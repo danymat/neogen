@@ -3,7 +3,7 @@ local ts_query  = require("nvim-treesitter.query")
 
 local M = {}
 
-M.generate = function (t, t2)
+M.generate = function ()
     local comment = {}
     local query = [[ 
     (function (parameters) @params)
@@ -21,8 +21,10 @@ M.generate = function (t, t2)
     end
     local line = ts_utils.get_node_range(function_node)
 
+
+    -- Parse and iterate over each found query
     local returned = vim.treesitter.parse_query("lua", query)
-    for id, node in returned:iter_captures(function_node) do -- For each found query
+    for id, node in returned:iter_captures(function_node) do
 
         -- Try to add params
         if returned.captures[id] == "params" then 
@@ -38,7 +40,12 @@ M.generate = function (t, t2)
             table.insert(comment, "---@return ")
         end
     end
-    
+
+    -- At the end, add description annotation
+    table.insert(comment, "---")
+
+    if #comment == 0 then return end
+
     -- Write on top of function
     vim.fn.append(line, comment)
     vim.fn.cursor(line+1, #comment[1])
