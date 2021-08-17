@@ -1,15 +1,11 @@
 local ts_utils = require("nvim-treesitter.ts_utils")
 
-local M = {}
+neogen = {}
 
-M.generate = function ()
+local configuration = require('neogen.config')
+
+neogen.generate = function ()
     local comment = {}
-    local query = [[ 
-    (function (parameters) @params)
-    (function (return_statement) @return)
-    (function_definition (parameters) @params)
-    (function_definition (if_statement (return_statement) @return))
-    ]]
 
     -- Try to find the upper function
     local cursor = ts_utils.get_node_at_cursor(0)
@@ -17,6 +13,7 @@ M.generate = function ()
     while function_node ~= nil do
         if function_node:type() == "function_definition" then break end
         if function_node:type() == "function" then break end
+        if function_node:type() == "local_function" then break end
         function_node = function_node:parent()
     end
     local line = ts_utils.get_node_range(function_node)
@@ -29,7 +26,7 @@ M.generate = function ()
     local param_comment = offset .. "---@param "
 
     -- Parse and iterate over each found query
-    local returned = vim.treesitter.parse_query("lua", query)
+    local returned = vim.treesitter.get_query("lua", "neogen")
     for id, node in returned:iter_captures(function_node) do
 
         -- Try to add params
@@ -58,15 +55,13 @@ M.generate = function ()
     vim.api.nvim_command('startinsert!')
 end
 
-function M.generate_command()
+function neogen.generate_command()
     vim.api.nvim_command('command! -range -bar Neogen lua require("neogen").generate()')
 end
 
-M.setup = function(opts)
-    local config = opts or {}
-    if config.enabled == true then
-        M.generate_command()
-    end
+neogen.setup = function(opts)
+    local config = opts or configuration
+    if config.enabled == true then neogen.generate_command() end
 end
 
-return M
+return neogen
