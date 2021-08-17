@@ -42,7 +42,7 @@ M.generate = function ()
     end
 
     -- At the end, add description annotation
-    table.insert(comment, "---")
+    table.insert(comment, 1, "---")
 
     if #comment == 0 then return end
 
