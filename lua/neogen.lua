@@ -8,6 +8,7 @@ M.generate = function ()
     (function (parameters) @params)
     (function (return_statement) @return)
     (function_definition (parameters) @params)
+    (function_definition (if_statement (return_statement) @return))
     ]]
 
     -- Try to find the upper function
