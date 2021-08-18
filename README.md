@@ -1,6 +1,8 @@
 # neogen
 A better Neovim documentation generator
 
+![](./.images/recording_1.mov)
+
 ## Warning
 
 This project is still in alpha !
