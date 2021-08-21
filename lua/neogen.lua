@@ -1,7 +1,15 @@
 local ok, ts_utils = pcall(require, "nvim-treesitter.ts_utils")
 assert(ok, "neogen requires nvim-treesitter to operate :(")
 
-neogen = { }
+neogen = {}
+
+require("neogen.utility")
+
+-- Require defaults
+require("neogen.locators.default")
+require("neogen.granulators.default")
+require("neogen.generators.default")
+
 
 neogen.auto_generate = function(custom_template)
     vim.treesitter.get_parser(0):for_each_tree(function(tree, language_tree)
@@ -26,7 +34,7 @@ neogen.auto_generate = function(custom_template)
             local data = language.granulator(located_parent_node, language.data)
 
             if data and not vim.tbl_isempty(data) then
-                -- Will try to generate the documentation from a template and the data found from the granulator 
+                -- Will try to generate the documentation from a template and the data found from the granulator
                 local to_place, content = language.generator(
                     located_parent_node,
                     data,
@@ -48,16 +56,11 @@ neogen.setup = function(opts)
     neogen.configuration = vim.tbl_deep_extend("keep", opts or {}, {
         -- DEFAULT CONFIGURATION
         languages = {
-            lua = require('neogen.configurations.lua'),
+            lua = require("neogen.configurations.lua"),
         },
     })
 
     neogen.generate_command()
 end
-
-require('neogen.utility')
-require('neogen.locators.default')
-require('neogen.granulators.default')
-require('neogen.generators.default')
 
 return neogen

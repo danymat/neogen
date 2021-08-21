@@ -21,7 +21,7 @@ neogen.utility = {
     end,
 
     --- Extract content from specified children from a tree
-    --- the tree parameter can be a nested { [key] = value} with key being the 
+    --- the tree parameter can be a nested { [key] = value} with key being the
     --- * key: is which children we want to extract the values from (e.g first children is 1)
     --- * value: "extract" or { [key] = value }. If value is "extract", it will extract the key child node
     --- Example (extract the first child node from the first child node of the parent node):

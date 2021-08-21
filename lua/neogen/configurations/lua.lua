@@ -2,7 +2,7 @@ local ts_utils = require("nvim-treesitter.ts_utils")
 
 return {
     -- Search for these nodes
-    parent = { "function", "local_function", "local_variable_declaration", "field", "variable_declaration"},
+    parent = { "function", "local_function", "local_variable_declaration", "field", "variable_declaration" },
 
     -- Traverse down these nodes and extract the information as necessary
     data = {
@@ -36,10 +36,12 @@ return {
                         [1] = "extract",
                     }, "spread")(node)
 
+                    local return_statement = neogen.utility:extract_children("return_statement")(node)
 
                     return {
                         parameters = regular_params,
                         vararg = varargs,
+                        return_statement = return_statement
                     }
                 end,
             },
@@ -47,7 +49,7 @@ return {
     },
 
     -- Custom lua locator that escapes from comments
-    locator = require('neogen.locators.lua'),
+    locator = require("neogen.locators.lua"),
 
     -- Use default granulator and generator
     granulator = nil,
@@ -57,5 +59,6 @@ return {
         { nil, "- " },
         { "parameters", "- @param %s any" },
         { "vararg", "- @vararg any" },
+        { "return_statement", "- @return any" }
     },
 }
