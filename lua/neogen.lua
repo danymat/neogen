@@ -35,7 +35,7 @@ neogen.auto_generate = function(custom_template)
 
             if data and not vim.tbl_isempty(data) then
                 -- Will try to generate the documentation from a template and the data found from the granulator
-                local to_place, content = language.generator(
+                local to_place, start_column, content = language.generator(
                     located_parent_node,
                     data,
                     custom_template or language.template
@@ -43,6 +43,12 @@ neogen.auto_generate = function(custom_template)
 
                 -- Append the annotation in required place
                 vim.fn.append(to_place, content)
+
+                -- Place cursor after annotations ans start editing
+                if neogen.configuration.input_after_comment == true then
+                    vim.fn.cursor(to_place+1, start_column)
+                    vim.api.nvim_command('startinsert!')
+                end
             end
         end
     end)
@@ -54,6 +60,7 @@ end
 
 neogen.setup = function(opts)
     neogen.configuration = vim.tbl_deep_extend("keep", opts or {}, {
+        input_after_comment = true,
         -- DEFAULT CONFIGURATION
         languages = {
             lua = require("neogen.configurations.lua"),

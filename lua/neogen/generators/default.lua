@@ -50,5 +50,5 @@ neogen.default_generator = function(parent, data, template)
         return result
     end
 
-    return start_row, parse_generated_template()
+    return start_row, start_column, parse_generated_template()
 end
