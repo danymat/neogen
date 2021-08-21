@@ -1,67 +1,73 @@
-local ts_utils = require("nvim-treesitter.ts_utils")
+local ok, ts_utils = pcall(require, "nvim-treesitter.ts_utils")
+assert(ok, "neogen requires nvim-treesitter to operate :(")
 
 neogen = {}
 
-local configuration = require('neogen.config')
+require("neogen.utility")
 
-neogen.generate = function ()
-    local comment = {}
+-- Require defaults
+require("neogen.locators.default")
+require("neogen.granulators.default")
+require("neogen.generators.default")
 
-    -- Try to find the upper function
-    local cursor = ts_utils.get_node_at_cursor(0)
-    local function_node = cursor
-    while function_node ~= nil do
-        if function_node:type() == "function_definition" then break end
-        if function_node:type() == "function" then break end
-        if function_node:type() == "local_function" then break end
-        function_node = function_node:parent()
-    end
-    local line = ts_utils.get_node_range(function_node)
 
-    -- find the starting position in the line function
-    local line_content = vim.api.nvim_buf_get_lines(0, line, line+1, false)[1]
-    local offset = line_content:match("^%s+") or ""
+neogen.auto_generate = function(custom_template)
+    vim.treesitter.get_parser(0):for_each_tree(function(tree, language_tree)
+        local language = neogen.configuration.languages[language_tree:lang()]
 
-    local return_comment = offset .. "---@return "
-    local param_comment = offset .. "---@param "
+        if language then
+            language.locator = language.locator or neogen.default_locator
+            language.granulator = language.granulator or neogen.default_granulator
+            language.generator = language.generator or neogen.default_generator
 
-    -- Parse and iterate over each found query
-    local returned = vim.treesitter.get_query("lua", "neogen")
-    for id, node in returned:iter_captures(function_node) do
+            -- Use the language locator to locate one of the required parent nodes above the cursor
+            local located_parent_node = language.locator({
+                root = tree:root(),
+                current = ts_utils.get_node_at_cursor(0),
+            }, language.parent)
 
-        -- Try to add params
-        if returned.captures[id] == "params" then 
-            local params = ts_utils.get_node_text(node)[1]:sub(2,-2)
-            for p in string.gmatch(params, '[^,]+') do
-                p = p:gsub("%s+", "") -- remove trailing spaces
-                table.insert(comment, param_comment .. p .. " ")
+            if not located_parent_node then
+                return
+            end
+
+            -- Use the language granulator to get the required content inside the node found with the locator
+            local data = language.granulator(located_parent_node, language.data)
+
+            if data and not vim.tbl_isempty(data) then
+                -- Will try to generate the documentation from a template and the data found from the granulator
+                local to_place, start_column, content = language.generator(
+                    located_parent_node,
+                    data,
+                    custom_template or language.template
+                )
+
+                -- Append the annotation in required place
+                vim.fn.append(to_place, content)
+
+                -- Place cursor after annotations ans start editing
+                if neogen.configuration.input_after_comment == true then
+                    vim.fn.cursor(to_place+1, start_column)
+                    vim.api.nvim_command('startinsert!')
+                end
             end
         end
-
-        -- Try to add return statement
-        if returned.captures[id] == "return" then
-            table.insert(comment, return_comment)
-        end
-    end
-
-    -- At the end, add description annotation
-    table.insert(comment, 1, offset .. "---")
-
-    if #comment == 0 then return end
-
-    -- Write on top of function
-    vim.fn.append(line, comment)
-    vim.fn.cursor(line+1, #comment[1])
-    vim.api.nvim_command('startinsert!')
+    end)
 end
 
 function neogen.generate_command()
-    vim.api.nvim_command('command! -range -bar Neogen lua require("neogen").generate()')
+    vim.api.nvim_command('command! -range -bar Neogen lua require("neogen").auto_generate()')
 end
 
 neogen.setup = function(opts)
-    local config = opts or configuration
-    if config.enabled == true then neogen.generate_command() end
+    neogen.configuration = vim.tbl_deep_extend("keep", opts or {}, {
+        input_after_comment = true,
+        -- DEFAULT CONFIGURATION
+        languages = {
+            lua = require("neogen.configurations.lua"),
+        },
+    })
+
+    neogen.generate_command()
 end
 
 return neogen
