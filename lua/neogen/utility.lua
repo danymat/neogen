@@ -21,26 +21,26 @@ neogen.utility = {
     end,
 
     --- Extract content from specified children from a set of nodes
-    --- the nodes parameter can be a nested { [key] = value} with key being the 
+    --- the tree parameter can be a nested { [key] = value} with key being the 
     --- * key: is which children we want to extract the values from (e.g first children is 1)
     --- * value: "extract" or { [key] = value }. If value is "extract", it will extract the key child node
     --- Example (extract the first child node from the first child node of the parent node):
     --- [1] = {
     ---  [1] = "extract"
     --- }
+    --- @param tree table see description
     --- @param name string the children we want to extract (if multiple children, separate each one with "|")
-    --- @param nodes table see description
-    extract_children_from = function(self, name, nodes)
+    extract_children_from = function(self, tree, name)
         return function(node)
             local result = {}
 
-            for i, value in ipairs(nodes) do
+            for i, subtree in ipairs(tree) do
                 local child_node = node:named_child(i - 1)
 
-                if value == "extract" then
+                if subtree == "extract" then
                     return self:extract_children(name)(child_node)
                 else
-                    return self:extract_children_from(name, value)(node)
+                    return self:extract_children_from(subtree, name)(node)
                 end
             end
 

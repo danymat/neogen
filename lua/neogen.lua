@@ -3,34 +3,32 @@ assert(ok, "neogen requires nvim-treesitter to operate :(")
 
 neogen = { }
 
--- TODO: Move code here
-neogen.generate = function(searcher, generator) end
-
 neogen.auto_generate = function(custom_template)
     vim.treesitter.get_parser(0):for_each_tree(function(tree, language_tree)
-        local searcher = neogen.configuration.languages[language_tree:lang()]
+        local language = neogen.configuration.languages[language_tree:lang()]
 
-        if searcher then
-            searcher.locator = searcher.locator or neogen.default_locator
-            searcher.granulator = searcher.granulator or neogen.default_granulator
-            searcher.generator = searcher.generator or neogen.default_generator
+        if language then
+            language.locator = language.locator or neogen.default_locator
+            language.granulator = language.granulator or neogen.default_granulator
+            language.generator = language.generator or neogen.default_generator
 
-            local located_parent_node = searcher.locator({
+            -- Use the language locator to locate one the the required parent nodes above the cursor
+            local located_parent_node = language.locator({
                 root = tree:root(),
                 current = ts_utils.get_node_at_cursor(0),
-            }, searcher.parent)
+            }, language.parent)
 
             if not located_parent_node then
                 return
             end
 
-            local data = searcher.granulator(located_parent_node, searcher.data)
+            local data = language.granulator(located_parent_node, language.data)
 
             if data and not vim.tbl_isempty(data) then
-                local to_place, content = searcher.generator(
+                local to_place, content = language.generator(
                     located_parent_node,
                     data,
-                    custom_template or searcher.template
+                    custom_template or language.template
                 )
 
                 vim.fn.append(to_place, content)
