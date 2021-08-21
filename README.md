@@ -1,18 +1,31 @@
-# neogen
-A better Neovim documentation generator
-
+<div align="center">
+# Neogen - Your annotation toolkit
 ![](./.images/recording_1.mov)
+</div>
 
-## Warning
+# Table Of Contents
 
-This project is still in alpha !
+* [Features](#features)
+* [Requirements](#requirements)
+* [Installation](#installation)
+* [Configuration](#configuration)
+* [Supported Languages](#supported-languages)
+* [Usage](#usage)
+* [Contributing](#-contributing)
 
-Work In progress:
-- lua: `@return`, `@param`
+## Features
+
+- Create annotations with one keybind
+- Defaults for multiple languages and annotation conventions
+- Extremely customizable and extensible
+
+## Requirements
+
+- Install [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter)
 
 ## Installation
 
-1. Packer
+Use your favorite package manager to install Neogen, e.g:
 
 ```lua
 use { 
@@ -21,14 +34,41 @@ use {
         require('neogen').setup {
             enabled = true
         }
-    end
+    end,
+    requires = "nvim-treesitter/nvim-treesitter"
 }
 ```
+
+## Configuration
+
+```lua
+use { 
+    "danymat/neogen", 
+    config = function()
+        require('neogen').setup {
+            enabled = true,             -- required for Neogen to work
+            input_after_comment = true, -- automatic jump (with insert mode) on inserted annotation
+        }
+    end,
+    requires = "nvim-treesitter/nvim-treesitter"
+}
+```
+
+## Supported Languages
+
+There is a list of supported languages and fields, with their annotation style
+
+| Language | Annotation conventions | Supported fields |
+|---|---|---|
+| lua | Emmylua | |
+| | | `@param` |
+| | | `@varargs` |
+| | | `@return` |
 
 ## Usage
 
 I exposed a command `:Neogen` to generate the annotations.
-You can bind it to your keybind of choice:
+You can bind it to your keybind of choice, like so:
 
 ```lua
 vim.api.nvim_set_keymap("n", "<Leader>ng", ":Neogen<CR>", {})
@@ -36,3 +76,6 @@ vim.api.nvim_set_keymap("n", "<Leader>ng", ":Neogen<CR>", {})
 
 If you are inside a function, it'll generate the documentation for you with Emmylua annotation convention
 
+## Contributing
+
+A
