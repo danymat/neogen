@@ -36,6 +36,7 @@ return {
                         [1] = "extract",
                     }, "spread")(node)
 
+
                     return {
                         parameters = regular_params,
                         vararg = varargs,

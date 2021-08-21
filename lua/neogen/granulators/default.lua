@@ -1,5 +1,8 @@
 local ts_utils = require("nvim-treesitter.ts_utils")
 
+--- Tries to use the configuration to find all required content nodes from the parent node 
+--- @param parent_node userdata the node found by the locator
+--- @param node_data table the data from configurations[lang].data
 neogen.default_granulator = function(parent_node, node_data)
     local result = {}
 

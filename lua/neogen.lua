@@ -12,7 +12,7 @@ neogen.auto_generate = function(custom_template)
             language.granulator = language.granulator or neogen.default_granulator
             language.generator = language.generator or neogen.default_generator
 
-            -- Use the language locator to locate one the the required parent nodes above the cursor
+            -- Use the language locator to locate one of the required parent nodes above the cursor
             local located_parent_node = language.locator({
                 root = tree:root(),
                 current = ts_utils.get_node_at_cursor(0),
@@ -22,15 +22,18 @@ neogen.auto_generate = function(custom_template)
                 return
             end
 
+            -- Use the language granulator to get the required content inside the node found with the locator
             local data = language.granulator(located_parent_node, language.data)
 
             if data and not vim.tbl_isempty(data) then
+                -- Will try to generate the documentation from a template and the data found from the granulator 
                 local to_place, content = language.generator(
                     located_parent_node,
                     data,
                     custom_template or language.template
                 )
 
+                -- Append the annotation in required place
                 vim.fn.append(to_place, content)
             end
         end
