@@ -1,7 +1,6 @@
-<div align="center">
 # Neogen - Your annotation toolkit
+
 ![](./.images/recording_1.mov)
-</div>
 
 # Table Of Contents
 
@@ -11,13 +10,14 @@
 * [Configuration](#configuration)
 * [Supported Languages](#supported-languages)
 * [Usage](#usage)
-* [Contributing](#-contributing)
+* [Contributing](#contributing)
 
 ## Features
 
 - Create annotations with one keybind
 - Defaults for multiple languages and annotation conventions
 - Extremely customizable and extensible
+- Written in lua
 
 ## Requirements
 
@@ -78,4 +78,4 @@ If you are inside a function, it'll generate the documentation for you with Emmy
 
 ## Contributing
 
-A
+Adding support for new languages is quite easy, and a documentation will be available soon!
