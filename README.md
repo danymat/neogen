@@ -1,8 +1,6 @@
 <div align="center">
-  <img src="https://user-images.githubusercontent.com/5306901/130351259-d1b61d9d-afdc-4569-982e-2fe915b79d22.jpg"><br>
+  <img src="https://user-images.githubusercontent.com/5306901/130352268-226f51a7-b203-4e74-aa71-2e53cb276ac0.png"><br>
 </div>
-
----
 
 # Neogen - Your Annotation Toolkit
 
