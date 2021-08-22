@@ -1,6 +1,6 @@
 # Neogen - Your annotation toolkit
 
-![](./.images/recording_1.mov)
+![better_quality_neogen_logo](https://user-images.githubusercontent.com/5306901/130351259-d1b61d9d-afdc-4569-982e-2fe915b79d22.jpg)
 
 # Table Of Contents
 
@@ -10,6 +10,7 @@
 * [Configuration](#configuration)
 * [Supported Languages](#supported-languages)
 * [Usage](#usage)
+* [GIFS](#gifs)
 * [Contributing](#contributing)
 
 ## Features
@@ -76,6 +77,20 @@ vim.api.nvim_set_keymap("n", "<Leader>ng", ":Neogen<CR>", {})
 
 If you are inside a function, it'll generate the documentation for you with Emmylua annotation convention
 
+## GIFS
+
+![](./.images/recording_1.mov)
+
 ## Contributing
 
 Adding support for new languages is quite easy, and a documentation will be available soon!
+
+## Credits
+
+- Binx, for making that gorgeous logo for free!
+	- [Github](https://github.com/Binx-Codes/)
+	- [Reddit](https://www.reddit.com/u/binxatmachine)
+- bandithedoge, for recreating the logo in svg form!
+	- [Website](https://bandithedoge.com)
+	- [Github](https://github.com/bandithedoge)
+	- [YouTube](https://youtube.com/bandithedoge)
