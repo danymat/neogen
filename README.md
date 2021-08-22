@@ -1,6 +1,10 @@
-# Neogen - Your annotation toolkit
+<div align="center">
+  <img src="https://user-images.githubusercontent.com/5306901/130351259-d1b61d9d-afdc-4569-982e-2fe915b79d22.jpg"><br>
+</div>
 
-![better_quality_neogen_logo](https://user-images.githubusercontent.com/5306901/130351259-d1b61d9d-afdc-4569-982e-2fe915b79d22.jpg)
+---
+
+# Neogen - Your Annotation Toolkit
 
 # Table Of Contents
 
