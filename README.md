@@ -1,8 +1,9 @@
 <div align="center">
-  <img src="https://user-images.githubusercontent.com/5306901/130352268-226f51a7-b203-4e74-aa71-2e53cb276ac0.png"><br>
-</div>
-
+<img src="https://user-images.githubusercontent.com/5306901/130352268-226f51a7-b203-4e74-aa71-2e53cb276ac0.png" width=250><br>
+	
 # Neogen - Your Annotation Toolkit
+
+</div>
 
 # Table Of Contents
 
