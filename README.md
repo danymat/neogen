@@ -92,7 +92,3 @@ Adding support for new languages is quite easy, and a documentation will be avai
 - Binx, for making that gorgeous logo for free!
 	- [Github](https://github.com/Binx-Codes/)
 	- [Reddit](https://www.reddit.com/u/binxatmachine)
-- bandithedoge, for recreating the logo in svg form!
-	- [Website](https://bandithedoge.com)
-	- [Github](https://github.com/bandithedoge)
-	- [YouTube](https://youtube.com/bandithedoge)
