@@ -64,10 +64,7 @@ There is a list of supported languages and fields, with their annotation style
 
 | Language | Annotation conventions | Supported fields |
 |---|---|---|
-| lua | Emmylua | |
-| | | `@param` |
-| | | `@varargs` |
-| | | `@return` |
+| lua | Emmylua | `@param`, `@varargs`, `@return` |
 
 ## Usage
 
@@ -78,7 +75,7 @@ You can bind it to your keybind of choice, like so:
 vim.api.nvim_set_keymap("n", "<Leader>ng", ":Neogen<CR>", {})
 ```
 
-If you are inside a function, it'll generate the documentation for you with Emmylua annotation convention
+It'll generate the annotations provided by neogen.
 
 ## GIFS
 
