@@ -71,9 +71,11 @@ require('neogen').setup {
 	languages = {
 	    lua = {
 	        template = {
-                    annotation_convention = "emmylua" -- for a full list of annotation_conventions, see supported-languages below
+                    annotation_convention = "emmylua" -- for a full list of annotation_conventions, see supported-languages below,
+		    ... -- for more template configurations, see the language's configuration file in configurations/{lang}.lua
 		}
-	    }
+	    },
+	    ...
     }
 }
 ```
@@ -84,7 +86,7 @@ There is a list of supported languages and fields, with their annotation style
 
 | Language | Annotation conventions | Supported fields |
 |---|---|---|
-| lua | Emmylua (`"emmylua"` | `@param`, `@varargs`, `@return` |
+| lua | Emmylua (`"emmylua"`) | `@param`, `@varargs`, `@return` |
 | python | Google docstrings (`"google_docstrings"`) | `Args:`, `Attributes:` |
 
 ## Adding Languages
