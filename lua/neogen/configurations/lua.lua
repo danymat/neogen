@@ -53,7 +53,7 @@ return {
 
     -- Use default granulator and generator
     granulator = nil,
-    generator = require("neogen.generators.lua"),
+    generator = nil,
 
     template = {
         -- Which annotation convention to use
