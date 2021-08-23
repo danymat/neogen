@@ -57,7 +57,9 @@ neogen.default_generator = function(parent, data, template)
 
             -- Will append the item before all their nodes
             if opts.before_first_item and data[type] then
-                table.insert(result, prefix .. opts.before_first_item)
+                for _, value in pairs(opts.before_first_item) do
+                table.insert(result, prefix .. value)
+                end
             end
 
             if not type then
