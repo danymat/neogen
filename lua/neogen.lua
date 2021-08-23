@@ -10,7 +10,6 @@ require("neogen.locators.default")
 require("neogen.granulators.default")
 require("neogen.generators.default")
 
-
 neogen.auto_generate = function(custom_template)
     vim.treesitter.get_parser(0):for_each_tree(function(tree, language_tree)
         local language = neogen.configuration.languages[language_tree:lang()]
@@ -46,8 +45,8 @@ neogen.auto_generate = function(custom_template)
 
                 -- Place cursor after annotations ans start editing
                 if neogen.configuration.input_after_comment == true then
-                    vim.fn.cursor(to_place+1, start_column)
-                    vim.api.nvim_command('startinsert!')
+                    vim.fn.cursor(to_place + 1, start_column)
+                    vim.api.nvim_command("startinsert!")
                 end
             end
         end

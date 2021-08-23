@@ -41,7 +41,7 @@ return {
                     return {
                         parameters = regular_params,
                         vararg = varargs,
-                        return_statement = return_statement
+                        return_statement = return_statement,
                     }
                 end,
             },
@@ -53,12 +53,16 @@ return {
 
     -- Use default granulator and generator
     granulator = nil,
-    generator = nil,
+    generator = require("neogen.generators.lua"),
 
     template = {
-        { nil, "- " },
-        { "parameters", "- @param %s any" },
-        { "vararg", "- @vararg any" },
-        { "return_statement", "- @return any" }
+        -- Which annotation convention to use
+        annotation_convention = "emmylua",
+        emmylua = {
+            { nil, "- " },
+            { "parameters", "- @param %s any" },
+            { "vararg", "- @vararg any" },
+            { "return_statement", "- @return any" },
+        },
     },
 }

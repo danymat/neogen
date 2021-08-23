@@ -139,10 +139,14 @@ generator = nil,
                                                             
 -- Template to use with the generator. (More on this below)
 template = {
-    { nil, "- " },
-    { "parameters", "- @param %s any" },
-    { "vararg", "- @vararg any" },
-    { "return_statement", "- @return any" }
+    -- Which annotation convention to use
+    annotation_convention = "emmylua",
+    emmylua = {
+        { nil, "- " },
+        { "parameters", "- @param %s any" },
+        { "vararg", "- @vararg any" },
+        { "return_statement", "- @return any" }
+    }
 },
 ```
 
