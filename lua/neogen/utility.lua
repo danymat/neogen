@@ -10,6 +10,7 @@ neogen.utility = {
             local result = {}
             local split = vim.split(name, "|", true)
 
+
             for child in node:iter_children() do
                 if vim.tbl_contains(split, child:type()) then
                     table.insert(result, ts_utils.get_node_text(child)[1])
@@ -34,13 +35,13 @@ neogen.utility = {
         return function(node)
             local result = {}
 
-            for i, subtree in ipairs(tree) do
-                local child_node = node:named_child(i - 1)
+            for i, subtree in pairs(tree) do
+                local child_node = node:named_child(tonumber(i) - 1)
 
                 if subtree == "extract" then
                     return self:extract_children(name)(child_node)
                 else
-                    return self:extract_children_from(subtree, name)(node)
+                    return self:extract_children_from(subtree, name)(child_node)
                 end
             end
 

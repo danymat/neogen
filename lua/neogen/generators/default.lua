@@ -8,17 +8,16 @@ local ts_utils = require("nvim-treesitter.ts_utils")
 --- @return table { line, content }, with line being the line to append the content
 neogen.default_generator = function(parent, data, template)
     local start_row, start_column, end_row, end_column = ts_utils.get_node_range(parent)
-    P(ts_utils.get_node_range(parent))
     local commentstring, generated_template = vim.trim(vim.api.nvim_buf_get_option(0, "commentstring"):format(""))
 
     local row_to_place = start_row
     local col_to_place = start_column
 
     local append = template.append or {}
+
     if append.position == "after" then
-        row_to_place = end_row - 1
-        -- Add the offset if there's one
-        col_to_place = start_column + (append.offset or 0)
+        local append_at_child = parent:child(append.child_number + 1)
+        row_to_place, col_to_place, _ , _ = append_at_child:range()
     end
 
     if not template or not template.annotation_convention then

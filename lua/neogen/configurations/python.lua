@@ -2,7 +2,7 @@ local ts_utils = require("nvim-treesitter.ts_utils")
 
 return {
     -- Search for these nodes
-    parent = { "function_definition" },
+    parent = { "function_definition", "class_definition" },
 
     -- Traverse down these nodes and extract the information as necessary
     data = {
@@ -28,11 +28,11 @@ return {
 
     template = {
         annotation_convention = "google_docstrings", -- required: Which annotation convention to use (default_generator)
-        append = { position = "after", offset = 4 }, -- optional: where to append the text (default_generator)
+        append = { position = "after", child_number = 3 }, -- optional: where to append the text (default_generator)
         use_default_comment = false, -- If you want to prefix the template with the default comment for the language (default_generator)
         google_docstrings = {
             { nil, '"""' },
-            { "parameters", "\t%s: ", { before_first_item = "Args: " } },
+            { "parameters", "\t%s: ", { before_first_item = "Args: " } }, -- FIXME when no parameter is set
             { nil, '"""' },
         },
     },
