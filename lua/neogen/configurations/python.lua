@@ -28,7 +28,7 @@ return {
 
     template = {
         annotation_convention = "google_docstrings", -- required: Which annotation convention to use (default_generator)
-        append = { position = "after", child_number = 3 }, -- optional: where to append the text (default_generator)
+        append = { position = "after", child_name = "block" }, -- optional: where to append the text (default_generator)
         use_default_comment = false, -- If you want to prefix the template with the default comment for the language (default_generator)
         google_docstrings = {
             { nil, '"""' },

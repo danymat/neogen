@@ -5,9 +5,11 @@ local ts_utils = require("nvim-treesitter.ts_utils")
 --- @param parent userdata the node used to generate the annotations
 --- @param data table the data from the granulator, which is a set of [type] = results
 --- @param template table a template from the configuration
+--- There are some special fields it can take:
 --- @return table { line, content }, with line being the line to append the content
 neogen.default_generator = function(parent, data, template)
     local start_row, start_column, end_row, end_column = ts_utils.get_node_range(parent)
+    P(ts_utils.get_node_range(parent))
     local commentstring, generated_template = vim.trim(vim.api.nvim_buf_get_option(0, "commentstring"):format(""))
 
     local row_to_place = start_row
@@ -16,8 +18,13 @@ neogen.default_generator = function(parent, data, template)
     local append = template.append or {}
 
     if append.position == "after" then
-        local append_at_child = parent:child(append.child_number + 1)
-        row_to_place, col_to_place, _ , _ = append_at_child:range()
+        for child in parent:iter_children() do
+            if child:type() == append.child_name then
+                row_to_place, col_to_place, _ , _ = child:range()
+                break
+            end
+        end
+
     end
 
     if not template or not template.annotation_convention then
