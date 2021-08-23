@@ -86,9 +86,11 @@ There is a list of supported languages and fields, with their annotation style
 
 | Language | Annotation conventions | Supported fields |
 |---|---|---|
-| lua | Emmylua (`"emmylua"`) | `@param`, `@varargs`, `@return` |
-| python | Google docstrings (`"google_docstrings"`) | `Args`, `Attributes`, `Returns` |
-| python | Numpydoc (`"numpydoc"`)| `Arguments`, `Attributes`, `Returns`|
+| lua | | |
+| | Emmylua (`"emmylua"`) | `@param`, `@varargs`, `@return` |
+| python | | |
+| | Google docstrings (`"google_docstrings"`) | `Args`, `Attributes`, `Returns` |
+| | Numpydoc (`"numpydoc"`)| `Arguments`, `Attributes`, `Returns`|
 
 ## Adding Languages
 
