@@ -16,25 +16,38 @@ return {
                     local params = neogen.utilities.nodes:matching_child_nodes(node, "parameters")[1]
 
 
-                    local regular_params
-                    local typed_params_node
+                    local found_nodes
                     if #params ~= 0 then
 
+
                         -- Find regular parameters
-                        regular_params = neogen.utilities.extractors:extract_children_text("identifier")(params)
+                        local regular_params = neogen.utilities.extractors:extract_children_text("identifier")(params)
                         if #regular_params == 0 then
                             regular_params = nil
                         end
                         results.parameters = regular_params
 
-                        -- Find typed params
-                        typed_params_node = neogen.utilities.nodes:matching_child_nodes(params, "typed_parameter")
-                        for _,_node in pairs(typed_params_node) do
-                            local typed_params = neogen.utilities.extractors:extract_children_text("identifier")(_node)[1]
-                            table.insert(results.parameters, typed_params)
+                        -- Find regular optional parameters
+                        found_nodes = neogen.utilities.nodes:matching_child_nodes(params, "default_parameter")
+                        for _,_node in pairs(found_nodes) do
+                            local _params = neogen.utilities.extractors:extract_children_text("identifier")(_node)[1]
+                            table.insert(results.parameters, _params)
                         end
 
-                        -- TODO Find optional params
+                        -- Find typed params
+                        found_nodes = neogen.utilities.nodes:matching_child_nodes(params, "typed_parameter")
+                        for _,_node in pairs(found_nodes) do
+                            local _params = neogen.utilities.extractors:extract_children_text("identifier")(_node)[1]
+                            table.insert(results.parameters, _params)
+                        end
+
+                        -- TODO Find optional typed params
+                        found_nodes = neogen.utilities.nodes:matching_child_nodes(params, "typed_default_parameter")
+                        for _,_node in pairs(found_nodes) do
+                            local _params = neogen.utilities.extractors:extract_children_text("identifier")(_node)[1]
+                            table.insert(results.parameters, _params)
+                        end
+
                     end
 
                     local body = neogen.utilities.nodes:matching_child_nodes(node, "block")[1]
@@ -46,11 +59,9 @@ return {
                     if #return_statement == 0 then
                         return_statement = nil
                     end
+                    results.return_statement = return_statement
 
-                    return {
-                        parameters = regular_params,
-                        return_statement = return_statement
-                    }
+                    return results
                 end
             },
         },
