@@ -1,11 +1,11 @@
 local ts_utils = require("nvim-treesitter.ts_utils")
 
-neogen.utility = {
+neogen.utilities.extractors = {
     --- Return a function to extract content of required children from a node
     --- @param _ any self
     --- @param name string the children we want to extract (if multiple childrens, separate each one with "|")
     --- @return function cb function taking a node and getting the content of each children we want from name
-    extract_children = function(_, name)
+    extract_children_text = function(_, name)
         return function(node)
             local result = {}
             local split = vim.split(name, "|", true)
@@ -39,7 +39,7 @@ neogen.utility = {
                 local child_node = node:named_child(tonumber(i) - 1)
 
                 if subtree == "extract" then
-                    return self:extract_children(name)(child_node)
+                    return self:extract_children_text(name)(child_node)
                 else
                     return self:extract_children_from(subtree, name)(child_node)
                 end

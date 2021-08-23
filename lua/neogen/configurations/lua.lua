@@ -13,8 +13,8 @@ return {
                 match = "parameters",
 
                 extract = function(node)
-                    local regular_params = neogen.utility:extract_children("identifier")(node)
-                    local varargs = neogen.utility:extract_children("spread")(node)
+                    local regular_params = neogen.utilities.extractors:extract_children_text("identifier")(node)
+                    local varargs = neogen.utilities.extractors:extract_children_text("spread")(node)
 
                     return {
                         parameters = regular_params,
@@ -28,15 +28,15 @@ return {
                 match = "function_definition",
 
                 extract = function(node)
-                    local regular_params = neogen.utility:extract_children_from({
+                    local regular_params = neogen.utilities.extractors:extract_children_from({
                         [1] = "extract",
                     }, "identifier")(node)
 
-                    local varargs = neogen.utility:extract_children_from({
+                    local varargs = neogen.utilities.extractors:extract_children_from({
                         [1] = "extract",
                     }, "spread")(node)
 
-                    local return_statement = neogen.utility:extract_children("return_statement")(node)
+                    local return_statement = neogen.utilities.extractors:extract_children_text("return_statement")(node)
 
                     return {
                         parameters = regular_params,

@@ -11,11 +11,20 @@ return {
                 match = "parameters",
 
                 extract = function(node)
-                    local regular_params = neogen.utility:extract_children("identifier")(node)
+                    local regular_params = neogen.utilities.extractors:extract_children_text("identifier")(node)
 
                     return {
                         parameters = regular_params,
                     }
+                end,
+            },
+        },
+        ["class_definition"] = {
+            ["2"] = {
+                match = "block",
+
+                extract = function(node)
+                   return {}
                 end,
             },
         },
@@ -29,7 +38,7 @@ return {
     template = {
         annotation_convention = "google_docstrings", -- required: Which annotation convention to use (default_generator)
         append = { position = "after", child_name = "block" }, -- optional: where to append the text (default_generator)
-        use_default_comment = false, -- If you want to prefix the template with the default comment for the language (default_generator)
+        use_default_comment = false, -- If you want to prefix the template with the default comment for the language, e.g for python: # (default_generator)
         google_docstrings = {
             { nil, '"""' },
             { "parameters", "\t%s: ", { before_first_item = "Args: " } },

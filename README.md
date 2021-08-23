@@ -114,8 +114,8 @@ data = {
                                                                                        
 	    -- Extractor function that returns a set of TSname = values with values being of type string[]
             extract = function(node)
-                local regular_params = neogen.utility:extract_children("identifier")(node)
-                local varargs = neogen.utility:extract_children("spread")(node)
+                local regular_params = neogen.utilities.extractors:extract_children_text("identifier")(node)
+                local varargs = neogen.utilities.extractors:extract_children_text("spread")(node)
                                                                                                           
                 return {
                     parameters = regular_params,
@@ -201,8 +201,8 @@ data = {
                                                                                        
 	    -- Extractor function that returns a set of TSname = values with values being of type string[]
             extract = function(node)
-                local regular_params = neogen.utility:extract_children("identifier")(node)
-                local varargs = neogen.utility:extract_children("spread")(node)
+                local regular_params = neogen.utilities.extractors:extract_children_text("identifier")(node)
+                local varargs = neogen.utilities.extractors:extract_children_text("spread")(node)
                                                                                                           
                 return {
                     parameters = regular_params,
@@ -217,7 +217,7 @@ data = {
 Notes:
 
 - If you create your own granulator, you can add any kind of parameters in the `data` field from configuration file as long as the function signature is the same provided. 
-- Utilities are provided in order to extract content from subnodes. You can check out their documentation in `lua/utility.lua`.
+- Utilities are provided. You can check out their documentation in `lua/utilities/`.
 
 ### Generators
 

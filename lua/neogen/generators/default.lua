@@ -18,13 +18,10 @@ neogen.default_generator = function(parent, data, template)
     local append = template.append or {}
 
     if append.position == "after" then
-        for child in parent:iter_children() do
-            if child:type() == append.child_name then
-                row_to_place, col_to_place, _ , _ = child:range()
-                break
-            end
+        local child_node = neogen.utilities.nodes:first_child_node(parent, append.child_name)
+        if child_node ~= nil then
+            row_to_place, col_to_place, _ , _ = child_node:range()
         end
-
     end
 
     if not template or not template.annotation_convention then
