@@ -63,11 +63,11 @@ require('neogen').setup {
 }
 ```
 
-If you're not satisfied with the default configuration for the language, you can change the defaults like this:
+If you're not satisfied with the default configuration for a language, you can change the defaults like this:
 
 ```lua
 require('neogen').setup {
-        enabled = true,             -- required for Neogen to work
+        enabled = true,
 	languages = {
 	    lua = {
 	        template = {
