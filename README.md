@@ -10,9 +10,9 @@
 * [Features](#features)
 * [Requirements](#requirements)
 * [Installation](#installation)
+* [Usage](#usage)
 * [Configuration](#configuration)
 * [Supported Languages](#supported-languages)
-* [Usage](#usage)
 * [GIFS](#gifs)
 * [Contributing](#contributing)
 
@@ -43,17 +43,28 @@ use {
 }
 ```
 
+## Usage
+
+I exposed a command `:Neogen` to generate the annotations.
+You can bind it to your keybind of choice, like so:
+
+```lua
+vim.api.nvim_set_keymap("n", "<Leader>ng", ":Neogen<CR>", {})
+```
+
+It'll generate the annotations provided by neogen.
+
 ## Configuration
 
 ```lua
 require('neogen').setup {
         enabled = true,             -- required for Neogen to work
-        input_after_comment = true, -- automatic jump (with insert mode) on inserted annotation
+        input_after_comment = true, -- (default: true) automatic jump (with insert mode) on inserted annotation
     }
 }
 ```
 
-The configuration file a language is in `lua/configurations/{lang}.lua`. 
+The configuration file for a language is in `lua/configurations/{lang}.lua`. 
 
 _Note: Be aware that Neogen uses Treesitter to operate. You can install [TSPlayground](https://github.com/nvim-treesitter/playground) to check the AST._
 
@@ -83,17 +94,6 @@ There is a list of supported languages and fields, with their annotation style
 | Language | Annotation conventions | Supported fields |
 |---|---|---|
 | lua | Emmylua | `@param`, `@varargs`, `@return` |
-
-## Usage
-
-I exposed a command `:Neogen` to generate the annotations.
-You can bind it to your keybind of choice, like so:
-
-```lua
-vim.api.nvim_set_keymap("n", "<Leader>ng", ":Neogen<CR>", {})
-```
-
-It'll generate the annotations provided by neogen.
 
 ## GIFS
 
