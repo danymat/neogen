@@ -54,8 +54,10 @@ require('neogen').setup {
 ```
 
 The configuration file a language is in `lua/configurations/{lang}.lua`. 
-If you're not satisfied with the default configuration for the language, you can change the defaults like this:
+
 _Note: Be aware that Neogen uses Treesitter to operate. You can install [TSPlayground](https://github.com/nvim-treesitter/playground) to check the AST._
+
+If you're not satisfied with the default configuration for the language, you can change the defaults like this:
 
 ```lua
 require('neogen').setup {
