@@ -10,7 +10,6 @@ neogen.utilities.extractors = {
             local result = {}
             local split = vim.split(name, "|", true)
 
-
             for child in node:iter_children() do
                 if vim.tbl_contains(split, child:type()) then
                     table.insert(result, ts_utils.get_node_text(child)[1])

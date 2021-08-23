@@ -1,14 +1,17 @@
 neogen.utilities.nodes = {
-    --- Get first child node that match the provided node name
+    --- Get a list of child nodes that match the provided node name
     --- @param _ any
     --- @param parent userdata the parent's node
     --- @param node_name string the node type to search for
-    --- @return userdata node the first encountered child node
-    first_child_node = function (_, parent, node_name)
+    --- @return table a table of nodes that matched the name
+    matching_child_nodes = function (_, parent, node_name)
+        local results = {}
+
         for child in parent:iter_children() do
             if child:type() == node_name then
-                return child
+                table.insert(results, child)
             end
         end
-    end
+        return results
+    end,
 }

@@ -24,8 +24,34 @@ return {
                 match = "block",
 
                 extract = function(node)
-                   return {}
-                end,
+                    local results = {
+                        attributes = {}
+                    }
+
+                    local init_function = neogen.utilities.nodes:matching_child_nodes(node, "function_definition")[1]
+
+                    if init_function == nil then
+                        return
+                    end
+
+                    local body = neogen.utilities.nodes:matching_child_nodes(init_function, "block")[1]
+
+                    if body == nil then
+                        return
+                    end
+
+                    local expressions = neogen.utilities.nodes:matching_child_nodes(body, "expression_statement")
+                    for _,expression in pairs(expressions) do
+                        local assignment = neogen.utilities.nodes:matching_child_nodes(expression, "assignment")[1]
+                        if assignment ~= nil then
+                            local left_side = assignment:field("left")[1]
+                            local left_attribute = left_side:field("attribute")[1]
+                            table.insert(results.attributes, ts_utils.get_node_text(left_attribute)[1])
+                        end
+                    end
+
+                    return results
+                end
             },
         },
     },
@@ -42,6 +68,7 @@ return {
         google_docstrings = {
             { nil, '"""' },
             { "parameters", "\t%s: ", { before_first_item = "Args: " } },
+            { "attributes", "\t%s: ", { before_first_item = "Attributes: " } },
             { nil, '"""' },
         },
     },
