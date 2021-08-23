@@ -10,9 +10,32 @@ return {
             ["0"] = {
                 extract = function (node)
                     local results = {
-
+                        parameters = {}
                     }
-                    local regular_params = neogen.utilities.extractors:extract_children_from({ ["2"] = "extract" }, "identifier")(node)
+
+                    local params = neogen.utilities.nodes:matching_child_nodes(node, "parameters")[1]
+
+
+                    local regular_params
+                    local typed_params_node
+                    if #params ~= 0 then
+
+                        -- Find regular parameters
+                        regular_params = neogen.utilities.extractors:extract_children_text("identifier")(params)
+                        if #regular_params == 0 then
+                            regular_params = nil
+                        end
+                        results.parameters = regular_params
+
+                        -- Find typed params
+                        typed_params_node = neogen.utilities.nodes:matching_child_nodes(params, "typed_parameter")
+                        for _,_node in pairs(typed_params_node) do
+                            local typed_params = neogen.utilities.extractors:extract_children_text("identifier")(_node)[1]
+                            table.insert(results.parameters, typed_params)
+                        end
+
+                        -- TODO Find optional params
+                    end
 
                     local body = neogen.utilities.nodes:matching_child_nodes(node, "block")[1]
                     if body == nil then
