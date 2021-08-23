@@ -7,8 +7,19 @@ local ts_utils = require("nvim-treesitter.ts_utils")
 --- @param template table a template from the configuration
 --- @return table { line, content }, with line being the line to append the content
 neogen.default_generator = function(parent, data, template)
-    local start_row, start_column, _, _ = ts_utils.get_node_range(parent)
+    local start_row, start_column, end_row, end_column = ts_utils.get_node_range(parent)
+    P(ts_utils.get_node_range(parent))
     local commentstring, generated_template = vim.trim(vim.api.nvim_buf_get_option(0, "commentstring"):format(""))
+
+    local row_to_place = start_row
+    local col_to_place = start_column
+
+    local append = template.append or {}
+    if append.position == "after" then
+        row_to_place = end_row - 1
+        -- Add the offset if there's one
+        col_to_place = start_column + (append.offset or 0)
+    end
 
     if not template or not template.annotation_convention then
         -- Default template
@@ -27,10 +38,25 @@ neogen.default_generator = function(parent, data, template)
 
     local function parse_generated_template()
         local result = {}
-        local prefix = (" "):rep(start_column) .. commentstring
+        local prefix = (" "):rep(col_to_place)
+
+        -- Do not append the comment string if not wanted
+        if template.use_default_comment ~= false then
+            prefix = prefix .. commentstring
+        end
 
         for _, values in ipairs(generated_template) do
             local type = values[1]
+
+            -- Checks for custom options
+            -- Supported options:
+            --   - before_first_item = value
+            local opts = values[3] or {}
+
+            -- Will append the item before all their nodes
+            if opts.before_first_item then
+                table.insert(result, prefix .. opts.before_first_item)
+            end
 
             if not type then
                 table.insert(result, prefix .. values[2]:format(""))
@@ -50,5 +76,5 @@ neogen.default_generator = function(parent, data, template)
         return result
     end
 
-    return start_row, start_column, parse_generated_template()
+    return row_to_place, col_to_place, parse_generated_template()
 end

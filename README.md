@@ -85,6 +85,7 @@ There is a list of supported languages and fields, with their annotation style
 | Language | Annotation conventions | Supported fields |
 |---|---|---|
 | lua | Emmylua | `@param`, `@varargs`, `@return` |
+| python | Google docstrings | `Args:` |
 
 ## Adding Languages
 

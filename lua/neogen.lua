@@ -63,6 +63,7 @@ neogen.setup = function(opts)
         -- DEFAULT CONFIGURATION
         languages = {
             lua = require("neogen.configurations.lua"),
+            python = require("neogen.configurations.python"),
         },
     })
 
