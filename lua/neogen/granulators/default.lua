@@ -13,7 +13,13 @@ neogen.default_granulator = function(parent_node, node_data)
         if vim.tbl_contains(matches, parent_node:type()) then
             -- For each child_data in the matched parent node
             for i, data in pairs(child_data) do
-                local child_node = parent_node:named_child(tonumber(i) - 1)
+                local child_node
+
+                if tonumber(i) == 0 then
+                   child_node = parent_node
+                else
+                    child_node = parent_node:named_child(tonumber(i) - 1)
+                end
 
                 if not child_node then
                     return

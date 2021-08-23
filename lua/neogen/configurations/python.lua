@@ -7,16 +7,28 @@ return {
     -- Traverse down these nodes and extract the information as necessary
     data = {
         ["function_definition"] = {
-            ["2"] = {
-                match = "parameters",
+            ["0"] = {
+                extract = function (node)
+                    local results = {
 
-                extract = function(node)
-                    local regular_params = neogen.utilities.extractors:extract_children_text("identifier")(node)
+                    }
+                    local regular_params = neogen.utilities.extractors:extract_children_from({ ["2"] = "extract" }, "identifier")(node)
+
+                    local body = neogen.utilities.nodes:matching_child_nodes(node, "block")[1]
+                    if body == nil then
+                        return
+                    end
+
+                    local return_statement = neogen.utilities.nodes:matching_child_nodes(body, "return_statement")
+                    if #return_statement == 0 then
+                        return_statement = nil
+                    end
 
                     return {
                         parameters = regular_params,
+                        return_statement = return_statement
                     }
-                end,
+                end
             },
         },
         ["class_definition"] = {
@@ -69,6 +81,7 @@ return {
             { nil, '"""' },
             { "parameters", "\t%s: ", { before_first_item = "Args: " } },
             { "attributes", "\t%s: ", { before_first_item = "Attributes: " } },
+            { "return_statement", "", { before_first_item = "Returns: " } },
             { nil, '"""' },
         },
     },
