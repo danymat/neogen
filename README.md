@@ -71,13 +71,9 @@ require('neogen').setup {
 	languages = {
 	    lua = {
 	        template = {
-		    { nil, "- " }, -- First annotation line will be {default_comment}- (in lua ---)
-        	    { "parameters", "- @param %s any" }, -- If matching parameters, will ouput --- @param {param} any
-	            { "vararg", "- @vararg any" },
-	            { "return_statement", "- @return any" }
-		}
+                annotation_convention = "emmylua" -- for a full list of annotation_conventions, see supported-languages below
+		    }
 	    }
-	}
     }
 }
 ```
