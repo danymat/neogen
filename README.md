@@ -14,7 +14,6 @@
 * [Configuration](#configuration)
 * [Supported Languages](#supported-languages)
 * [GIFS](#gifs)
-* [Contributing](#contributing)
 
 ## Features
 
@@ -241,10 +240,6 @@ end
 ## GIFS
 
 ![](./.images/recording_1.mov)
-
-## Contributing
-
-Adding support for new languages is quite easy, and a documentation will be available soon!
 
 ## Credits
 
