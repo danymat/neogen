@@ -52,7 +52,8 @@ neogen.default_generator = function(parent, data, template)
 
             -- Checks for custom options
             -- Supported options:
-            --   - before_first_item = value
+            --   - before_first_item = string[]
+            --   - no_params = bool
             local opts = values[3] or {}
 
             -- Will append the item before all their nodes
@@ -62,15 +63,19 @@ neogen.default_generator = function(parent, data, template)
                 end
             end
 
-            if not type then
-                table.insert(result, prefix .. values[2]:format(""))
+            if opts.no_results == true and vim.tbl_isempty(data) then
+               table.insert(result, prefix .. values[2])
             else
-                if data[type] then
-                    if #vim.tbl_values(data[type]) == 1 then
-                        table.insert(result, prefix .. values[2]:format(data[type][1]))
-                    else
-                        for _, value in ipairs(data[type]) do
-                            table.insert(result, prefix .. values[2]:format(value))
+                if not type and opts.no_results ~= true and not vim.tbl_isempty(data) then
+                    table.insert(result, prefix .. values[2]:format(""))
+                else
+                    if data[type] then
+                        if #vim.tbl_values(data[type]) == 1 then
+                            table.insert(result, prefix .. values[2]:format(data[type][1]))
+                        else
+                            for _, value in ipairs(data[type]) do
+                                table.insert(result, prefix .. values[2]:format(value))
+                            end
                         end
                     end
                 end

@@ -31,6 +31,7 @@ return {
         use_default_comment = false,
 
         jsdoc = {
+            { nil, "/* */", { no_results = true } },
             { nil, "/**" },
             { "parameters", " * @param {any} %s " },
             { "return_statement", " * @returns {any} " },

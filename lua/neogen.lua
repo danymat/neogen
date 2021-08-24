@@ -35,7 +35,7 @@ neogen.auto_generate = function(custom_template)
             -- Use the language granulator to get the required content inside the node found with the locator
             local data = language.granulator(located_parent_node, language.data)
 
-            if data and not vim.tbl_isempty(data) then
+            if data then
                 -- Will try to generate the documentation from a template and the data found from the granulator
                 local to_place, start_column, content = language.generator(
                     located_parent_node,
