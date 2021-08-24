@@ -19,7 +19,7 @@ neogen.default_generator = function(parent, data, template)
     if append.position == "after" then
         local child_node = neogen.utilities.nodes:matching_child_nodes(parent, append.child_name)[1]
         if child_node ~= nil then
-            row_to_place, col_to_place, _ , _ = child_node:range()
+            row_to_place, col_to_place, _, _ = child_node:range()
         end
     end
 
@@ -58,7 +58,7 @@ neogen.default_generator = function(parent, data, template)
             -- Will append the item before all their nodes
             if opts.before_first_item and data[type] then
                 for _, value in pairs(opts.before_first_item) do
-                table.insert(result, prefix .. value)
+                    table.insert(result, prefix .. value)
                 end
             end
 

@@ -8,68 +8,48 @@ return {
     data = {
         ["function_definition"] = {
             ["0"] = {
-                extract = function (node)
-                    local results = {
-                        parameters = {},
-                        return_statement = {}
+                extract = function(node)
+                    local results = {}
+
+                    local tree = {
+                        {
+                            retrieve = "all",
+                            node_type = "parameters",
+                            subtree = {
+                                { retrieve = "all", node_type = "identifier", extract = true },
+
+                                {
+                                    retrieve = "all",
+                                    node_type = "default_parameter",
+                                    subtree = { { retrieve = "all", node_type = "identifier", extract = true } },
+                                },
+                                {
+                                    retrieve = "all",
+                                    node_type = "typed_parameter",
+                                    subtree = { { retrieve = "all", node_type = "identifier", extract = true } },
+                                },
+                                {
+                                    retrieve = "all",
+                                    node_type = "typed_default_parameter",
+                                    subtree = { { retrieve = "all", node_type = "identifier", extract = true } },
+                                },
+                            },
+                        },
+                        {
+                            retrieve = "first",
+                            node_type = "block",
+                            subtree = {
+                                { retrieve = "all", node_type = "return_statement", extract = true },
+                            },
+                        },
                     }
+                    local nodes = neogen.utilities.nodes:matching_nodes_from(node, tree)
+                    local res = neogen.utilities.extractors:extract_from_matched(nodes)
 
-                    local params = neogen.utilities.nodes:matching_child_nodes(node, "parameters")[1]
-
-                    if #params == 0 then
-                        results.parameters = nil
-                    end
-
-                    local found_nodes
-
-                    -- Find regular parameters
-                    local regular_params = neogen.utilities.extractors:extract_children_text("identifier")(params)
-                    if #regular_params == 0 then
-                        regular_params = nil
-                    end
-
-                    for _, _params in pairs(regular_params) do
-                        table.insert(results.parameters, _params)
-                    end
-
-                    results.parameters = regular_params
-
-                    -- Find regular optional parameters
-                    found_nodes = neogen.utilities.nodes:matching_child_nodes(params, "default_parameter")
-                    for _,_node in pairs(found_nodes) do
-                        local _params = neogen.utilities.extractors:extract_children_text("identifier")(_node)[1]
-                        table.insert(results.parameters, _params)
-                    end
-
-                    -- Find typed params
-                    found_nodes = neogen.utilities.nodes:matching_child_nodes(params, "typed_parameter")
-                    for _,_node in pairs(found_nodes) do
-                        local _params = neogen.utilities.extractors:extract_children_text("identifier")(_node)[1]
-                        table.insert(results.parameters, _params)
-                    end
-
-                    -- TODO Find optional typed params
-                    found_nodes = neogen.utilities.nodes:matching_child_nodes(params, "typed_default_parameter")
-                    for _,_node in pairs(found_nodes) do
-                        local _params = neogen.utilities.extractors:extract_children_text("identifier")(_node)[1]
-                        table.insert(results.parameters, _params)
-                    end
-
-
-                    local body = neogen.utilities.nodes:matching_child_nodes(node, "block")[1]
-                    if body ~= nil then
-                        local return_statement = neogen.utilities.nodes:matching_child_nodes(body, "return_statement")
-
-                        if #return_statement == 0 then
-                            return_statement = nil
-                        end
-
-                        results.return_statement = return_statement
-                    end
-
-
+                    results.parameters = res.identifier
+                    results.return_statement = res.return_statement
                     return results
-                end
+                end,
             },
         },
         ["class_definition"] = {
@@ -77,34 +57,40 @@ return {
                 match = "block",
 
                 extract = function(node)
-                    local results = {
-                        attributes = {}
+                    local results = {}
+                    local tree = {
+                        {
+                            retrieve = "first",
+                            node_type = "function_definition",
+                            subtree = {
+                                {
+                                    retrieve = "first",
+                                    node_type = "block",
+                                    subtree = {
+                                        {
+                                            retrieve = "all",
+                                            node_type = "expression_statement",
+                                            subtree = {
+                                                { retrieve = "first", node_type = "assignment", extract = true },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
                     }
 
-                    local init_function = neogen.utilities.nodes:matching_child_nodes(node, "function_definition")[1]
+                    local nodes = neogen.utilities.nodes:matching_nodes_from(node, tree)
 
-                    if init_function == nil then
-                        return
-                    end
-
-                    local body = neogen.utilities.nodes:matching_child_nodes(init_function, "block")[1]
-
-                    if body == nil then
-                        return
-                    end
-
-                    local expressions = neogen.utilities.nodes:matching_child_nodes(body, "expression_statement")
-                    for _,expression in pairs(expressions) do
-                        local assignment = neogen.utilities.nodes:matching_child_nodes(expression, "assignment")[1]
-                        if assignment ~= nil then
-                            local left_side = assignment:field("left")[1]
-                            local left_attribute = left_side:field("attribute")[1]
-                            table.insert(results.attributes, ts_utils.get_node_text(left_attribute)[1])
-                        end
+                    results.attributes = {}
+                    for _, assignment in pairs(nodes["assignment"]) do
+                        local left_side = assignment:field("left")[1]
+                        local left_attribute = left_side:field("attribute")[1]
+                        table.insert(results.attributes, ts_utils.get_node_text(left_attribute)[1])
                     end
 
                     return results
-                end
+                end,
             },
         },
     },
@@ -115,7 +101,7 @@ return {
     generator = nil,
 
     template = {
-        annotation_convention = "numpydoc", -- required: Which annotation convention to use (default_generator)
+        annotation_convention = "google_docstrings", -- required: Which annotation convention to use (default_generator)
         append = { position = "after", child_name = "block" }, -- optional: where to append the text (default_generator)
         use_default_comment = false, -- If you want to prefix the template with the default comment for the language, e.g for python: # (default_generator)
         google_docstrings = {
@@ -128,11 +114,11 @@ return {
         },
         numpydoc = {
             { nil, '"""' },
-            { "parameters", "%s: ", { before_first_item = { "", "Parameters", "----------"  } } },
-            { "attributes", "%s: ", { before_first_item = { "", "Attributes", "----------"  } } },
-            { "return_statement", "", { before_first_item = { "", "Returns", "-------"  } } },
+            { "parameters", "%s: ", { before_first_item = { "", "Parameters", "----------" } } },
+            { "attributes", "%s: ", { before_first_item = { "", "Attributes", "----------" } } },
+            { "return_statement", "", { before_first_item = { "", "Returns", "-------" } } },
             { nil, "" },
-            { nil, '"""' }
-        }
+            { nil, '"""' },
+        },
     },
 }

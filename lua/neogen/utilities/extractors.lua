@@ -1,50 +1,18 @@
 local ts_utils = require("nvim-treesitter.ts_utils")
 
 neogen.utilities.extractors = {
-    --- Return a function to extract content of required children from a node
+    --- Extract the content from each node from data
     --- @param _ any self
-    --- @param name string the children we want to extract (if multiple childrens, separate each one with "|")
-    --- @return function cb function taking a node and getting the content of each children we want from name
-    extract_children_text = function(_, name)
-        return function(node)
-            local result = {}
-            local split = vim.split(name, "|", true)
-
-            for child in node:iter_children() do
-                if vim.tbl_contains(split, child:type()) then
-                    table.insert(result, ts_utils.get_node_text(child)[1])
-                end
+    --- @param data table a list of k,v values where k is the node_type and v a table of nodes
+    --- @return any result the same table as data but with node texts instead
+    extract_from_matched = function(_, data)
+        local result = {}
+        for k, v in pairs(data) do
+            local get_text = function(node)
+                return ts_utils.get_node_text(node)[1]
             end
-
-            return result
+            result[k] = vim.tbl_map(get_text, v)
         end
-    end,
-
-    --- Extract content from specified children from a tree
-    --- the tree parameter can be a nested { [key] = value} with key being the
-    --- * key: is which children we want to extract the values from (e.g first children is 1)
-    --- * value: "extract" or { [key] = value }. If value is "extract", it will extract the key child node
-    --- Example (extract the first child node from the first child node of the parent node):
-    --- [1] = {
-    ---  [1] = "extract"
-    --- }
-    --- @param tree table see description
-    --- @param name string the children we want to extract (if multiple children, separate each one with "|")
-    extract_children_from = function(self, tree, name)
-        return function(node)
-            local result = {}
-
-            for i, subtree in pairs(tree) do
-                local child_node = node:named_child(tonumber(i) - 1)
-
-                if subtree == "extract" then
-                    return self:extract_children_text(name)(child_node)
-                else
-                    return self:extract_children_from(subtree, name)(child_node)
-                end
-            end
-
-            return result
-        end
+        return result
     end,
 }

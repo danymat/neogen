@@ -3,7 +3,6 @@ assert(ok, "neogen requires nvim-treesitter to operate :(")
 
 neogen = {}
 
-
 -- Require utilities
 neogen.utilities = {}
 require("neogen.utilities.extractors")

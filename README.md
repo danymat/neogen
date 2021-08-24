@@ -197,26 +197,28 @@ end
 
 ```lua
 data = {
-    -- If function or local_function is found as a parent
     ["function|local_function"] = {
-        -- Get second child from the parent node
+        -- get second child from the parent node
         ["2"] = {
-            -- This second child has to be of type "parameters", otherwise does nothing
+            -- it has to be of type "parameters"
             match = "parameters",
-                                                                                       
-	    -- Extractor function that returns a set of TSname = values with values being of type string[]
+
             extract = function(node)
-                local regular_params = neogen.utilities.extractors:extract_children_text("identifier")(node)
-                local varargs = neogen.utilities.extractors:extract_children_text("spread")(node)
-                                                                                                          
+                local tree = {
+                    { retrieve = "all", node_type = "identifier", extract = true },
+                    { retrieve = "all", node_type = "spread", extract = true }
+                }
+                local nodes = neogen.utilities.nodes:matching_nodes_from(node, tree)
+                local res = neogen.utilities.extractors:extract_from_matched(nodes)
+
                 return {
-                    parameters = regular_params,
-                    vararg = varargs,
+                    parameters = res.identifier,
+                    vararg = res.spread,
                 }
             end,
         },
     },
-},
+}
 ```
 
 Notes:

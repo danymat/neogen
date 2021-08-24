@@ -16,7 +16,7 @@ neogen.default_granulator = function(parent_node, node_data)
                 local child_node
 
                 if tonumber(i) == 0 then
-                   child_node = parent_node
+                    child_node = parent_node
                 else
                     child_node = parent_node:named_child(tonumber(i) - 1)
                 end

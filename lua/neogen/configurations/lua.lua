@@ -1,5 +1,3 @@
-local ts_utils = require("nvim-treesitter.ts_utils")
-
 return {
     -- Search for these nodes
     parent = { "function", "local_function", "local_variable_declaration", "field", "variable_declaration" },
@@ -13,12 +11,16 @@ return {
                 match = "parameters",
 
                 extract = function(node)
-                    local regular_params = neogen.utilities.extractors:extract_children_text("identifier")(node)
-                    local varargs = neogen.utilities.extractors:extract_children_text("spread")(node)
+                    local tree = {
+                        { retrieve = "all", node_type = "identifier", extract = true },
+                        { retrieve = "all", node_type = "spread", extract = true },
+                    }
+                    local nodes = neogen.utilities.nodes:matching_nodes_from(node, tree)
+                    local res = neogen.utilities.extractors:extract_from_matched(nodes)
 
                     return {
-                        parameters = regular_params,
-                        vararg = varargs,
+                        parameters = res.identifier,
+                        vararg = res.spread,
                     }
                 end,
             },
@@ -28,20 +30,25 @@ return {
                 match = "function_definition",
 
                 extract = function(node)
-                    local regular_params = neogen.utilities.extractors:extract_children_from({
-                        [1] = "extract",
-                    }, "identifier")(node)
+                    local tree = {
+                        {
+                            retrieve = "first",
+                            node_type = "parameters",
+                            subtree = {
+                                { retrieve = "all", node_type = "identifier", extract = true },
+                                { retrieve = "all", node_type = "spread", extract = true },
+                            },
+                        },
+                        { retrieve = "first", node_type = "return_statement", extract = true },
+                    }
 
-                    local varargs = neogen.utilities.extractors:extract_children_from({
-                        [1] = "extract",
-                    }, "spread")(node)
-
-                    local return_statement = neogen.utilities.extractors:extract_children_text("return_statement")(node)
+                    local nodes = neogen.utilities.nodes:matching_nodes_from(node, tree)
+                    local res = neogen.utilities.extractors:extract_from_matched(nodes)
 
                     return {
-                        parameters = regular_params,
-                        vararg = varargs,
-                        return_statement = return_statement,
+                        parameters = res.identifier,
+                        vararg = res.spread,
+                        return_statement = res.return_statement,
                     }
                 end,
             },
