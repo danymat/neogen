@@ -106,6 +106,7 @@ return {
         use_default_comment = false, -- If you want to prefix the template with the default comment for the language, e.g for python: # (default_generator)
         google_docstrings = {
             { nil, '"""' },
+            { nil, '""" """', { no_results = true } },
             { "parameters", "\t%s: ", { before_first_item = { "", "Args:" } } },
             { "attributes", "\t%s: ", { before_first_item = { "", "Attributes: " } } },
             { "return_statement", "", { before_first_item = { "", "Returns: " } } },
@@ -114,6 +115,7 @@ return {
         },
         numpydoc = {
             { nil, '"""' },
+            { nil, '""" """', { no_results = true } },
             { "parameters", "%s: ", { before_first_item = { "", "Parameters", "----------" } } },
             { "attributes", "%s: ", { before_first_item = { "", "Attributes", "----------" } } },
             { "return_statement", "", { before_first_item = { "", "Returns", "-------" } } },

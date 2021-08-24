@@ -1,10 +1,18 @@
 local function_tree = {
-    { retrieve = "first", node_type = "formal_parameters", subtree = {
-        { retrieve = "all", node_type = "identifier", extract = true }
-    } },
-    { retrieve = "first", node_type = "statement_block", subtree = {
-        { retrieve = "first", node_type = "return_statement", extract = true }
-    } }
+    {
+        retrieve = "first",
+        node_type = "formal_parameters",
+        subtree = {
+            { retrieve = "all", node_type = "identifier", extract = true },
+        },
+    },
+    {
+        retrieve = "first",
+        node_type = "statement_block",
+        subtree = {
+            { retrieve = "first", node_type = "return_statement", extract = true },
+        },
+    },
 }
 return {
     parent = { "function_declaration", "expression_statement", "variable_declaration" },
@@ -13,7 +21,7 @@ return {
         ["function_declaration"] = {
             ["0"] = {
 
-                extract = function (node)
+                extract = function(node)
                     local results = {}
                     local tree = function_tree
                     local nodes = neogen.utilities.nodes:matching_nodes_from(node, tree)
@@ -22,12 +30,12 @@ return {
                     results.parameters = res.identifier
                     results.return_statement = res.return_statement
                     return results
-                end
-            }
+                end,
+            },
         },
         ["expression_statement|variable_declaration"] = {
             ["1"] = {
-                extract = function (node)
+                extract = function(node)
                     local results = {}
                     local tree = { { retrieve = "all", node_type = "function", subtree = function_tree } }
                     local nodes = neogen.utilities.nodes:matching_nodes_from(node, tree)
@@ -36,8 +44,8 @@ return {
                     results.parameters = res.identifier
                     results.return_statement = res.return_statement
                     return results
-                end
-            }
+                end,
+            },
         },
     },
 
@@ -50,7 +58,7 @@ return {
             { nil, "/**" },
             { "parameters", " * @param {any} %s " },
             { "return_statement", " * @returns {any} " },
-            { nil, " */" }
-        }
-    }
+            { nil, " */" },
+        },
+    },
 }

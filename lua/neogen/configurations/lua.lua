@@ -67,6 +67,7 @@ return {
         annotation_convention = "emmylua",
         emmylua = {
             { nil, "- " },
+            { nil, "- ", { no_results = true } },
             { "parameters", "- @param %s any" },
             { "vararg", "- @vararg any" },
             { "return_statement", "- @return any" },

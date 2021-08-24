@@ -64,7 +64,7 @@ neogen.default_generator = function(parent, data, template)
             end
 
             if opts.no_results == true and vim.tbl_isempty(data) then
-               table.insert(result, prefix .. values[2])
+                table.insert(result, prefix .. values[2])
             else
                 if not type and opts.no_results ~= true and not vim.tbl_isempty(data) then
                     table.insert(result, prefix .. values[2]:format(""))
