@@ -5,8 +5,8 @@ local ts_utils = require("nvim-treesitter.ts_utils")
 --- @param parent userdata the node used to generate the annotations
 --- @param data table the data from the granulator, which is a set of [type] = results
 --- @param template table a template from the configuration
---- There are some special fields it can take:
---- @return table { line, content }, with line being the line to append the content
+--- @return table { line, content, opts }, with line being the line to append the content
+
 neogen.default_generator = function(parent, data, template)
     local start_row, start_column, end_row, end_column = ts_utils.get_node_range(parent)
     local commentstring, generated_template = vim.trim(vim.api.nvim_buf_get_option(0, "commentstring"):format(""))
@@ -49,32 +49,43 @@ neogen.default_generator = function(parent, data, template)
 
         for _, values in ipairs(generated_template) do
             local type = values[1]
-
-            -- Checks for custom options
-            -- Supported options:
-            --   - before_first_item = string[]
-            --   - no_params = bool
+            local formatted_string = values[2]
             local opts = values[3] or {}
-
+            
             -- Will append the item before all their nodes
             if opts.before_first_item and data[type] then
-                for _, value in pairs(opts.before_first_item) do
-                    table.insert(result, prefix .. value)
+                for i, value in ipairs(opts.before_first_item) do
+                    if value == "" then
+                        table.insert(result, value)
+                    else
+                        table.insert(result, prefix .. value)
+                    end
                 end
             end
 
+            -- If there is no data returned, will append the string with opts.no_results
             if opts.no_results == true and vim.tbl_isempty(data) then
-                table.insert(result, prefix .. values[2])
-            else
-                if not type and opts.no_results ~= true and not vim.tbl_isempty(data) then
-                    table.insert(result, prefix .. values[2]:format(""))
+                if formatted_string == "" then
+                    table.insert(result, formatted_string)
                 else
+                    table.insert(result, prefix .. formatted_string)
+                end
+            else
+                -- append the output as is
+                if type == nil and opts.no_results ~= true and not vim.tbl_isempty(data) then
+                    if formatted_string == "" then
+                        table.insert(result, formatted_string)
+                    else
+                        table.insert(result, prefix .. formatted_string:format(""))
+                    end
+                else
+                    -- Format the output with the corresponding data
                     if data[type] then
-                        if #vim.tbl_values(data[type]) == 1 then
-                            table.insert(result, prefix .. values[2]:format(data[type][1]))
-                        else
-                            for _, value in ipairs(data[type]) do
-                                table.insert(result, prefix .. values[2]:format(value))
+                        for _, value in ipairs(data[type]) do
+                            if formatted_string == "" then
+                                table.insert(result, formatted_string)
+                            else
+                                table.insert(result, prefix .. formatted_string:format(value))
                             end
                         end
                     end
