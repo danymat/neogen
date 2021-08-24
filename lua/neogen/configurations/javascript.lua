@@ -7,7 +7,7 @@ local function_tree = {
     } }
 }
 return {
-    parent = { "function_declaration", "expression_statement" },
+    parent = { "function_declaration", "expression_statement", "variable_declaration" },
 
     data = {
         ["function_declaration"] = {
@@ -25,15 +25,11 @@ return {
                 end
             }
         },
-        ["expression_statement"] = {
-            ["0"] = {
+        ["expression_statement|variable_declaration"] = {
+            ["1"] = {
                 extract = function (node)
                     local results = {}
-                    local tree = {
-                        { retrieve = "all", node_type = "assignment_expression", subtree = {
-                            { retrieve = "all", node_type = "function", subtree = function_tree }
-                        } }
-                    }
+                    local tree = { { retrieve = "all", node_type = "function", subtree = function_tree } }
                     local nodes = neogen.utilities.nodes:matching_nodes_from(node, tree)
                     local res = neogen.utilities.extractors:extract_from_matched(nodes)
 
@@ -42,7 +38,7 @@ return {
                     return results
                 end
             }
-        }
+        },
     },
 
     template = {
