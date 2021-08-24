@@ -67,10 +67,13 @@ neogen.setup = function(opts)
         languages = {
             lua = require("neogen.configurations.lua"),
             python = require("neogen.configurations.python"),
+            javascript = require("neogen.configurations.javascript")
         },
     })
 
-    neogen.generate_command()
+    if neogen.configuration.enabled == true then
+        neogen.generate_command()
+    end
 end
 
 return neogen

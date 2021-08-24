@@ -67,7 +67,7 @@ If you're not satisfied with the default configuration for a language, you can c
 
 ```lua
 require('neogen').setup {
-        enabled = true,
+    enabled = true,
 	languages = {
 	    lua = {
 	        template = {
@@ -91,6 +91,9 @@ There is a list of supported languages and fields, with their annotation style
 | python | | |
 | | Google docstrings (`"google_docstrings"`) | `Args`, `Attributes`, `Returns` |
 | | Numpydoc (`"numpydoc"`)| `Arguments`, `Attributes`, `Returns`|
+| javascript | | |
+| | JSDoc (`"jsdoc"`) | `@param`, `@returns` |
+
 
 ## Adding Languages
 
