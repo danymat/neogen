@@ -44,14 +44,34 @@ use {
 
 ## Usage
 
-I exposed a command `:Neogen` to generate the annotations.
+I exposed a function to generate the annotations.
+
+```lua
+require('neogen').generate()
+```
+
 You can bind it to your keybind of choice, like so:
 
 ```lua
-vim.api.nvim_set_keymap("n", "<Leader>ng", ":Neogen<CR>", {})
+vim.api.nvim_set_keymap("n", "<Leader>ng", ":lua require('neogen').generate()<CR>", {})
 ```
 
-It'll generate the annotations provided by neogen.
+Calling the `generate` function without any parameters will try to generate annotations for the current function.
+
+You can provide some options for the generate, like so:
+
+```lua
+require('neogen').generate({
+    type = "func" -- the annotation type to generate. Currently supported: func, class
+})
+```
+
+For example, I can add an other keybind to generate class annotations:
+
+```lua
+vim.api.nvim_set_keymap("n", "<Leader>nc", ":lua require('neogen').generate({ type = 'class' })<CR>", {})
+```
+
 
 ## Configuration
 

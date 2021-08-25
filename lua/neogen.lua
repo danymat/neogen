@@ -13,7 +13,10 @@ require("neogen.locators.default")
 require("neogen.granulators.default")
 require("neogen.generators.default")
 
-neogen.auto_generate = function(custom_template)
+neogen.generate = function(opts)
+    opts = opts or {
+        type = "func",
+    }
     vim.treesitter.get_parser(0):for_each_tree(function(tree, language_tree)
         local language = neogen.configuration.languages[language_tree:lang()]
 
@@ -22,26 +25,26 @@ neogen.auto_generate = function(custom_template)
             language.granulator = language.granulator or neogen.default_granulator
             language.generator = language.generator or neogen.default_generator
 
+            if not language.parent[opts.type] or not language.data[opts.type] then
+                return
+            end
+
             -- Use the language locator to locate one of the required parent nodes above the cursor
             local located_parent_node = language.locator({
                 root = tree:root(),
                 current = ts_utils.get_node_at_cursor(0),
-            }, language.parent)
+            }, language.parent[opts.type])
 
             if not located_parent_node then
                 return
             end
 
             -- Use the language granulator to get the required content inside the node found with the locator
-            local data = language.granulator(located_parent_node, language.data)
+            local data = language.granulator(located_parent_node, language.data[opts.type])
 
             if data then
                 -- Will try to generate the documentation from a template and the data found from the granulator
-                local to_place, start_column, content = language.generator(
-                    located_parent_node,
-                    data,
-                    custom_template or language.template
-                )
+                local to_place, start_column, content = language.generator(located_parent_node, data, language.template)
 
                 -- Append the annotation in required place
                 vim.fn.append(to_place, content)
@@ -57,7 +60,7 @@ neogen.auto_generate = function(custom_template)
 end
 
 function neogen.generate_command()
-    vim.api.nvim_command('command! -range -bar Neogen lua require("neogen").auto_generate()')
+    vim.api.nvim_command('command! -range -bar Neogen lua require("neogen").generate()')
 end
 
 neogen.setup = function(opts)

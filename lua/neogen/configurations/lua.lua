@@ -23,22 +23,49 @@ end
 
 return {
     -- Search for these nodes
-    parent = { "function", "local_function", "local_variable_declaration", "field", "variable_declaration" },
+    parent = {
+        func = { "function", "local_function", "local_variable_declaration", "field", "variable_declaration" },
+        class = { "local_variable_declaration" },
+    },
 
     data = {
-        -- When the function is inside one of those
-        ["local_variable_declaration|field|variable_declaration"] = {
-            ["2"] = {
-                match = "function_definition",
+        func = {
+            -- When the function is inside one of those
+            ["local_variable_declaration|field|variable_declaration"] = {
+                ["2"] = {
+                    match = "function_definition",
 
-                extract = common_function_extractor,
+                    extract = common_function_extractor,
+                },
+            },
+            -- When the function is in the root tree
+            ["function_definition|function|local_function"] = {
+                ["0"] = {
+
+                    extract = common_function_extractor,
+                },
             },
         },
-        -- When the function is in the root tree
-        ["function_definition|function|local_function"] = {
-            ["0"] = {
-
-                extract = common_function_extractor,
+        class = {
+            ["local_variable_declaration"] = {
+                ["0"] = {
+                    extract = function(node)
+                        local tree = {
+                            {
+                                retrieve = "first",
+                                node_type = "variable_declarator",
+                                subtree = {
+                                    { retrieve = "first", node_type = "identifier", extract = true },
+                                },
+                            },
+                        }
+                        local nodes = neogen.utilities.nodes:matching_nodes_from(node, tree)
+                        local res = neogen.utilities.extractors:extract_from_matched(nodes)
+                        return {
+                            class_name = res.identifier,
+                        }
+                    end,
+                },
             },
         },
     },
@@ -59,6 +86,7 @@ return {
             { "parameters", "- @param %s any" },
             { "vararg", "- @vararg any" },
             { "return_statement", "- @return any" },
+            { "class_name", "- @class any" },
         },
     },
 }
