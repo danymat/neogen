@@ -62,7 +62,7 @@ You can provide some options for the generate, like so:
 
 ```lua
 require('neogen').generate({
-    type = "func" -- the annotation type to generate. Currently supported: func, class
+    type = "func" -- the annotation type to generate. Currently supported: func, class, type
 })
 ```
 
@@ -107,7 +107,7 @@ There is a list of supported languages and fields, with their annotation style
 | Language | Annotation conventions | Supported fields |
 |---|---|---|
 | lua | | |
-| | Emmylua (`"emmylua"`) | `@param`, `@varargs`, `@return`, `@class` |
+| | Emmylua (`"emmylua"`) | `@param`, `@varargs`, `@return`, `@class`, `@type` |
 | python | | |
 | | Google docstrings (`"google_docstrings"`) | `Args`, `Attributes`, `Returns` |
 | | Numpydoc (`"numpydoc"`)| `Arguments`, `Attributes`, `Returns`|

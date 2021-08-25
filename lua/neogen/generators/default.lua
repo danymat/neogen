@@ -47,8 +47,9 @@ end
 --- @param parent userdata the node used to generate the annotations
 --- @param data table the data from the granulator, which is a set of [type] = results
 --- @param template table a template from the configuration
+--- @param type string
 --- @return table { line, content, opts }, with line being the line to append the content
-neogen.default_generator = function(parent, data, template)
+neogen.default_generator = function(parent, data, template, required_type)
     local start_row, start_column, end_row, end_column = ts_utils.get_node_range(parent)
     local commentstring, generated_template = vim.trim(vim.api.nvim_buf_get_option(0, "commentstring"):format(""))
 
@@ -85,28 +86,32 @@ neogen.default_generator = function(parent, data, template)
         for _, values in ipairs(generated_template) do
             local type = values[1]
             local formatted_string = values[2]
-            local opts = values[3] or {}
+            local opts = values[3] or {
+                type = { required_type }
+            }
 
             -- Will append the item before all their nodes
             if opts.before_first_item and data[type] then
                 result = add_values_to_result(result, opts.before_first_item, prefix)
             end
 
-            -- If there is no data returned, will append the string with opts.no_results
-            if opts.no_results == true and vim.tbl_isempty(data) then
-                local inserted = conditional_prefix_inserter(prefix, formatted_string)
-                table.insert(result, inserted)
-            else
-                -- append the output as is
-                if type == nil and opts.no_results ~= true and not vim.tbl_isempty(data) then
-                    local inserted = conditional_prefix_inserter(prefix, formatted_string:format(""))
+            if opts.type and vim.tbl_contains(opts.type, required_type) then
+                -- If there is no data returned, will append the string with opts.no_results
+                if opts.no_results == true and vim.tbl_isempty(data) then
+                    local inserted = conditional_prefix_inserter(prefix, formatted_string)
                     table.insert(result, inserted)
                 else
-                    -- Format the output with the corresponding data
-                    if data[type] then
-                        for _, value in ipairs(data[type]) do
-                            local inserted = conditional_prefix_inserter(prefix, formatted_string:format(value))
-                            table.insert(result, inserted)
+                    -- append the output as is
+                    if type == nil and opts.no_results ~= true and not vim.tbl_isempty(data) then
+                        local inserted = conditional_prefix_inserter(prefix, formatted_string:format(""))
+                        table.insert(result, inserted)
+                    else
+                        -- Format the output with the corresponding data
+                        if data[type] then
+                            for _, value in ipairs(data[type]) do
+                                local inserted = conditional_prefix_inserter(prefix, formatted_string:format(value))
+                                table.insert(result, inserted)
+                            end
                         end
                     end
                 end

@@ -21,11 +21,27 @@ local common_function_extractor = function(node)
     }
 end
 
+local get_identifier_from_var = function (node)
+    local tree = {
+        {
+            retrieve = "first",
+            node_type = "variable_declarator",
+            subtree = {
+                { retrieve = "first", node_type = "identifier", extract = true },
+            },
+        },
+    }
+    local nodes = neogen.utilities.nodes:matching_nodes_from(node, tree)
+    local res = neogen.utilities.extractors:extract_from_matched(nodes)
+    return res
+end
+
 return {
     -- Search for these nodes
     parent = {
         func = { "function", "local_function", "local_variable_declaration", "field", "variable_declaration" },
-        class = { "local_variable_declaration" },
+        class = { "local_variable_declaration", "variable_declaration" },
+        type = { "local_variable_declaration", "variable_declaration" },
     },
 
     data = {
@@ -47,22 +63,24 @@ return {
             },
         },
         class = {
-            ["local_variable_declaration"] = {
+            ["local_variable_declaration|variable_declaration"] = {
                 ["0"] = {
                     extract = function(node)
-                        local tree = {
-                            {
-                                retrieve = "first",
-                                node_type = "variable_declarator",
-                                subtree = {
-                                    { retrieve = "first", node_type = "identifier", extract = true },
-                                },
-                            },
-                        }
-                        local nodes = neogen.utilities.nodes:matching_nodes_from(node, tree)
-                        local res = neogen.utilities.extractors:extract_from_matched(nodes)
+                        local res = get_identifier_from_var(node)
                         return {
                             class_name = res.identifier,
+                        }
+                    end,
+                },
+            },
+        },
+        type = {
+            ["local_variable_declaration|variable_declaration"] = {
+                ["0"] = {
+                    extract = function(node)
+                        local res = get_identifier_from_var(node)
+                        return {
+                            type = res.identifier,
                         }
                     end,
                 },
@@ -81,12 +99,13 @@ return {
         -- Which annotation convention to use
         annotation_convention = "emmylua",
         emmylua = {
-            { nil, "- " },
-            { nil, "- ", { no_results = true } },
+            { nil, "- ", { type = { "class", "func" } } }, -- add this string only on requested types
+            { nil, "- ", { no_results = true } }, -- Shows only when there's no results from the granulator
             { "parameters", "- @param %s any" },
             { "vararg", "- @vararg any" },
             { "return_statement", "- @return any" },
             { "class_name", "- @class any" },
+            { "type", "- @type any" },
         },
     },
 }

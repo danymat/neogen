@@ -44,7 +44,7 @@ neogen.generate = function(opts)
 
             if data then
                 -- Will try to generate the documentation from a template and the data found from the granulator
-                local to_place, start_column, content = language.generator(located_parent_node, data, language.template)
+                local to_place, start_column, content = language.generator(located_parent_node, data, language.template, opts.type)
 
                 -- Append the annotation in required place
                 vim.fn.append(to_place, content)
