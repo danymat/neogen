@@ -86,9 +86,10 @@ neogen.default_generator = function(parent, data, template, required_type)
         for _, values in ipairs(generated_template) do
             local type = values[1]
             local formatted_string = values[2]
-            local opts = values[3] or {
-                type = { required_type }
-            }
+            local opts = values[3] or {}
+            if not opts.type then
+                opts.type = { required_type }
+            end
 
             -- Will append the item before all their nodes
             if opts.before_first_item and data[type] then
