@@ -112,7 +112,7 @@ There is a list of supported languages and fields, with their annotation style
 | | Google docstrings (`"google_docstrings"`) | `Args`, `Attributes`, `Returns` |
 | | Numpydoc (`"numpydoc"`)| `Arguments`, `Attributes`, `Returns`|
 | javascript | | |
-| | JSDoc (`"jsdoc"`) | `@param`, `@returns` |
+| | JSDoc (`"jsdoc"`) | `@param`, `@returns`, `@class`, `@classdesc` |
 
 
 ## Adding Languages

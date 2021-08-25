@@ -14,8 +14,12 @@ local function_tree = {
         },
     },
 }
+
 return {
-    parent = { func = { "function_declaration", "expression_statement", "variable_declaration" }, },
+    parent = { 
+        func = { "function_declaration", "expression_statement", "variable_declaration" }, 
+        class = { "function_declaration", "expression_statement", "variable_declaration", "class_declaration" }, 
+    },
 
     data = {
         func = {
@@ -48,6 +52,18 @@ return {
                     end,
                 },
             },
+        },
+        class = {
+            ["function_declaration|class_declaration|expression_statement|variable_declaration"] = {
+                ["0"] = {
+
+                    extract = function(_)
+                        local results = {}
+                        results.class_tag = { "" }
+                        return results
+                    end,
+                },
+            },
         }
     },
 
@@ -58,6 +74,7 @@ return {
         jsdoc = {
             { nil, "/* */", { no_results = true } },
             { nil, "/**" },
+            { "class_tag", " * @classdesc" , { before_first_item = { " * ", " * @class" } }},
             { "parameters", " * @param {any} %s " },
             { "return_statement", " * @returns {any} " },
             { nil, " */" },
