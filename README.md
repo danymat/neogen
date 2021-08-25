@@ -107,7 +107,7 @@ There is a list of supported languages and fields, with their annotation style
 | Language | Annotation conventions | Supported fields |
 |---|---|---|
 | lua | | |
-| | Emmylua (`"emmylua"`) | `@param`, `@varargs`, `@return` |
+| | Emmylua (`"emmylua"`) | `@param`, `@varargs`, `@return`, `@class` |
 | python | | |
 | | Google docstrings (`"google_docstrings"`) | `Args`, `Attributes`, `Returns` |
 | | Numpydoc (`"numpydoc"`)| `Arguments`, `Attributes`, `Returns`|
