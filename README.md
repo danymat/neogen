@@ -53,7 +53,7 @@ require('neogen').generate()
 You can bind it to your keybind of choice, like so:
 
 ```lua
-vim.api.nvim_set_keymap("n", "<Leader>ng", ":lua require('neogen').generate()<CR>", {})
+vim.api.nvim_set_keymap("n", "<Leader>nf", ":lua require('neogen').generate()<CR>", {})
 ```
 
 Calling the `generate` function without any parameters will try to generate annotations for the current function.
@@ -107,12 +107,12 @@ There is a list of supported languages and fields, with their annotation style
 | Language | Annotation conventions | Supported fields |
 |---|---|---|
 | lua | | |
-| | Emmylua (`"emmylua"`) | `@param`, `@varargs`, `@return`, `@class`, `@type` |
+| | [Emmylua](https://emmylua.github.io/) (`"emmylua"`) | `@param`, `@varargs`, `@return`, `@class`, `@type` |
 | python | | |
-| | Google docstrings (`"google_docstrings"`) | `Args`, `Attributes`, `Returns` |
-| | Numpydoc (`"numpydoc"`)| `Arguments`, `Attributes`, `Returns`|
+| | [Google docstrings](https://google.github.io/styleguide/pyguide.html) (`"google_docstrings"`) | `Args`, `Attributes`, `Returns` |
+| | [Numpydoc](https://numpydoc.readthedocs.io/en/latest/format.html) (`"numpydoc"`)| `Arguments`, `Attributes`, `Returns`|
 | javascript | | |
-| | JSDoc (`"jsdoc"`) | `@param`, `@returns`, `@class`, `@classdesc` |
+| | [JSDoc](https://jsdoc.app) (`"jsdoc"`) | `@param`, `@returns`, `@class`, `@classdesc` |
 
 
 ## Adding Languages
