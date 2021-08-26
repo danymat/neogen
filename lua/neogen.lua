@@ -44,15 +44,22 @@ neogen.generate = function(opts)
 
             if data then
                 -- Will try to generate the documentation from a template and the data found from the granulator
-                local to_place, start_column, content = language.generator(located_parent_node, data, language.template, opts.type)
+                local to_place, start_column, content = language.generator(
+                    located_parent_node,
+                    data,
+                    language.template,
+                    opts.type
+                )
 
-                -- Append the annotation in required place
-                vim.fn.append(to_place, content)
+                if #content ~= 0 then
+                    -- Append the annotation in required place
+                    vim.fn.append(to_place, content)
 
-                -- Place cursor after annotations ans start editing
-                if neogen.configuration.input_after_comment == true then
-                    vim.fn.cursor(to_place + 1, start_column)
-                    vim.api.nvim_command("startinsert!")
+                    -- Place cursor after annotations and start editing
+                    if neogen.configuration.input_after_comment == true and #data ~= 0 then
+                        vim.fn.cursor(to_place + 1, start_column)
+                        vim.api.nvim_command("startinsert!")
+                    end
                 end
             end
         end
