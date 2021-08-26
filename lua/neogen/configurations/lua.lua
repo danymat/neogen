@@ -21,13 +21,14 @@ local common_function_extractor = function(node)
     }
 end
 
-local get_identifier_from_var = function (node)
+local extract_from_var = function (node)
     local tree = {
         {
             retrieve = "first",
             node_type = "variable_declarator",
             subtree = {
                 { retrieve = "first", node_type = "identifier", extract = true },
+                { retrieve = "first", node_type = "field_expression", extract = true },
             },
         },
     }
@@ -66,7 +67,7 @@ return {
             ["local_variable_declaration|variable_declaration"] = {
                 ["0"] = {
                     extract = function(node)
-                        local res = get_identifier_from_var(node)
+                        local res = extract_from_var(node)
                         return {
                             class_name = res.identifier,
                         }
@@ -78,10 +79,16 @@ return {
             ["local_variable_declaration|variable_declaration"] = {
                 ["0"] = {
                     extract = function(node)
-                        local res = get_identifier_from_var(node)
-                        return {
-                            type = res.identifier,
-                        }
+                        result = {}
+                        local res = extract_from_var(node)
+                        result.type = {}
+                        if res.identifier then 
+                            vim.list_extend(result.type, res.identifier)
+                        end
+                        if res.field_expression then
+                            vim.list_extend(result.type, res.field_expression)
+                        end
+                        return result
                     end,
                 },
             },
