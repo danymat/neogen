@@ -16,9 +16,9 @@ local function_tree = {
 }
 
 return {
-    parent = { 
-        func = { "function_declaration", "expression_statement", "variable_declaration" }, 
-        class = { "function_declaration", "expression_statement", "variable_declaration", "class_declaration" }, 
+    parent = {
+        func = { "function_declaration", "expression_statement", "variable_declaration" },
+        class = { "function_declaration", "expression_statement", "variable_declaration", "class_declaration" },
     },
 
     data = {
@@ -64,7 +64,7 @@ return {
                     end,
                 },
             },
-        }
+        },
     },
 
     template = {
@@ -74,7 +74,7 @@ return {
         jsdoc = {
             { nil, "/* */", { no_results = true } },
             { nil, "/**" },
-            { "class_tag", " * @classdesc" , { before_first_item = { " * ", " * @class" } }},
+            { "class_tag", " * @classdesc", { before_first_item = { " * ", " * @class" } } },
             { "parameters", " * @param {any} %s " },
             { "return_statement", " * @returns {any} " },
             { nil, " */" },

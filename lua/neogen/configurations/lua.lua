@@ -21,7 +21,7 @@ local common_function_extractor = function(node)
     }
 end
 
-local extract_from_var = function (node)
+local extract_from_var = function(node)
     local tree = {
         {
             retrieve = "first",
@@ -31,10 +31,13 @@ local extract_from_var = function (node)
                 { retrieve = "first", node_type = "field_expression", extract = true },
             },
         },
+        {
+            position = 2,
+            extract = true,
+        },
     }
     local nodes = neogen.utilities.nodes:matching_nodes_from(node, tree)
-    local res = neogen.utilities.extractors:extract_from_matched(nodes)
-    return res
+    return nodes
 end
 
 return {
@@ -67,7 +70,8 @@ return {
             ["local_variable_declaration|variable_declaration"] = {
                 ["0"] = {
                     extract = function(node)
-                        local res = extract_from_var(node)
+                        local nodes = extract_from_var(node)
+                        local res = neogen.utilities.extractors:extract_from_matched(nodes)
                         return {
                             class_name = res.identifier,
                         }
@@ -79,14 +83,20 @@ return {
             ["local_variable_declaration|variable_declaration"] = {
                 ["0"] = {
                     extract = function(node)
-                        result = {}
-                        local res = extract_from_var(node)
+                        local result = {}
                         result.type = {}
-                        if res.identifier then 
-                            vim.list_extend(result.type, res.identifier)
-                        end
-                        if res.field_expression then
-                            vim.list_extend(result.type, res.field_expression)
+
+                        local nodes = extract_from_var(node)
+                        local res = neogen.utilities.extractors:extract_from_matched(nodes, { type = true })
+
+                        -- We asked the extract_from_var function to find the type node at right assignment.
+                        -- We check if it found it, or else will put `any` in the type
+                        if res["_"] then
+                            vim.list_extend(result.type, res["_"])
+                        else
+                            if res.identifier or res.field_expression then
+                                vim.list_extend(result.type, { "any" })
+                            end
                         end
                         return result
                     end,
@@ -112,7 +122,7 @@ return {
             { "vararg", "- @vararg any" },
             { "return_statement", "- @return any" },
             { "class_name", "- @class any" },
-            { "type", "- @type any" },
+            { "type", "- @type %s" },
         },
     },
 }
