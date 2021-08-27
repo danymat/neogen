@@ -101,6 +101,10 @@ function neogen.jump_next()
     neogen.utilities.cursor.jump()
 end
 
+function neogen.jumpable()
+    return neogen.utilities.cursor.jumpable()
+end
+
 function neogen.generate_command()
     vim.api.nvim_command('command! -range -bar Neogen lua require("neogen").generate()')
 end
