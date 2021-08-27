@@ -64,12 +64,16 @@ neogen.generate = function(opts)
 
                         if matched then
                             local split = vim.split(matched, "|", true)
-                            if #split == 2 then
+                            if #split == 2 and neogen.configuration.input_after_comment == false then
                                 return string.gsub(v, jump_text .. "|", "") .. " "
+                            elseif #split == 1 then
+                               string.gsub(v, jump_text, "")
                             end
                         else
                             return string.gsub(v, jump_text, "")
                         end
+                        
+                        return string.gsub(v, pattern, "")
                     end
 
                     local content_with_marks = vim.deepcopy(content)
