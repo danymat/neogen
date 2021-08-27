@@ -113,11 +113,11 @@ There is a list of supported languages and fields, with their annotation style
 | | [Numpydoc](https://numpydoc.readthedocs.io/en/latest/format.html) (`"numpydoc"`)| `Arguments`, `Attributes`, `Returns`|
 | javascript | | |
 | | [JSDoc](https://jsdoc.app) (`"jsdoc"`) | `@param`, `@returns`, `@class`, `@classdesc` |
+| c | | |
+| | [Doxygen](https://www.doxygen.nl/manual/commands.html) (`"doxygen"`) | `@param`, `@returns` | 
 
 
 ## Adding Languages
-
-
 
 ### Configuration file
 
