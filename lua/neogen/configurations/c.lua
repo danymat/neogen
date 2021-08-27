@@ -52,7 +52,7 @@ local c_function_extractor = function(node)
                                 {
                                     retrieve = "all",
                                     node_type = "identifier",
-                                    extract = true
+                                    extract = true,
                                 },
 
                                 {
@@ -62,7 +62,7 @@ local c_function_extractor = function(node)
                                         {
                                             retrieve = "all",
                                             node_type = "identifier",
-                                            extract = true
+                                            extract = true,
                                         },
 
                                         {
@@ -72,7 +72,7 @@ local c_function_extractor = function(node)
                                                 {
                                                     retrieve = "all",
                                                     node_type = "identifier",
-                                                    extract = true
+                                                    extract = true,
                                                 },
                                             },
                                         },
@@ -84,7 +84,13 @@ local c_function_extractor = function(node)
                 },
             },
         },
-        { retrieve = "first", node_type = "return_statement", extract = true },
+        {
+            retrieve = "first",
+            node_type = "compound_statement",
+            subtree = {
+                { retrieve = "first", node_type = "return_statement", extract = true },
+            },
+        },
     }
 
     local nodes = neogen.utilities.nodes:matching_nodes_from(node, tree)
