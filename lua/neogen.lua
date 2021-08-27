@@ -65,14 +65,12 @@ neogen.generate = function(opts)
                         if matched then
                             local split = vim.split(matched, "|", true)
                             if #split == 2 and neogen.configuration.input_after_comment == false then
-                                return string.gsub(v, jump_text .. "|", "") .. " "
-                            elseif #split == 1 then
-                               string.gsub(v, jump_text, "")
+                                return string.gsub(v, jump_text .. "|", "")
                             end
                         else
                             return string.gsub(v, jump_text, "")
                         end
-                        
+
                         return string.gsub(v, pattern, "")
                     end
 
@@ -93,7 +91,9 @@ neogen.generate = function(opts)
                                 neogen.utilities.cursor.create(to_place + i, input_start)
                             end
                         end
-                        neogen.utilities.cursor.jump()
+                        if neogen.utilities.cursor.jumpable() then
+                            neogen.utilities.cursor.jump({ first_time = true })
+                        end
                     end
                 end
             end
@@ -129,7 +129,7 @@ neogen.setup = function(opts)
 
     if neogen.configuration.enabled == true then
         neogen.generate_command()
-        vim.api.nvim_set_keymap("i", neogen.configuration.jump_map, "<cmd>lua require('neogen').jump_next()<CR>", { })
+        vim.api.nvim_set_keymap("i", neogen.configuration.jump_map, "<cmd>lua require('neogen').jump_next()<CR>", {})
     end
 end
 

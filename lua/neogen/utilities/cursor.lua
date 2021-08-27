@@ -12,10 +12,13 @@ end
 
 --- Find next created extmark and goes to it.
 --- It removes the extmark afterwards.
-neogen.utilities.cursor.go_next_extmark = function()
+neogen.utilities.cursor.go_next_extmark = function(first_time)
     local extm_list = vim.api.nvim_buf_get_extmarks(0, neogen_ns, 0, -1, {})
+    P(extm_list)
     if #extm_list ~= 0 then
-        vim.api.nvim_win_set_cursor(0, { extm_list[1][2] + 1, extm_list[1][3] })
+        local pos = { extm_list[1][2] + 1, extm_list[1][3] }
+
+        vim.api.nvim_win_set_cursor(0, pos)
         if #extm_list ~= 0 then
             vim.api.nvim_buf_del_extmark(0, neogen_ns, extm_list[1][1])
         end
@@ -25,9 +28,19 @@ neogen.utilities.cursor.go_next_extmark = function()
     end
 end
 
---- Goes to next extmark and start insert mode
-neogen.utilities.cursor.jump = function()
-    if neogen.utilities.cursor.go_next_extmark() then
+--- Goes to next extmark and start insert mode.
+--- If `opts.first_time` is supplied, will try to go to normal mode before going to extmark
+--- @param opts table
+neogen.utilities.cursor.jump = function(opts)
+    opts = opts or {}
+
+    -- This is weird, the first time nvim goes to insert is not the same as when i'm already on insert mode
+    -- that's why i put a first_time flag
+    if opts.first_time then
+        vim.api.nvim_command("startinsert")
+    end
+
+    if neogen.utilities.cursor.go_next_extmark(opts.first_time) then
         vim.api.nvim_command("startinsert")
     end
 end
@@ -41,7 +54,7 @@ neogen.utilities.cursor.del_extmarks = function()
 end
 
 --- Checks if there are still possible jump positions to perform
-neogen.utilities.cursor.jumpable = function ()
+neogen.utilities.cursor.jumpable = function()
     local extm_list = vim.api.nvim_buf_get_extmarks(0, neogen_ns, 0, -1, {})
     if #extm_list ~= 0 then
         return true
