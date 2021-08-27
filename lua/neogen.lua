@@ -97,6 +97,10 @@ neogen.generate = function(opts)
     end)
 end
 
+function neogen.jump_next()
+    neogen.utilities.cursor.jump()
+end
+
 function neogen.generate_command()
     vim.api.nvim_command('command! -range -bar Neogen lua require("neogen").generate()')
 end
