@@ -74,6 +74,56 @@ local opts = { noremap = true, silent = true }
 vim.api.nvim_set_keymap("n", "<Leader>nc", ":lua require('neogen').generate({ type = 'class' })<CR>", opts)
 ```
 
+### Cycle between annotations
+
+I added support passing cursor positionings in templates.
+
+That means you can now cycle your cursor between different parts of the annotation.
+
+The default keybind is `<C-e>` in insert mode. 
+
+If you want to add `<Tab>` completion instead, be sure you don't have a completion plugin. If so, you have to configure them:
+
+<details>
+   <summary>nvim-cmp</summary>
+  
+    ```lua
+    local cmp = require('cmp')
+    local neogen = require('neogen')
+
+    local t = function(str)
+        return vim.api.nvim_replace_termcodes(str, true, true, true)
+    end
+
+    local check_back_space = function()
+        local col = vim.fn.col '.' - 1
+        return col == 0 or vim.fn.getline('.'):sub(col, col):match '%s' ~= nil
+    end
+
+    cmp.setup {
+        ...
+
+        -- You must set mapping if you want.
+        mapping = {
+            ["<tab>"] = cmp.mapping(function(fallback)
+                if vim.fn.pumvisible() == 1 then
+                    vim.fn.feedkeys(t("<C-n>"), "n")
+                elseif neogen.jumpable() then
+                    vim.fn.feedkeys(t("<cmd>lua require('neogen').jump_next()<CR>"), "")
+                elseif check_back_space() then
+                    vim.fn.feedkeys(t("<tab>"), "n")
+                else
+                    fallback()
+                end
+            end, {
+                "i",
+                "s",
+            }),
+        },
+        ...
+    }
+    ```
+  </details>
 
 ## Configuration
 
