@@ -47,7 +47,7 @@ end
 --- @param parent userdata the node used to generate the annotations
 --- @param data table the data from the granulator, which is a set of [type] = results
 --- @param template table a template from the configuration
---- @param type string
+--- @param required_type string
 --- @return table { line, content, opts }, with line being the line to append the content
 neogen.default_generator = function(parent, data, template, required_type)
     local start_row, start_column, end_row, end_column = ts_utils.get_node_range(parent)
@@ -86,18 +86,21 @@ neogen.default_generator = function(parent, data, template, required_type)
         for _, values in ipairs(generated_template) do
             local type = values[1]
             local formatted_string = values[2]
-            local opts = values[3] or {}
+            local opts = vim.deepcopy(values[3]) or {}
             if not opts.type then
                 opts.type = { required_type }
             end
 
-            -- Will append the item before all their nodes
-            if opts.before_first_item and data[type] then
-                result = add_values_to_result(result, opts.before_first_item, prefix)
-            end
-
             if opts.type and vim.tbl_contains(opts.type, required_type) then
+
+                -- Will append the item before all their nodes
+                if opts.before_first_item and data[type] then
+                    result = add_values_to_result(result, opts.before_first_item, prefix)
+                end
+
                 -- If there is no data returned, will append the string with opts.no_results
+                --P(data)
+                --P(opts)
                 if opts.no_results == true and vim.tbl_isempty(data) then
                     local inserted = conditional_prefix_inserter(prefix, formatted_string)
                     table.insert(result, inserted)

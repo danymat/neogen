@@ -74,7 +74,7 @@ return {
         jsdoc = {
             { nil, "/* */", { no_results = true } },
             { nil, "/**" },
-            { "class_tag", " * @classdesc", { before_first_item = { " * ", " * @class" } } },
+            { "class_tag", " * @classdesc", { before_first_item = { " * ", " * @class" }, type = { "class" } } },
             { "parameters", " * @param {any} %s " },
             { "return_statement", " * @returns {any} " },
             { nil, " */" },
