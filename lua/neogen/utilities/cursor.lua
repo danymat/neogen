@@ -37,4 +37,9 @@ neogen.utilities.cursor.jump = function()
     end
 end
 
-neogen.utilities.cursor.replace_jump_text = function(content, template) end
+neogen.utilities.cursor.del_extmarks = function()
+   local extmarks = vim.api.nvim_buf_get_extmarks(0, neogen_ns, 0, -1, {})
+   for _,v in pairs(extmarks) do
+        vim.api.nvim_buf_del_extmark(0, neogen_ns, v[1])
+    end
+end

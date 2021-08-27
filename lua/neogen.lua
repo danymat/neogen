@@ -55,13 +55,24 @@ neogen.generate = function(opts)
                 if #content ~= 0 then
                     local jump_text = language.jump_text or neogen.configuration.jump_text
 
+                    --- Removes jump_text marks and keep the second part of jump_text|other_text if there is one (which is other_text)
                     local delete_marks = function(v)
-                        return string.gsub(v, jump_text, "")
+                        local pattern = jump_text.. "[|%w]+"
+                        local matched = string.match(v, pattern)
+
+                        if matched then
+                            local split = vim.split(matched, "|", true)
+                            if #split == 2 then
+                                return string.gsub(v, jump_text .. "|", "")
+                            end
+                        else
+                            return string.gsub(v, jump_text, "")
+                        end
                     end
 
                     local content_with_marks = vim.deepcopy(content)
+                    
                     -- delete all jump_text marks
-                    neogen.utilities.cursor.replace_jump_text(content, language.template)
                     content = vim.tbl_map(delete_marks, content)
 
                     -- Append the annotation in required place
@@ -107,3 +118,4 @@ neogen.setup = function(opts)
 end
 
 return neogen
+

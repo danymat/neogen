@@ -118,10 +118,10 @@ return {
         emmylua = {
             { nil, "- $1", { type = { "class", "func" } } }, -- add this string only on requested types
             { nil, "- $1", { no_results = true } }, -- Shows only when there's no results from the granulator
-            { "parameters", "- @param %s any $1" },
-            { "vararg", "- @vararg any $1" },
-            { "return_statement", "- @return any $1" },
-            { "class_name", "- @class any $1" },
+            { "parameters", "- @param %s $1|any" },
+            { "vararg", "- @vararg $1|any" },
+            { "return_statement", "- @return $1|any" },
+            { "class_name", "- @class $1|any" },
             { "type", "- @type %s $1" },
         },
     },
