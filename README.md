@@ -79,8 +79,9 @@ vim.api.nvim_set_keymap("n", "<Leader>nc", ":lua require('neogen').generate({ ty
 
 ```lua
 require('neogen').setup {
-        enabled = true,             -- required for Neogen to work
+        enabled = true,             --if you want to disable Neogen
         input_after_comment = true, -- (default: true) automatic jump (with insert mode) on inserted annotation
+        jump_map = "<C-e>"          -- The keymap in order to jump in the annotation fields (in insert mode)
     }
 }
 ```
