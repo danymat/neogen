@@ -53,8 +53,9 @@ neogen.generate = function(opts)
                 )
 
                 if #content ~= 0 then
-                    local jump_text = language.jump_text or neogen.configuration.jump_text
                     neogen.utilities.cursor.del_extmarks() -- Delete previous extmarks before setting any new ones
+
+                    local jump_text = language.jump_text or neogen.configuration.jump_text
 
                     --- Removes jump_text marks and keep the second part of jump_text|other_text if there is one (which is other_text)
                     local delete_marks = function(v)
@@ -64,7 +65,7 @@ neogen.generate = function(opts)
                         if matched then
                             local split = vim.split(matched, "|", true)
                             if #split == 2 then
-                                return string.gsub(v, jump_text .. "|", "")
+                                return string.gsub(v, jump_text .. "|", "") .. " "
                             end
                         else
                             return string.gsub(v, jump_text, "")
