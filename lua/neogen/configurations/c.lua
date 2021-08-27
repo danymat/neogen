@@ -126,7 +126,7 @@ return {
         use_default_comment = false,
 
         doxygen = {
-            { nil, "/* */", { no_results = true } },
+            { nil, "/* $1 */", { no_results = true } },
             { nil, "/**" },
             { nil, " * @brief $1" },
             { nil, " *" },
