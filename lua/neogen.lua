@@ -78,6 +78,7 @@ neogen.setup = function(opts)
             lua = require("neogen.configurations.lua"),
             python = require("neogen.configurations.python"),
             javascript = require("neogen.configurations.javascript"),
+            c = require("neogen.configurations.c"),
         },
     })
 
