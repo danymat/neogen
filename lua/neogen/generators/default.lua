@@ -92,7 +92,6 @@ neogen.default_generator = function(parent, data, template, required_type)
             end
 
             if opts.type and vim.tbl_contains(opts.type, required_type) then
-
                 -- Will append the item before all their nodes
                 if opts.before_first_item and data[type] then
                     result = add_values_to_result(result, opts.before_first_item, prefix)

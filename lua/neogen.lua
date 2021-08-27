@@ -7,6 +7,7 @@ neogen = {}
 neogen.utilities = {}
 require("neogen.utilities.extractors")
 require("neogen.utilities.nodes")
+require("neogen.utilities.cursor")
 
 -- Require defaults
 require("neogen.locators.default")
@@ -52,13 +53,30 @@ neogen.generate = function(opts)
                 )
 
                 if #content ~= 0 then
+                    local jump_text = language.jump_text or neogen.configuration.jump_text
+
+                    local delete_marks = function(v)
+                        return string.gsub(v, jump_text, "")
+                    end
+
+                    local content_with_marks = vim.deepcopy(content)
+                    -- delete all jump_text marks
+                    neogen.utilities.cursor.replace_jump_text(content, language.template)
+                    content = vim.tbl_map(delete_marks, content)
+
                     -- Append the annotation in required place
                     vim.fn.append(to_place, content)
 
                     -- Place cursor after annotations and start editing
                     if neogen.configuration.input_after_comment == true then
-                        vim.fn.cursor(to_place + 1, start_column)
-                        vim.api.nvim_command("startinsert!")
+                        -- Creates extmarks for the content
+                        for i, value in pairs(content_with_marks) do
+                            local input_start, _ = string.find(value, jump_text)
+                            if input_start then
+                                neogen.utilities.cursor.create(to_place + i, input_start)
+                            end
+                        end
+                        neogen.utilities.cursor.jump()
                     end
                 end
             end
@@ -72,7 +90,8 @@ end
 
 neogen.setup = function(opts)
     neogen.configuration = vim.tbl_deep_extend("keep", opts or {}, {
-        input_after_comment = true,
+        input_after_comment = true, -- bool, If you want to jump with the cursor after annotation
+        jump_text = "$1", -- symbol to find for jumping cursor in template
         -- DEFAULT CONFIGURATION
         languages = {
             lua = require("neogen.configurations.lua"),

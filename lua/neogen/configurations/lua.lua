@@ -116,13 +116,13 @@ return {
         -- Which annotation convention to use
         annotation_convention = "emmylua",
         emmylua = {
-            { nil, "- ", { type = { "class", "func" } } }, -- add this string only on requested types
-            { nil, "- ", { no_results = true } }, -- Shows only when there's no results from the granulator
-            { "parameters", "- @param %s any" },
-            { "vararg", "- @vararg any" },
-            { "return_statement", "- @return any" },
-            { "class_name", "- @class any" },
-            { "type", "- @type %s" },
+            { nil, "- $1", { type = { "class", "func" } } }, -- add this string only on requested types
+            { nil, "- $1", { no_results = true } }, -- Shows only when there's no results from the granulator
+            { "parameters", "- @param %s any $1" },
+            { "vararg", "- @vararg any $1" },
+            { "return_statement", "- @return any $1" },
+            { "class_name", "- @class any $1" },
+            { "type", "- @type %s $1" },
         },
     },
 }
