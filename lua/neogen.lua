@@ -54,10 +54,11 @@ neogen.generate = function(opts)
 
                 if #content ~= 0 then
                     local jump_text = language.jump_text or neogen.configuration.jump_text
+                    neogen.utilities.cursor.del_extmarks() -- Delete previous extmarks before setting any new ones
 
                     --- Removes jump_text marks and keep the second part of jump_text|other_text if there is one (which is other_text)
                     local delete_marks = function(v)
-                        local pattern = jump_text.. "[|%w]+"
+                        local pattern = jump_text .. "[|%w]+"
                         local matched = string.match(v, pattern)
 
                         if matched then
@@ -71,7 +72,7 @@ neogen.generate = function(opts)
                     end
 
                     local content_with_marks = vim.deepcopy(content)
-                    
+
                     -- delete all jump_text marks
                     content = vim.tbl_map(delete_marks, content)
 
@@ -118,4 +119,3 @@ neogen.setup = function(opts)
 end
 
 return neogen
-
