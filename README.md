@@ -53,7 +53,8 @@ require('neogen').generate()
 You can bind it to your keybind of choice, like so:
 
 ```lua
-vim.api.nvim_set_keymap("n", "<Leader>nf", ":lua require('neogen').generate()<CR>", {})
+local opts = { noremap = true, silent = true }
+vim.api.nvim_set_keymap("n", "<Leader>nf", ":lua require('neogen').generate()<CR>", opts)
 ```
 
 Calling the `generate` function without any parameters will try to generate annotations for the current function.
@@ -69,7 +70,8 @@ require('neogen').generate({
 For example, I can add an other keybind to generate class annotations:
 
 ```lua
-vim.api.nvim_set_keymap("n", "<Leader>nc", ":lua require('neogen').generate({ type = 'class' })<CR>", {})
+local opts = { noremap = true, silent = true }
+vim.api.nvim_set_keymap("n", "<Leader>nc", ":lua require('neogen').generate({ type = 'class' })<CR>", opts)
 ```
 
 
