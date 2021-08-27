@@ -56,7 +56,7 @@ neogen.generate = function(opts)
                     vim.fn.append(to_place, content)
 
                     -- Place cursor after annotations and start editing
-                    if neogen.configuration.input_after_comment == true and #data ~= 0 then
+                    if neogen.configuration.input_after_comment == true then
                         vim.fn.cursor(to_place + 1, start_column)
                         vim.api.nvim_command("startinsert!")
                     end
