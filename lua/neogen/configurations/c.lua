@@ -128,10 +128,10 @@ return {
         doxygen = {
             { nil, "/* */", { no_results = true } },
             { nil, "/**" },
-            { nil, " * @brief " },
+            { nil, " * @brief $1" },
             { nil, " *" },
-            { "parameters", " * @param[in] %s " },
-            { "return_statement", " * @returns " },
+            { "parameters", " * @param[in] %s $1" },
+            { "return_statement", " * @returns $1" },
             { nil, " */" },
         },
     },

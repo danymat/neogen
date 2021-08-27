@@ -72,11 +72,11 @@ return {
         use_default_comment = false,
 
         jsdoc = {
-            { nil, "/* */", { no_results = true } },
+            { nil, "/* $1 */", { no_results = true } },
             { nil, "/**" },
-            { "class_tag", " * @classdesc", { before_first_item = { " * ", " * @class" }, type = { "class" } } },
-            { "parameters", " * @param {any} %s " },
-            { "return_statement", " * @returns {any} " },
+            { "class_tag", " * @classdesc $1", { before_first_item = { " * ", " * @class" }, type = { "class" } } },
+            { "parameters", " * @param {any} %s $1" },
+            { "return_statement", " * @returns {$1|any}" },
             { nil, " */" },
         },
     },

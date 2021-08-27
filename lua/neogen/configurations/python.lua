@@ -109,19 +109,19 @@ return {
         append = { position = "after", child_name = "block" }, -- optional: where to append the text (default_generator)
         use_default_comment = false, -- If you want to prefix the template with the default comment for the language, e.g for python: # (default_generator)
         google_docstrings = {
-            { nil, '"""' },
-            { nil, '""" """', { no_results = true } },
-            { "parameters", "\t%s: ", { before_first_item = { "", "Args:" } } },
-            { "attributes", "\t%s: ", { before_first_item = { "", "Attributes: " } } },
+            { nil, '"""$1' },
+            { nil, '""" $1 """', { no_results = true } },
+            { "parameters", "\t%s: $1", { before_first_item = { "", "Args:" } } },
+            { "attributes", "\t%s: $1", { before_first_item = { "", "Attributes: " } } },
             { "return_statement", "", { before_first_item = { "", "Returns: " } } },
             { nil, "" },
             { nil, '"""' },
         },
         numpydoc = {
-            { nil, '"""' },
-            { nil, '""" """', { no_results = true } },
-            { "parameters", "%s: ", { before_first_item = { "", "Parameters", "----------" } } },
-            { "attributes", "%s: ", { before_first_item = { "", "Attributes", "----------" } } },
+            { nil, '"""$1' },
+            { nil, '""" $1 """', { no_results = true } },
+            { "parameters", "%s: $1", { before_first_item = { "", "Parameters", "----------" } } },
+            { "attributes", "%s: $1", { before_first_item = { "", "Attributes", "----------" } } },
             { "return_statement", "", { before_first_item = { "", "Returns", "-------" } } },
             { nil, "" },
             { nil, '"""' },
