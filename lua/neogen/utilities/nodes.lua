@@ -25,6 +25,26 @@ neogen.utilities.nodes = {
         return results
     end,
 
+    --- Find all nested childs from `parent` that match `node_name`. Returns a table of found nodes
+    --- @param parent userdata
+    --- @param node_name string
+    --- @param result table
+    --- @return table
+    recursive_find = function(self, parent, node_name, result)
+        local results = result or {}
+
+        for child in parent:iter_children() do
+            if child:named() and child:type() == node_name then
+                table.insert(results, child)
+            else
+                local found = self:recursive_find(child, node_name, results)
+                vim.tbl_deep_extend("keep", results, found)
+            end
+        end
+
+        return results
+    end,
+
     --- Get all required nodes from tree
     --- @param parent userdata the parent node
     --- @param tree table a nested table : { retrieve = "all|first", node_type = node_name, subtree = tree }
@@ -50,6 +70,10 @@ neogen.utilities.nodes = {
 
             if subtree.retrieve == "first" and #matched ~= 0 then
                 matched = { matched[1] }
+            end
+
+            if subtree.retrieve == "first_recursive" then
+                matched = self:recursive_find(parent, subtree.node_type)
             end
 
             for _, child in pairs(matched) do
