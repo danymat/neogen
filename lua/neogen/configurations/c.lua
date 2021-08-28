@@ -1,23 +1,29 @@
+local c_params = {
+    retrieve = "first",
+    node_type = "parameter_list",
+    subtree = {
+        {
+            retrieve = "all",
+            node_type = "parameter_declaration",
+            subtree = {
+                { retrieve = "first_recursive", node_type = "identifier", extract = true}
+            },
+        },
+    },
+}
 local c_function_extractor = function(node)
     local tree = {
         {
             retrieve = "first",
             node_type = "function_declarator",
             subtree = {
-                {
-                    retrieve = "first",
-                    node_type = "parameter_list",
-                    subtree = {
-                        {
-                            retrieve = "all",
-                            node_type = "parameter_declaration",
-                            subtree = {
-                                { retrieve = "first_recursive", node_type = "identifier", extract = true}
-                            },
-                        },
-                    },
-                },
+                c_params,
             },
+        },
+        {
+            retrieve = "first_recursive",
+            node_type = "function_declarator",
+            extract = true
         },
         {
             retrieve = "first",
@@ -26,10 +32,18 @@ local c_function_extractor = function(node)
                 { retrieve = "first", node_type = "return_statement", extract = true },
             },
         },
+        c_params
     }
 
     local nodes = neogen.utilities.nodes:matching_nodes_from(node, tree)
     local res = neogen.utilities.extractors:extract_from_matched(nodes)
+
+
+    if nodes.function_declarator then
+        local subnodes = neogen.utilities.nodes:matching_nodes_from(nodes.function_declarator[1], tree)
+        local subres = neogen.utilities.extractors:extract_from_matched(subnodes)
+        res = vim.tbl_deep_extend("keep", res, subres)
+    end
 
     return {
         parameters = res.identifier,
