@@ -14,7 +14,6 @@ end
 --- It removes the extmark afterwards.
 neogen.utilities.cursor.go_next_extmark = function(first_time)
     local extm_list = vim.api.nvim_buf_get_extmarks(0, neogen_ns, 0, -1, {})
-    P(extm_list)
     if #extm_list ~= 0 then
         local pos = { extm_list[1][2] + 1, extm_list[1][3] }
 
