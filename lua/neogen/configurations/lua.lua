@@ -124,5 +124,11 @@ return {
             { "class_name", "- @class $1|any" },
             { "type", "- @type %s $1" },
         },
+        ldoc = {
+            { nil, "- $1", { no_results = true, type = { "func" } } },
+            { nil, "- $1", { type = { "func" } } },
+            { "parameters", " @tparam $1|any %s " },
+            { "return_statement", " @treturn $1|any" },
+        },
     },
 }

@@ -6,7 +6,7 @@ local c_params = {
             retrieve = "all",
             node_type = "parameter_declaration",
             subtree = {
-                { retrieve = "first_recursive", node_type = "identifier", extract = true}
+                { retrieve = "first_recursive", node_type = "identifier", extract = true },
             },
         },
     },
@@ -23,7 +23,7 @@ local c_function_extractor = function(node)
         {
             retrieve = "first_recursive",
             node_type = "function_declarator",
-            extract = true
+            extract = true,
         },
         {
             retrieve = "first",
@@ -32,12 +32,11 @@ local c_function_extractor = function(node)
                 { retrieve = "first", node_type = "return_statement", extract = true },
             },
         },
-        c_params
+        c_params,
     }
 
     local nodes = neogen.utilities.nodes:matching_nodes_from(node, tree)
     local res = neogen.utilities.extractors:extract_from_matched(nodes)
-
 
     if nodes.function_declarator then
         local subnodes = neogen.utilities.nodes:matching_nodes_from(nodes.function_declarator[1], tree)
