@@ -17,7 +17,7 @@
 
 ## Features
 
-- Create annotations with one keybind
+- Create annotations with one keybind, and jump your cursor using `Tab`.
 - Defaults for multiple languages and annotation conventions
 - Extremely customizable and extensible
 - Written in lua
