@@ -24,7 +24,7 @@ Example (with Tree-sitter activated on the side for better comprehension):
 
 The current cursor position is located in the middle of the function (`local_variable_declaration`).
 
-If I generate a function annotation using neogen, the default locator will try to find the first parent node matchinf one of those:
+If I generate a function annotation using neogen, the default locator will try to find the first parent node matching one of those:
 
 ```lua
 func = { "function", "local_function", "local_variable_declaration", "field", "variable_declaration" },
