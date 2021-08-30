@@ -1,6 +1,6 @@
 # Adding Languages - Simplified
 
-This sections aims to simplify the languages addition, without exposing you the inner workings of neogen, but only showing you the quickest way to add support to a language.
+This sections aims to simplify the languages addition, without exposing the inner workings of neogen, but only showing the quickest way to add support to a language.
 
 For this, I will do a very quick recap about the backend concepts of Neogen. Pay very attention to this, because i will explain how the defaults are, so you can use the them.
 
@@ -12,7 +12,7 @@ I will use the lua configuration file [here](../lua/neogen/configurations/lua.lu
 
 #### Concept
 
-The locator is a function responsible of finding the most appropriate parent for annotation purposes
+The locator is a function responsible for finding the most appropriate parent for annotation purposes
 
 #### Default Locator
 
@@ -65,7 +65,7 @@ data = {
 }
 ```
 
-This means for our example, we found a parent node called `variable_declaration`. It'll fetch this data:
+This means in our example, that we found a parent node called `variable_declaration`. It'll fetch this data:
 
 ```lua
 ["local_variable_declaration|field|variable_declaration"] = {
@@ -79,7 +79,7 @@ This means for our example, we found a parent node called `variable_declaration`
 
 This snippet means: From the parent node, try to execute the `extract` function from the second child called `function_definition`.
 
-The extract function is important. It's here you'll parse the nodes and create a table corresponding the found content.
+The extract function is important. It's where you'll parse the nodes and create a table corresponding to the found content.
 
 This is the extract function for lua functions:
 
@@ -116,7 +116,7 @@ The tree in this example is very simple: from the node called `function_definiti
 
 The `neogen.utilities.extractors:extract_from_matched` takes the nodes table returned by the first function and will return a table containing the content of the nodes.
 
-The granulator then return the table you want with the extracted values you want
+The granulator then returns the table you want with the extracted values you want
 
 ### Generator
 
@@ -160,7 +160,7 @@ An annotation template is a set of tables, each one composed of 2 required param
     - Adding `$1` will move the cursor there (with tab completion) if the user allowed it in the setup function
 - the optional params: 
     - `no_results`: (bool, default false) will only use this field when there is no value returned by the granulator
-    - `type`: (string[], default nil) will only use this field for the required types. If not specified, will use this field for all types
+    - `type`: (string[], default nil) will only use this field for the required types. If not specified, it will use this field for all types
 
 
 
