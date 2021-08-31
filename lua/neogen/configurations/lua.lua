@@ -1,14 +1,20 @@
 local common_function_extractor = function(node)
     local tree = {
         {
-            retrieve = "first",
-            node_type = "parameters",
+            retrieve = "first_recursive",
+            node_type = "function_definition",
             subtree = {
-                { retrieve = "all", node_type = "identifier", extract = true },
-                { retrieve = "all", node_type = "spread", extract = true },
+                {
+                    retrieve = "first",
+                    node_type = "parameters",
+                    subtree = {
+                        { retrieve = "all", node_type = "identifier", extract = true },
+                        { retrieve = "all", node_type = "spread", extract = true },
+                    },
+                },
+                { retrieve = "first", node_type = "return_statement", extract = true },
             },
         },
-        { retrieve = "first", node_type = "return_statement", extract = true },
     }
 
     local nodes = neogen.utilities.nodes:matching_nodes_from(node, tree)
@@ -52,14 +58,12 @@ return {
         func = {
             -- When the function is inside one of those
             ["local_variable_declaration|field|variable_declaration"] = {
-                ["2"] = {
-                    match = "function_definition",
-
+                ["0"] = {
                     extract = common_function_extractor,
                 },
             },
             -- When the function is in the root tree
-            ["function_definition|function|local_function"] = {
+            ["function|local_function"] = {
                 ["0"] = {
 
                     extract = common_function_extractor,
