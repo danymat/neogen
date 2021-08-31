@@ -150,7 +150,9 @@ template = {
 },
 ```
 
-The `annotation_convention` field will use the desired annotation template.
+- The `annotation_convention` field will use the desired annotation template.
+- Adding `use_default_comment = false` will not prepend the language's default comment before the template
+- If you want to customize the position of the annotated text, you can add `append = { position = "<before|after>", child_name = "<node_name>"}`
 
 An annotation template is a set of tables, each one composed of 2 required params, and 1 optional table
 
@@ -161,6 +163,7 @@ An annotation template is a set of tables, each one composed of 2 required param
 - the optional params: 
     - `no_results`: (bool, default false) will only use this field when there is no value returned by the granulator
     - `type`: (string[], default nil) will only use this field for the required types. If not specified, it will use this field for all types
+    - `before_first_item`: (string[], default nil) will append the lines before the first found item for the table
 
 
 
