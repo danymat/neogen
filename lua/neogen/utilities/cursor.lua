@@ -12,10 +12,11 @@ end
 
 --- Find next created extmark and goes to it.
 --- It removes the extmark afterwards.
-neogen.utilities.cursor.go_next_extmark = function(first_time)
+--- First jumpable extmark is the one after the extmarks responsible of start/end of annotation
+neogen.utilities.cursor.go_next_extmark = function()
     local extm_list = vim.api.nvim_buf_get_extmarks(0, neogen_ns, 0, -1, {})
-    if #extm_list ~= 0 then
-        local pos = { extm_list[1][2] + 1, extm_list[1][3] }
+    if #extm_list ~= 2 then
+        local pos = { extm_list[2][2] + 1, extm_list[2][3] }
 
         vim.api.nvim_win_set_cursor(0, pos)
         if #extm_list ~= 0 then
@@ -39,7 +40,7 @@ neogen.utilities.cursor.jump = function(opts)
         vim.api.nvim_command("startinsert")
     end
 
-    if neogen.utilities.cursor.go_next_extmark(opts.first_time) then
+    if neogen.utilities.cursor.go_next_extmark() then
         vim.api.nvim_command("startinsert")
     end
 end
@@ -53,9 +54,14 @@ neogen.utilities.cursor.del_extmarks = function()
 end
 
 --- Checks if there are still possible jump positions to perform
+--- Verifies if the cursor is in the last annotated part
 neogen.utilities.cursor.jumpable = function()
     local extm_list = vim.api.nvim_buf_get_extmarks(0, neogen_ns, 0, -1, {})
-    if #extm_list ~= 0 then
+    local cursor = vim.api.nvim_win_get_cursor(0)
+    if cursor[1] > extm_list[#extm_list][2] or cursor[1] < extm_list[1][2] then
+      return false
+    end
+    if #extm_list > 2 then
         return true
     else
         return false

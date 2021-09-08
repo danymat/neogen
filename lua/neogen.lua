@@ -84,6 +84,8 @@ neogen.generate = function(opts)
 
                     -- Place cursor after annotations and start editing
                     if neogen.configuration.input_after_comment == true then
+                        -- Creates extmark for the beggining of the content
+                        neogen.utilities.cursor.create(to_place + 1, start_column)
                         -- Creates extmarks for the content
                         for i, value in pairs(content_with_marks) do
                             local input_start, _ = string.find(value, jump_text)
@@ -91,9 +93,11 @@ neogen.generate = function(opts)
                                 neogen.utilities.cursor.create(to_place + i, input_start)
                             end
                         end
-                        if neogen.utilities.cursor.jumpable() then
-                            neogen.utilities.cursor.jump({ first_time = true })
-                        end
+
+                        -- Creates extmark for the end of the content
+                        neogen.utilities.cursor.create(to_place + #content+ 1, 0)
+
+                        neogen.utilities.cursor.jump({ first_time = true })
                     end
                 end
             end
