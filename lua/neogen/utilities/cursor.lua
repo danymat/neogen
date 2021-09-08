@@ -57,6 +57,9 @@ end
 --- Verifies if the cursor is in the last annotated part
 neogen.utilities.cursor.jumpable = function()
     local extm_list = vim.api.nvim_buf_get_extmarks(0, neogen_ns, 0, -1, {})
+    if #extm_list == 0 then
+        return false
+    end
     local cursor = vim.api.nvim_win_get_cursor(0)
     if cursor[1] > extm_list[#extm_list][2] or cursor[1] < extm_list[1][2] then
       return false
