@@ -1,21 +1,29 @@
-local common_function_extractor = function(node)
+local function_extractor = function(node, type)
+    if not vim.tbl_contains({ "local", "function" }, type) then
+        error("Incorrect call for function_extractor")
+    end
+
     local tree = {
         {
-            retrieve = "first_recursive",
-            node_type = "function_definition",
+            retrieve = "first",
+            node_type = "parameters",
             subtree = {
-                {
-                    retrieve = "first",
-                    node_type = "parameters",
-                    subtree = {
-                        { retrieve = "all", node_type = "identifier", extract = true },
-                        { retrieve = "all", node_type = "spread", extract = true },
-                    },
-                },
-                { retrieve = "first", node_type = "return_statement", extract = true },
+                { retrieve = "all", node_type = "identifier", extract = true },
+                { retrieve = "all", node_type = "spread", extract = true },
             },
         },
+        { retrieve = "first", node_type = "return_statement", extract = true },
     }
+
+    if type == "local" then
+        tree = {
+            {
+                retrieve = "first_recursive",
+                node_type = "function_definition",
+                subtree = tree,
+            },
+        }
+    end
 
     local nodes = neogen.utilities.nodes:matching_nodes_from(node, tree)
     local res = neogen.utilities.extractors:extract_from_matched(nodes)
@@ -59,14 +67,17 @@ return {
             -- When the function is inside one of those
             ["local_variable_declaration|field|variable_declaration"] = {
                 ["0"] = {
-                    extract = common_function_extractor,
+                    extract = function(node)
+                        return function_extractor(node, "local")
+                    end,
                 },
             },
             -- When the function is in the root tree
             ["function|local_function"] = {
                 ["0"] = {
-
-                    extract = common_function_extractor,
+                    extract = function(node)
+                        return function_extractor(node, "function")
+                    end,
                 },
             },
         },

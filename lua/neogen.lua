@@ -95,7 +95,7 @@ neogen.generate = function(opts)
                         end
 
                         -- Creates extmark for the end of the content
-                        neogen.utilities.cursor.create(to_place + #content+ 1, 0)
+                        neogen.utilities.cursor.create(to_place + #content + 1, 0)
 
                         neogen.utilities.cursor.jump({ first_time = true })
                     end

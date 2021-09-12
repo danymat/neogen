@@ -62,7 +62,7 @@ neogen.utilities.cursor.jumpable = function()
     end
     local cursor = vim.api.nvim_win_get_cursor(0)
     if cursor[1] > extm_list[#extm_list][2] or cursor[1] < extm_list[1][2] then
-      return false
+        return false
     end
     if #extm_list > 2 then
         return true
