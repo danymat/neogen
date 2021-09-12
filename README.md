@@ -169,6 +169,8 @@ There is a list of supported languages and fields, with their annotation style
 | | [JSDoc](https://jsdoc.app) (`"jsdoc"`) | `@param`, `@returns`, `@class`, `@classdesc` |
 | c | | |
 | | [Doxygen](https://www.doxygen.nl/manual/commands.html) (`"doxygen"`) | `@param`, `@returns` | 
+| go | | |
+| | [Godoc](https://go.dev/blog/godoc) (`"godoc"`) | |
 
 
 ## Adding Languages
