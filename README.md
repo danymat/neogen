@@ -24,13 +24,11 @@
 
 ## GIFS
 
-![](https://user-images.githubusercontent.com/5306901/135052135-9b618cfc-bef4-40f4-a891-8450f18445c3.mov)
+![screen1](https://user-images.githubusercontent.com/5306901/135055052-6ee6a5e8-3f30-4c41-872e-e624e21a1e98.gif)
 
-![](https://user-images.githubusercontent.com/5306901/135053022-cdff2121-486a-4eda-b148-c213fc46d17e.mov)
+![screen2](https://user-images.githubusercontent.com/5306901/135055065-08def797-e5af-49c9-b530-dd5973045c4e.gif)
 
-![](https://user-images.githubusercontent.com/5306901/135052725-4ae5a8fc-4f33-48ce-b0f9-2b2fe2681ff7.mov)
-
-
+![screen3](https://user-images.githubusercontent.com/5306901/135055174-2a9d8b88-7b23-4513-af91-135d885783ec.gif)
 
 ## Requirements
 
