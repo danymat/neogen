@@ -50,11 +50,11 @@ local c_function_extractor = function(node)
     end
 
     local has_return_statement = function()
-        -- function implementation
         if res.return_statement then
+            -- function implementation
             return res.return_statement
-            -- function prototype
         elseif res.function_declarator and res.primitive_type and res.primitive_type[1] ~= "void" then
+            -- function prototype
             return res.primitive_type
         end
         -- not found
