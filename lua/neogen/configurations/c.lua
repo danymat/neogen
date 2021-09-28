@@ -32,6 +32,11 @@ local c_function_extractor = function(node)
                 { retrieve = "first", node_type = "return_statement", extract = true },
             },
         },
+        {
+          retrieve = "first",
+          node_type = "primitive_type",
+          extract = true,
+        },
         c_params,
     }
 
@@ -44,9 +49,21 @@ local c_function_extractor = function(node)
         res = vim.tbl_deep_extend("keep", res, subres)
     end
 
+    local has_return_statement = function()
+      -- function implementation
+      if res.return_statement then
+        return res.return_statement
+      -- function prototype
+      elseif res.function_declarator and res.primitive_type and res.primitive_type[1] ~= "void" then
+        return res.primitive_type
+      end
+      -- not found
+      return nil
+    end
+
     return {
         parameters = res.identifier,
-        return_statement = res.return_statement,
+        return_statement = has_return_statement(),
     }
 end
 
