@@ -52,12 +52,12 @@ end
 
 return {
     parent = {
-        func = { "function_declaration", "function_definition" },
+        func = { "function_declaration", "function_definition", "declaration" },
     },
 
     data = {
         func = {
-            ["function_declaration|function_definition"] = {
+            ["function_declaration|function_definition|declaration"] = {
                 ["0"] = {
                     extract = c_function_extractor,
                 },
