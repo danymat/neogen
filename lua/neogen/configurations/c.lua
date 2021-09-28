@@ -33,9 +33,9 @@ local c_function_extractor = function(node)
             },
         },
         {
-          retrieve = "first",
-          node_type = "primitive_type",
-          extract = true,
+            retrieve = "first",
+            node_type = "primitive_type",
+            extract = true,
         },
         c_params,
     }
@@ -50,15 +50,15 @@ local c_function_extractor = function(node)
     end
 
     local has_return_statement = function()
-      -- function implementation
-      if res.return_statement then
-        return res.return_statement
-      -- function prototype
-      elseif res.function_declarator and res.primitive_type and res.primitive_type[1] ~= "void" then
-        return res.primitive_type
-      end
-      -- not found
-      return nil
+        -- function implementation
+        if res.return_statement then
+            return res.return_statement
+            -- function prototype
+        elseif res.function_declarator and res.primitive_type and res.primitive_type[1] ~= "void" then
+            return res.primitive_type
+        end
+        -- not found
+        return nil
     end
 
     return {
