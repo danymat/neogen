@@ -8,12 +8,12 @@
 # Table Of Contents
 
 * [Features](#features)
+* [GIFS](#gifs)
 * [Requirements](#requirements)
 * [Installation](#installation)
 * [Usage](#usage)
 * [Configuration](#configuration)
 * [Supported Languages](#supported-languages)
-* [GIFS](#gifs)
 
 ## Features
 
@@ -21,6 +21,16 @@
 - Defaults for multiple languages and annotation conventions
 - Extremely customizable and extensible
 - Written in lua
+
+## GIFS
+
+![](https://user-images.githubusercontent.com/5306901/135052135-9b618cfc-bef4-40f4-a891-8450f18445c3.mov)
+
+![](https://user-images.githubusercontent.com/5306901/135053022-cdff2121-486a-4eda-b148-c213fc46d17e.mov)
+
+![](https://user-images.githubusercontent.com/5306901/135052725-4ae5a8fc-4f33-48ce-b0f9-2b2fe2681ff7.mov)
+
+
 
 ## Requirements
 
@@ -178,10 +188,6 @@ There is a list of supported languages and fields, with their annotation style
 
 1. Using the defaults to generate a new language support: [Adding Languages](./docs/adding-languages.md)
 2. (advanced) Only if the defaults aren't enough, please see here: [Advanced Integration](./docs/advanced-integration.md)
-
-## GIFS
-
-![](./.images/recording_1.mov)
 
 ## Credits
 
