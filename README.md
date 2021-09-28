@@ -8,12 +8,14 @@
 # Table Of Contents
 
 * [Features](#features)
-* [GIFS](#gifs)
 * [Requirements](#requirements)
 * [Installation](#installation)
 * [Usage](#usage)
 * [Configuration](#configuration)
 * [Supported Languages](#supported-languages)
+* [Adding Languages](#adding-languages)
+* [GIFS](#gifs)
+
 
 ## Features
 
@@ -22,13 +24,7 @@
 - Extremely customizable and extensible
 - Written in lua
 
-## GIFS
-
-![screen1](https://user-images.githubusercontent.com/5306901/135055052-6ee6a5e8-3f30-4c41-872e-e624e21a1e98.gif)
-
 ![screen2](https://user-images.githubusercontent.com/5306901/135055065-08def797-e5af-49c9-b530-dd5973045c4e.gif)
-
-![screen3](https://user-images.githubusercontent.com/5306901/135055174-2a9d8b88-7b23-4513-af91-135d885783ec.gif)
 
 ## Requirements
 
@@ -186,6 +182,14 @@ There is a list of supported languages and fields, with their annotation style
 
 1. Using the defaults to generate a new language support: [Adding Languages](./docs/adding-languages.md)
 2. (advanced) Only if the defaults aren't enough, please see here: [Advanced Integration](./docs/advanced-integration.md)
+
+## GIFS
+
+![screen1](https://user-images.githubusercontent.com/5306901/135055052-6ee6a5e8-3f30-4c41-872e-e624e21a1e98.gif)
+
+![screen3](https://user-images.githubusercontent.com/5306901/135055174-2a9d8b88-7b23-4513-af91-135d885783ec.gif)
+	
+![screen4](https://user-images.githubusercontent.com/5306901/135056308-9808c231-b1fd-4c41-80bd-85a08d7286dd.gif)
 
 ## Credits
 
