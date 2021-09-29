@@ -6,7 +6,7 @@ local c_params = {
             retrieve = "all",
             node_type = "parameter_declaration",
             subtree = {
-                { retrieve = "first_recursive", node_type = "identifier", extract = true },
+                { retrieve = "first", recursive = true, node_type = "identifier", extract = true },
             },
         },
     },
@@ -21,7 +21,8 @@ local c_function_extractor = function(node)
             },
         },
         {
-            retrieve = "first_recursive",
+            retrieve = "first",
+            recursive = true,
             node_type = "function_declarator",
             extract = true,
         },

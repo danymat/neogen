@@ -18,7 +18,8 @@ local function_extractor = function(node, type)
     if type == "local" then
         tree = {
             {
-                retrieve = "first_recursive",
+                retrieve = "first",
+                recursive = true,
                 node_type = "function_definition",
                 subtree = tree,
             },

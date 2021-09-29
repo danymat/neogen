@@ -30,16 +30,22 @@ neogen.utilities.nodes = {
     --- @param node_name string
     --- @param result table
     --- @return table
-    recursive_find = function(self, parent, node_name, result)
-        local results = result or {}
+    recursive_find = function(self, parent, node_name, opts)
+        opts = opts or {}
+        local results = opts.results or {}
 
         for child in parent:iter_children() do
-            if child:named() and child:type() == node_name then
-                table.insert(results, child)
-            else
-                local found = self:recursive_find(child, node_name, results)
-                vim.tbl_deep_extend("keep", results, found)
+
+            -- Find the first recursive item and breaks
+            if opts.first then
+                if child:named() and child:type() == node_name then
+                    table.insert(results, child)
+                    break
+                end
             end
+
+            local found = self:recursive_find(child, node_name, { results = results })
+            vim.tbl_deep_extend("keep", results, found)
         end
 
         return results
@@ -56,10 +62,15 @@ neogen.utilities.nodes = {
         result = result or {}
 
         for _, subtree in pairs(tree) do
-            -- Match all child nodes
+            if subtree.retrieve and not vim.tbl_contains({ "all", "first" }, subtree.retrieve) then
+                assert(false, "Supported nodes matching: all|first")
+                return
+            end
+
+            -- Match all child nodes of the parent node
             local matched = self:matching_child_nodes(parent, subtree.node_type)
 
-            -- Only keep first matched child node
+            -- Only keep the node with custom position
             if subtree.retrieve == nil then
                 if type(subtree.position) == "number" then
                     matched = { matched[subtree.position] }
@@ -68,13 +79,19 @@ neogen.utilities.nodes = {
                 end
             end
 
+            -- Only keep first matched child node
             if subtree.retrieve == "first" and #matched ~= 0 then
-                matched = { matched[1] }
+                if subtree.recursive == true then
+                    matched = self:recursive_find(parent, subtree.node_type, { first = true })
+                else
+                    matched = { matched[1] }
+                end
             end
 
-            if subtree.retrieve == "first_recursive" then
+            if subtree.retrieve == "all" and subtree.recursive then
                 matched = self:recursive_find(parent, subtree.node_type)
             end
+
 
             for _, child in pairs(matched) do
                 if subtree.extract == true then
