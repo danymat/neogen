@@ -8,14 +8,14 @@ local function_tree = {
                 node_type = "required_parameter",
                 subtree = {
                     { retrieve = "all", node_type = "identifier", extract = true },
-                }
+                },
             },
             {
                 retrieve = "all",
                 node_type = "optional_parameter",
                 subtree = {
                     { retrieve = "all", node_type = "identifier", extract = true },
-                }
+                },
             },
         },
     },
@@ -32,6 +32,7 @@ return {
     parent = {
         func = { "function_declaration", "expression_statement", "variable_declaration" },
         class = { "function_declaration", "expression_statement", "variable_declaration", "class_declaration" },
+        type = { "variable_declaration" },
     },
 
     data = {
@@ -78,6 +79,27 @@ return {
                 },
             },
         },
+        type = {
+            ["variable_declaration"] = {
+                ["1"] = {
+                    extract = function(node)
+                        local res = {}
+                        local tree = {
+                            {
+                                retrieve = "first",
+                                node_type = "identifier",
+                                extract = true,
+                            },
+                        }
+                        local nodes = neogen.utilities.nodes:matching_nodes_from(node, tree)
+                        local results = neogen.utilities.extractors:extract_from_matched(nodes)
+
+                        res.type = results.identifier
+                        return res
+                    end,
+                },
+            },
+        },
     },
 
     template = {
@@ -90,6 +112,7 @@ return {
             { "class_tag", " * @classdesc $1", { before_first_item = { " * ", " * @class" }, type = { "class" } } },
             { "parameters", " * @param {any} %s $1" },
             { "return_statement", " * @returns {$1|any}" },
+            { "type", " * @type {$1|any}", { type = { "type" } } },
             { nil, " */" },
         },
     },
