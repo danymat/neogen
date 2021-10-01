@@ -37,6 +37,11 @@ local c_function_extractor = function(node)
             node_type = "primitive_type",
             extract = true,
         },
+        {
+            retrieve = "first",
+            node_type = "pointer_declarator",
+            extract = true,
+        },
         c_params,
     }
 
@@ -53,9 +58,11 @@ local c_function_extractor = function(node)
         if res.return_statement then
             -- function implementation
             return res.return_statement
-        elseif res.function_declarator and res.primitive_type and res.primitive_type[1] ~= "void" then
-            -- function prototype
-            return res.primitive_type
+        elseif res.function_declarator and res.primitive_type then
+            if res.primitive_type[1] ~= "void" or res.pointer_declarator then
+                -- function prototype
+                return res.primitive_type
+            end
         end
         -- not found
         return nil
