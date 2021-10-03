@@ -35,7 +35,6 @@ neogen.utilities.nodes = {
         local results = opts.results or {}
 
         for child in parent:iter_children() do
-
             -- Find the first recursive item and breaks
             if opts.first then
                 if child:named() and child:type() == node_name then
@@ -91,7 +90,6 @@ neogen.utilities.nodes = {
             if subtree.retrieve == "all" and subtree.recursive then
                 matched = self:recursive_find(parent, subtree.node_type)
             end
-
 
             for _, child in pairs(matched) do
                 if subtree.extract == true then
