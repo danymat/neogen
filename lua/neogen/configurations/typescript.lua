@@ -30,7 +30,7 @@ local function_tree = {
 
 return {
     parent = {
-        func = { "function_declaration", "expression_statement", "variable_declaration" },
+        func = { "function_declaration", "expression_statement", "variable_declaration", "lexical_declaration" },
         class = { "function_declaration", "expression_statement", "variable_declaration", "class_declaration" },
         type = { "variable_declaration" },
     },
@@ -57,6 +57,20 @@ return {
                     extract = function(node)
                         local results = {}
                         local tree = { { retrieve = "all", node_type = "function", subtree = function_tree } }
+                        local nodes = neogen.utilities.nodes:matching_nodes_from(node, tree)
+                        local res = neogen.utilities.extractors:extract_from_matched(nodes)
+
+                        results.parameters = res.identifier
+                        results.return_statement = res.return_statement
+                        return results
+                    end,
+                },
+            },
+            ["lexical_declaration"] = {
+                ["1"] = {
+                    extract = function(node)
+                        local results = {}
+                        local tree = { { retrieve = "all", node_type = "arrow_function", subtree = function_tree } }
                         local nodes = neogen.utilities.nodes:matching_nodes_from(node, tree)
                         local res = neogen.utilities.extractors:extract_from_matched(nodes)
 
