@@ -130,6 +130,7 @@ neogen.setup = function(opts)
             typescript = require("neogen.configurations.typescript"),
             c = require("neogen.configurations.c"),
             go = require("neogen.configurations.go"),
+            java = require("neogen.configurations.java")
         },
     })
 
