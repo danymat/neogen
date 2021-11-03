@@ -162,22 +162,24 @@ require('neogen').setup {
 
 There is a list of supported languages and fields, with their annotation style
 
-| Language | Annotation conventions | Supported fields |
-|---|---|---|
-| lua | | |
+| Language | Annotation conventions | Supported fields | Supported annotation types
+|---|---|---|---|
+| lua | | | `func`, `class`, `type` |
 | | [Emmylua](https://emmylua.github.io/) (`"emmylua"`) | `@param`, `@varargs`, `@return`, `@class`, `@type` |
 | | [Ldoc](https://stevedonovan.github.io/ldoc/manual/doc.md.html) (`"ldoc"`) | `@param`, `@varargs`, `@return`, `@class`, `@type` |
-| python | | |
+| python | | | `func`, `class` |
 | | [Google docstrings](https://google.github.io/styleguide/pyguide.html) (`"google_docstrings"`) | `Args`, `Attributes`, `Returns` |
 | | [Numpydoc](https://numpydoc.readthedocs.io/en/latest/format.html) (`"numpydoc"`)| `Arguments`, `Attributes`, `Returns`|
-| javascript | | |
+| javascript | | | `func`, `class` |
 | | [JSDoc](https://jsdoc.app) (`"jsdoc"`) | `@param`, `@returns`, `@class`, `@classdesc` |
-| typescript | | |
+| typescript | | | `func`, `class` |
 | | [JSDoc](https://jsdoc.app) (`"jsdoc"`) | `@param`, `@returns`, `@class`, `@classdesc`, `@type` |
-| c | | |
+| c | | | `func` |
 | | [Doxygen](https://www.doxygen.nl/manual/commands.html) (`"doxygen"`) | `@param`, `@returns` | 
-| go | | |
+| go | | | |
 | | [Godoc](https://go.dev/blog/godoc) (`"godoc"`) | |
+| java | | | `class` |
+| | [Javadoc](https://docs.oracle.com/javase/1.5.0/docs/tooldocs/windows/javadoc.html#documentationcomments) (`"javadoc"`) | |
 
 
 ## Adding Languages
