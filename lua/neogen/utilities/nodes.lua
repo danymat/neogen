@@ -28,7 +28,8 @@ neogen.utilities.nodes = {
     --- Find all nested childs from `parent` that match `node_name`. Returns a table of found nodes
     --- @param parent userdata
     --- @param node_name string
-    --- @param result table
+    --- @param opts table
+    ---   - opts.first (bool):      if true, breaks at the first recursive item
     --- @return table
     recursive_find = function(self, parent, node_name, opts)
         opts = opts or {}
@@ -36,11 +37,12 @@ neogen.utilities.nodes = {
 
         for child in parent:iter_children() do
             -- Find the first recursive item and breaks
-            if opts.first then
-                if child:named() and child:type() == node_name then
-                    table.insert(results, child)
-                    break
-                end
+            if child:named() and child:type() == node_name then
+                table.insert(results, child)
+            end
+
+            if opts.first and #results ~= 0 then
+                break
             end
 
             local found = self:recursive_find(child, node_name, { results = results })
