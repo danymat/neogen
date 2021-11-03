@@ -52,7 +52,7 @@ neogen.utilities.nodes = {
 
     --- Get all required nodes from tree
     --- @param parent userdata the parent node
-    --- @param tree table a nested table : { retrieve = "all|first", node_type = node_name, subtree = tree }
+    --- @param tree table a nested table : { retrieve = "all|first", node_type = node_name, subtree = tree, recursive = true }
     --- If you want to extract the node, do not specify the subtree and instead: extract = true
     --- Optional: you can specify position = number instead of retrieve, and it will fetch the child node at position number
     --- @param result table the table of results
@@ -78,17 +78,9 @@ neogen.utilities.nodes = {
                 end
             end
 
-            -- Only keep first matched child node
-            if subtree.retrieve == "first" and #matched ~= 0 then
-                if subtree.recursive == true then
-                    matched = self:recursive_find(parent, subtree.node_type, { first = true })
-                else
-                    matched = { matched[1] }
-                end
-            end
-
-            if subtree.retrieve == "all" and subtree.recursive then
-                matched = self:recursive_find(parent, subtree.node_type)
+            if subtree.recursive then
+                local first = subtree.retrieve == "first"
+                matched = self:recursive_find(parent, subtree.node_type, { first = first })
             end
 
             for _, child in pairs(matched) do
