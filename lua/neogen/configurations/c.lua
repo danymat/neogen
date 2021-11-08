@@ -4,15 +4,7 @@ local c_params = {
     subtree = {
         {
             retrieve = "all",
-            node_type = "parameter_declaration",
-            subtree = {
-                { retrieve = "first", recursive = true, node_type = "identifier", extract = true },
-            },
-        },
-        -- This one is only used in cpp, considering moving it elsewhere to refactor
-        {
-            retrieve = "all",
-            node_type = "variadic_parameter_declaration",
+            node_type = "parameter_declaration|variadic_parameter_declaration|optional_parameter_declaration",
             subtree = {
                 { retrieve = "first", recursive = true, node_type = "identifier", extract = true },
             },
@@ -21,6 +13,19 @@ local c_params = {
 }
 local c_function_extractor = function(node)
     local tree = {
+        {
+            retrieve = "first",
+            node_type = "template_parameter_list",
+            subtree = {
+                {
+                    retrieve = "first",
+                    node_type = "type_parameter_declaration",
+                    subtree = {
+                        { retrieve = "all", node_type = "type_identifier", extract = true },
+                    },
+                },
+            },
+        },
         {
             retrieve = "first",
             node_type = "function_declarator",
@@ -79,18 +84,19 @@ local c_function_extractor = function(node)
 
     return {
         parameters = res.identifier,
+        type_identifier = res.type_identifier,
         return_statement = has_return_statement(),
     }
 end
 
 return {
     parent = {
-        func = { "function_declaration", "function_definition", "declaration" },
+        func = { "function_declaration", "function_definition", "declaration", "template_declaration" },
     },
 
     data = {
         func = {
-            ["function_declaration|function_definition|declaration"] = {
+            ["function_declaration|function_definition|declaration|template_declaration"] = {
                 ["0"] = {
                     extract = c_function_extractor,
                 },
@@ -114,6 +120,7 @@ return {
             { nil, "/**" },
             { nil, " * @brief $1" },
             { nil, " *" },
+            { "type_identifier", " * @tparam %s $1" },
             { "parameters", " * @param %s $1" },
             { "return_statement", " * @returns $1" },
             { nil, " */" },
