@@ -107,7 +107,10 @@ return {
         use_default_comment = false,
 
         doxygen = {
-            { nil, "/* $1 */", { no_results = true } },
+            { nil, "/**", { no_results = true } },
+            { nil, " * @brief $1", { no_results = true } },
+            { nil, " */", { no_results = true } },
+
             { nil, "/**" },
             { nil, " * @brief $1" },
             { nil, " *" },
