@@ -9,6 +9,14 @@ local c_params = {
                 { retrieve = "first", recursive = true, node_type = "identifier", extract = true },
             },
         },
+        -- This one is only used in cpp, considering moving it elsewhere to refactor
+        {
+            retrieve = "all",
+            node_type = "variadic_parameter_declaration",
+            subtree = {
+                { retrieve = "first", recursive = true, node_type = "identifier", extract = true },
+            },
+        },
     },
 }
 local c_function_extractor = function(node)
