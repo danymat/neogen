@@ -19,7 +19,7 @@ local c_function_extractor = function(node)
             subtree = {
                 {
                     retrieve = "first",
-                    node_type = "type_parameter_declaration",
+                    node_type = "type_parameter_declaration|variadic_type_parameter_declaration",
                     subtree = {
                         { retrieve = "all", node_type = "type_identifier", extract = true },
                     },
