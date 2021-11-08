@@ -111,7 +111,7 @@ return {
             { nil, "/**" },
             { nil, " * @brief $1" },
             { nil, " *" },
-            { "parameters", " * @param[in] %s $1" },
+            { "parameters", " * @param %s $1" },
             { "return_statement", " * @returns $1" },
             { nil, " */" },
         },
