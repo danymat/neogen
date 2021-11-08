@@ -122,7 +122,7 @@ return {
             { nil, " *" },
             { "type_identifier", " * @tparam %s $1" },
             { "parameters", " * @param %s $1" },
-            { "return_statement", " * @returns $1" },
+            { "return_statement", " * @return $1" },
             { nil, " */" },
         },
     },
