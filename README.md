@@ -175,9 +175,9 @@ There is a list of supported languages and fields, with their annotation style
 | typescript | | | `func`, `class` |
 | | [JSDoc](https://jsdoc.app) (`"jsdoc"`) | `@param`, `@returns`, `@class`, `@classdesc`, `@type` |
 | c | | | `func` |
-| | [Doxygen](https://www.doxygen.nl/manual/commands.html) (`"doxygen"`) | `@param`, `@returns`, `@brief`| 
+| | [Doxygen](https://www.doxygen.nl/manual/commands.html) (`"doxygen"`) | `@param`, `@return`, `@brief`| 
 | cpp | | | `func` |
-| | [Doxygen](https://www.doxygen.nl/manual/commands.html) (`"doxygen"`) | `@param`, `@returns`, `@tparam`, `@brief`| 
+| | [Doxygen](https://www.doxygen.nl/manual/commands.html) (`"doxygen"`) | `@param`, `@return`, `@tparam`, `@brief`| 
 | go | | | |
 | | [Godoc](https://go.dev/blog/godoc) (`"godoc"`) | |
 | java | | | `class` |
