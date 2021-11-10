@@ -19,10 +19,10 @@
 
 ## Features
 
-- Create annotations with one keybind, and jump your cursor using `Tab`.
+- Create annotations with one keybind, and jump your cursor in the inserted annotation
 - Defaults for multiple languages and annotation conventions
 - Extremely customizable and extensible
-- Written in lua
+- Written in lua (and uses Tree-sitter)
 
 ![screen2](https://user-images.githubusercontent.com/5306901/135055065-08def797-e5af-49c9-b530-dd5973045c4e.gif)
 
