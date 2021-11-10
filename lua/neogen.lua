@@ -131,7 +131,7 @@ neogen.setup = function(opts)
             c = require("neogen.configurations.c"),
             cpp = require("neogen.configurations.c"),
             go = require("neogen.configurations.go"),
-            java = require("neogen.configurations.java")
+            java = require("neogen.configurations.java"),
         },
     })
 

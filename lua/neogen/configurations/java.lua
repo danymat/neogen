@@ -27,7 +27,7 @@ return {
 
         javadoc = {
             { nil, "/**" },
-            { "class_name", " * %s $1"},
+            { "class_name", " * %s $1" },
             { nil, " */" },
         },
     },
