@@ -82,8 +82,12 @@ return {
         use_default_comment = false,
 
         javadoc = {
+            { nil, "/**", { no_results = true } },
+            { nil, " * $1", { no_results = true } },
+            { nil, " */", { no_results = true } },
+
             { nil, "/**" },
-            { nil, " * %s $1" },
+            { nil, " * $1" },
             { "parameters", " * @param %s $1" },
             { "return_statement", " * @return $1" },
             { nil, " */" },
