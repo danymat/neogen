@@ -1,11 +1,18 @@
 return {
     parent = {
         class = { "class_declaration" },
-        func = { "method_declaration" },
+        func = { "method_declaration", "constructor_declaration" },
     },
 
     data = {
         func = {
+            ["constructor_declaration"] = {
+                ["0"] = {
+                    extract = function(_)
+                        return { class_declaration = {} }
+                    end,
+                },
+            },
             ["method_declaration"] = {
                 ["0"] = {
                     extract = function(node)
