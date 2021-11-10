@@ -104,6 +104,23 @@ return {
         },
     },
 
+	locator = function(node_info, nodes_to_match)
+		local result = neogen.default_locator(node_info, nodes_to_match)
+		if not result then
+			return nil
+		end
+		-- if the function happens to be a function template we want to place
+		-- the annotation before the template statement and extract the
+		-- template parameters names as well
+		if node_info.current:parent() == nil then
+			return result
+		end
+		if node_info.current:parent():type() == "template_declaration" then
+			return result:parent()
+		end
+		return result
+	end,
+
     -- Use default granulator and generator
     granulator = nil,
     generator = nil,
