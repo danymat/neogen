@@ -73,7 +73,7 @@ local c_function_extractor = function(node)
             -- function implementation
             return res.return_statement
         elseif res.function_declarator and res.primitive_type then
-            if res.primitive_type[1] ~= "void" or res.pointer_declarator then
+            if res.primitive_type or res.pointer_declarator then
                 -- function prototype
                 return res.primitive_type
             end
@@ -91,7 +91,13 @@ end
 
 return {
     parent = {
-        func = { "function_declaration", "function_definition", "declaration", "field_declaration", "template_declaration" },
+        func = {
+            "function_declaration",
+            "function_definition",
+            "declaration",
+            "field_declaration",
+            "template_declaration",
+        },
     },
 
     data = {
@@ -104,22 +110,22 @@ return {
         },
     },
 
-	locator = function(node_info, nodes_to_match)
-		local result = neogen.default_locator(node_info, nodes_to_match)
-		if not result then
-			return nil
-		end
-		-- if the function happens to be a function template we want to place
-		-- the annotation before the template statement and extract the
-		-- template parameters names as well
-		if node_info.current:parent() == nil then
-			return result
-		end
-		if node_info.current:parent():type() == "template_declaration" then
-			return result:parent()
-		end
-		return result
-	end,
+    locator = function(node_info, nodes_to_match)
+        local result = neogen.default_locator(node_info, nodes_to_match)
+        if not result then
+            return nil
+        end
+        -- if the function happens to be a function template we want to place
+        -- the annotation before the template statement and extract the
+        -- template parameters names as well
+        if node_info.current:parent() == nil then
+            return result
+        end
+        if node_info.current:parent():type() == "template_declaration" then
+            return result:parent()
+        end
+        return result
+    end,
 
     -- Use default granulator and generator
     granulator = nil,
