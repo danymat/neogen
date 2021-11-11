@@ -73,7 +73,7 @@ local c_function_extractor = function(node)
             -- function implementation
             return res.return_statement
         elseif res.function_declarator and res.primitive_type then
-            if res.primitive_type or res.pointer_declarator then
+            if res.primitive_type[1] ~= "void" or res.pointer_declarator then
                 -- function prototype
                 return res.primitive_type
             end
