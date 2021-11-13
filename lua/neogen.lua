@@ -1,6 +1,7 @@
 local ok, ts_utils = pcall(require, "nvim-treesitter.ts_utils")
 assert(ok, "neogen requires nvim-treesitter to operate :(")
 
+---@diagnostic disable-next-line: lowercase-global
 neogen = {}
 
 -- Require utilities
@@ -18,91 +19,94 @@ neogen.generate = function(opts)
     opts = opts or {
         type = "func",
     }
-    vim.treesitter.get_parser(0):for_each_tree(function(tree, language_tree)
-        local language = neogen.configuration.languages[language_tree:lang()]
 
-        if language then
-            language.locator = language.locator or neogen.default_locator
-            language.granulator = language.granulator or neogen.default_granulator
-            language.generator = language.generator or neogen.default_generator
+    local parser = vim.treesitter.get_parser(0, vim.bo.filetype)
+    local tstree = parser:parse()[1]
+    local tree = tstree:root()
 
-            if not language.parent[opts.type] or not language.data[opts.type] then
-                return
-            end
+    local language = neogen.configuration.languages[vim.bo.filetype]
 
-            -- Use the language locator to locate one of the required parent nodes above the cursor
-            local located_parent_node = language.locator({
-                root = tree:root(),
-                current = ts_utils.get_node_at_cursor(0),
-            }, language.parent[opts.type])
+    if language then
+        language.locator = language.locator or neogen.default_locator
+        language.granulator = language.granulator or neogen.default_granulator
+        language.generator = language.generator or neogen.default_generator
 
-            if not located_parent_node then
-                return
-            end
+        if not language.parent[opts.type] or not language.data[opts.type] then
+            return
+        end
 
-            -- Use the language granulator to get the required content inside the node found with the locator
-            local data = language.granulator(located_parent_node, language.data[opts.type])
+        -- Use the language locator to locate one of the required parent nodes above the cursor
+        local located_parent_node = language.locator({
+            root = tree,
+            current = ts_utils.get_node_at_cursor(0),
+        }, language.parent[opts.type])
 
-            if data then
-                -- Will try to generate the documentation from a template and the data found from the granulator
-                local to_place, start_column, content = language.generator(
-                    located_parent_node,
-                    data,
-                    language.template,
-                    opts.type
-                )
+        if not located_parent_node then
+            return
+        end
 
-                if #content ~= 0 then
-                    neogen.utilities.cursor.del_extmarks() -- Delete previous extmarks before setting any new ones
+        -- Use the language granulator to get the required content inside the node found with the locator
+        local data = language.granulator(located_parent_node, language.data[opts.type])
 
-                    local jump_text = language.jump_text or neogen.configuration.jump_text
+        if data then
+            -- Will try to generate the documentation from a template and the data found from the granulator
+            local to_place, start_column, content = language.generator(
+                located_parent_node,
+                data,
+                language.template,
+                opts.type
+            )
 
-                    --- Removes jump_text marks and keep the second part of jump_text|other_text if there is one (which is other_text)
-                    local delete_marks = function(v)
-                        local pattern = jump_text .. "[|%w]+"
-                        local matched = string.match(v, pattern)
+            if #content ~= 0 then
+                neogen.utilities.cursor.del_extmarks() -- Delete previous extmarks before setting any new ones
 
-                        if matched then
-                            local split = vim.split(matched, "|", true)
-                            if #split == 2 and neogen.configuration.input_after_comment == false then
-                                return string.gsub(v, jump_text .. "|", "")
-                            end
-                        else
-                            return string.gsub(v, jump_text, "")
+                local jump_text = language.jump_text or neogen.configuration.jump_text
+
+                --- Removes jump_text marks and keep the second part of jump_text|other_text if there is one (which is other_text)
+                local delete_marks = function(v)
+                    local pattern = jump_text .. "[|%w]+"
+                    local matched = string.match(v, pattern)
+
+                    if matched then
+                        local split = vim.split(matched, "|", true)
+                        if #split == 2 and neogen.configuration.input_after_comment == false then
+                            return string.gsub(v, jump_text .. "|", "")
                         end
-
-                        return string.gsub(v, pattern, "")
+                    else
+                        return string.gsub(v, jump_text, "")
                     end
 
-                    local content_with_marks = vim.deepcopy(content)
+                    return string.gsub(v, pattern, "")
+                end
 
-                    -- delete all jump_text marks
-                    content = vim.tbl_map(delete_marks, content)
+                local content_with_marks = vim.deepcopy(content)
 
-                    -- Append the annotation in required place
-                    vim.fn.append(to_place, content)
+                -- delete all jump_text marks
+                content = vim.tbl_map(delete_marks, content)
 
-                    -- Place cursor after annotations and start editing
-                    if neogen.configuration.input_after_comment == true then
-                        -- Creates extmark for the beggining of the content
-                        neogen.utilities.cursor.create(to_place + 1, start_column)
-                        -- Creates extmarks for the content
-                        for i, value in pairs(content_with_marks) do
-                            local input_start, _ = string.find(value, jump_text)
-                            if input_start then
-                                neogen.utilities.cursor.create(to_place + i, input_start)
-                            end
+                -- Append the annotation in required place
+                vim.fn.append(to_place, content)
+
+                -- Place cursor after annotations and start editing
+                if neogen.configuration.input_after_comment == true then
+                    -- Creates extmark for the beggining of the content
+                    neogen.utilities.cursor.create(to_place + 1, start_column)
+                    -- Creates extmarks for the content
+                    for i, value in pairs(content_with_marks) do
+                        local input_start, _ = string.find(value, jump_text)
+                        if input_start then
+                            neogen.utilities.cursor.create(to_place + i, input_start)
                         end
-
-                        -- Creates extmark for the end of the content
-                        neogen.utilities.cursor.create(to_place + #content + 1, 0)
-
-                        neogen.utilities.cursor.jump({ first_time = true })
                     end
+
+                    -- Creates extmark for the end of the content
+                    neogen.utilities.cursor.create(to_place + #content + 1, 0)
+
+                    neogen.utilities.cursor.jump({ first_time = true })
                 end
             end
         end
-    end)
+    end
 end
 
 function neogen.jump_next()
