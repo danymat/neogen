@@ -48,6 +48,11 @@ local c_function_extractor = function(node)
         },
         {
             retrieve = "first",
+            node_type = "type_identifier",
+            extract = true,
+        },
+        {
+            retrieve = "first",
             node_type = "primitive_type",
             extract = true,
         },
@@ -72,8 +77,10 @@ local c_function_extractor = function(node)
         if res.return_statement then
             -- function implementation
             return res.return_statement
-        elseif res.function_declarator and res.primitive_type then
-            if res.primitive_type[1] ~= "void" or res.pointer_declarator then
+        elseif res.function_declarator and (res.primitive_type or res.type_identifier) then
+            if res.type_identifier then
+                return res.type_identifier
+            elseif res.primitive_type[1] ~= "void" or res.pointer_declarator then
                 -- function prototype
                 return res.primitive_type
             end
@@ -82,9 +89,14 @@ local c_function_extractor = function(node)
         return nil
     end
 
+    if node:type() == "template_declaration" then
+        res.tparam = res.type_identifier
+    end
+
     return {
         parameters = res.identifier,
         type_identifier = res.type_identifier,
+        tparam = res.tparam,
         return_statement = has_return_statement(),
     }
 end
@@ -143,7 +155,7 @@ return {
             { nil, "/**" },
             { nil, " * @brief $1" },
             { nil, " *" },
-            { "type_identifier", " * @tparam %s $1" },
+            { "tparam", " * @tparam %s $1" },
             { "parameters", " * @param %s $1" },
             { "return_statement", " * @return $1" },
             { nil, " */" },
