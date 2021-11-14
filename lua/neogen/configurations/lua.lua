@@ -138,7 +138,7 @@ return {
             { "vararg", "- @vararg $1|any" },
             { "return_statement", "- @return $1|any" },
             { "class_name", "- @class $1|any" },
-            { "type", "- @type %s $1" },
+            { "type", "- @type $1" },
         },
         ldoc = {
             { nil, "- $1", { no_results = true, type = { "func" } } },
