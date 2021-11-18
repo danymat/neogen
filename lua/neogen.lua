@@ -125,7 +125,6 @@ neogen.setup = function(opts)
     neogen.configuration = vim.tbl_deep_extend("keep", opts or {}, {
         input_after_comment = true, -- bool, If you want to jump with the cursor after annotation
         jump_text = "$1", -- symbol to find for jumping cursor in template
-        jump_map = "<C-e>",
         -- DEFAULT CONFIGURATION
         languages = {
             lua = require("neogen.configurations.lua"),
@@ -141,15 +140,6 @@ neogen.setup = function(opts)
 
     if neogen.configuration.enabled == true then
         neogen.generate_command()
-        vim.api.nvim_set_keymap("i", neogen.configuration.jump_map, "<cmd>lua require('neogen').jump_next()<CR>", {})
-        vim.notify(
-            [[
-[neogen] Future deprecation: `jump_map` option will be deprecated in favor of user keybinds.
-You can do something like this:
-vim.api.nvim_set_keymap("n", "<C-e>", ":lua require('neogen').jump_next()<CR>", { silent = true, noremap = true })
-            ]],
-            vim.log.levels.WARN
-        )
     end
 end
 
