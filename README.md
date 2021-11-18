@@ -80,13 +80,16 @@ vim.api.nvim_set_keymap("n", "<Leader>nc", ":lua require('neogen').generate({ ty
 
 ### Cycle between annotations
 
-I added support passing cursor positionings in templates.
+I added support passing cursor positionings in templates. That means you can now cycle your cursor between different parts of the annotation.
 
-That means you can now cycle your cursor between different parts of the annotation.
+To configure it to the keybind of your choice, you can do something like this:
 
-The default keybind is `<C-e>` in insert mode. 
+```lua
+local opts = { noremap = true, silent = true }
+vim.api.nvim_set_keymap("n", "<C-e>", ":lua require('neogen').jump_next()<CR>", opts)
+```
 
-If you want to add `<Tab>` completion instead, be sure you don't have a completion plugin. If so, you have to configure them:
+If you want to use a key that's already used for completion purposes, take a look at the code snippet here:
 
 <details>
    <summary>nvim-cmp</summary>

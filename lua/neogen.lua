@@ -142,6 +142,14 @@ neogen.setup = function(opts)
     if neogen.configuration.enabled == true then
         neogen.generate_command()
         vim.api.nvim_set_keymap("i", neogen.configuration.jump_map, "<cmd>lua require('neogen').jump_next()<CR>", {})
+        vim.notify(
+            [[
+[neogen] Future deprecation: `jump_map` option will be deprecated in favor of user keybinds.
+You can do something like this:
+vim.api.nvim_set_keymap("n", "<C-e>", ":lua require('neogen').jump_next()<CR>", { silent = true, noremap = true })
+            ]],
+            vim.log.levels.WARN
+        )
     end
 end
 
