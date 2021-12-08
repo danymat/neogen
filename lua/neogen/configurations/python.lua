@@ -114,7 +114,6 @@ return {
             { "parameters", "\t%s: $1", { before_first_item = { "", "Args:" } } },
             { "attributes", "\t%s: $1", { before_first_item = { "", "Attributes: " } } },
             { "return_statement", "\t$1", { before_first_item = { "", "Returns: " } } },
-            { nil, "" },
             { nil, '"""' },
         },
         numpydoc = {
@@ -123,7 +122,6 @@ return {
             { "parameters", "%s: $1", { before_first_item = { "", "Parameters", "----------" } } },
             { "attributes", "%s: $1", { before_first_item = { "", "Attributes", "----------" } } },
             { "return_statement", "$1", { before_first_item = { "", "Returns", "-------" } } },
-            { nil, "" },
             { nil, '"""' },
         },
     },
