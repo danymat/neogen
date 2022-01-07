@@ -85,6 +85,10 @@ return {
 
                         local nodes = neogen.utilities.nodes:matching_nodes_from(node, tree)
 
+                        if vim.tbl_isempty(nodes) then
+                            return {}
+                        end
+
                         results.attributes = {}
                         for _, assignment in pairs(nodes["assignment"]) do
                             local left_side = assignment:field("left")[1]
