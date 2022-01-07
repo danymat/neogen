@@ -73,16 +73,19 @@ local c_function_extractor = function(node)
         res = vim.tbl_deep_extend("keep", res, subres)
     end
 
+    --- Checks if we have a return statement.
+    --- If so, return { true } as we don't need to properly know the content of the node for the template
+    --- @return table?
     local has_return_statement = function()
         if res.return_statement then
             -- function implementation
             return res.return_statement
         elseif res.function_declarator and (res.primitive_type or res.type_identifier) then
             if res.type_identifier then
-                return res.type_identifier
+                return { true }
             elseif res.primitive_type[1] ~= "void" or res.pointer_declarator then
                 -- function prototype
-                return res.primitive_type
+                return { true }
             end
         end
         -- not found
