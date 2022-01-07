@@ -114,20 +114,26 @@ cmp.setup {
 
     -- You must set mapping if you want.
     mapping = {
-        ["<tab>"] = cmp.mapping(function(fallback)
-            if vim.fn.pumvisible() == 1 then
-                vim.fn.feedkeys(t("<C-n>"), "n")
-            elseif neogen.jumpable() then
-                vim.fn.feedkeys(t("<cmd>lua require('neogen').jump_next()<CR>"), "")
-            elseif check_back_space() then
-                vim.fn.feedkeys(t("<tab>"), "n")
-            else
-                fallback()
-            end
-        end, {
-            "i",
-            "s",
-        }),
+		["<tab>"] = cmp.mapping(function(fallback)
+			if neogen.jumpable() then
+				vim.fn.feedkeys(t("<cmd>lua require('neogen').jump_next()<CR>"), "")
+			else
+				fallback()
+			end
+		end, {
+			"i",
+			"s",
+		}),
+		["<S-tab>"] = cmp.mapping(function(fallback)
+			if neogen.jumpable(-1) then
+				vim.fn.feedkeys(t("<cmd>lua require('neogen').jump_prev()<CR>"), "")
+			else
+				fallback()
+			end
+		end, {
+			"i",
+			"s",
+		}),
     },
     ...
 }

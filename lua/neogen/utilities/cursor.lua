@@ -1,12 +1,14 @@
 neogen.utilities.cursor = {}
 
 local neogen_ns = vim.api.nvim_create_namespace("neogen")
+local current_position = 1
 
 --- Wrapper around set_extmark with 1-based numbering for `line` and `col`, and returns the id of the created extmark
 --- @param line string
 --- @param col string
 --- @return number
 neogen.utilities.cursor.create = function(line, col)
+    current_position = 1
     return vim.api.nvim_buf_set_extmark(0, neogen_ns, line - 1, col - 1, {})
 end
 
@@ -15,13 +17,13 @@ end
 --- First jumpable extmark is the one after the extmarks responsible of start/end of annotation
 neogen.utilities.cursor.go_next_extmark = function()
     local extm_list = vim.api.nvim_buf_get_extmarks(0, neogen_ns, 0, -1, {})
+    local position = current_position + 1
+
     if #extm_list ~= 2 then
-        local pos = { extm_list[2][2] + 1, extm_list[2][3] }
+        local pos = { extm_list[position][2] + 1, extm_list[position][3] }
 
         vim.api.nvim_win_set_cursor(0, pos)
-        if #extm_list ~= 0 then
-            vim.api.nvim_buf_del_extmark(0, neogen_ns, extm_list[1][1])
-        end
+        current_position = current_position + 1
         return true
     else
         return false
@@ -45,6 +47,20 @@ neogen.utilities.cursor.jump = function(opts)
     end
 end
 
+neogen.utilities.cursor.jump_prev = function()
+    local marks = vim.api.nvim_buf_get_extmarks(0, neogen_ns, 0, -1, {})
+
+    if #marks == 2 then
+        return false
+    end
+
+    local position = current_position - 1
+    local pos = { marks[position][2] + 1, marks[position][3] }
+    vim.api.nvim_win_set_cursor(0, pos)
+    current_position = current_position - 1
+    return true
+end
+
 --- Delete all active extmarks
 neogen.utilities.cursor.del_extmarks = function()
     local extmarks = vim.api.nvim_buf_get_extmarks(0, neogen_ns, 0, -1, {})
@@ -55,7 +71,7 @@ end
 
 --- Checks if there are still possible jump positions to perform
 --- Verifies if the cursor is in the last annotated part
-neogen.utilities.cursor.jumpable = function()
+neogen.utilities.cursor.jumpable = function(reverse)
     local extm_list = vim.api.nvim_buf_get_extmarks(0, neogen_ns, 0, -1, {})
     if #extm_list == 0 then
         return false
@@ -64,6 +80,19 @@ neogen.utilities.cursor.jumpable = function()
     if cursor[1] > extm_list[#extm_list][2] or cursor[1] < extm_list[1][2] then
         return false
     end
+
+    -- We arrive at the end, we can't jump anymore
+    if current_position == #extm_list then
+        return false
+    end
+
+    if reverse == -1 then
+        -- Check first boundaries
+        if current_position == 1 then
+            return false
+        end
+    end
+
     if #extm_list > 2 then
         return true
     else

@@ -88,6 +88,7 @@ neogen.generate = function(opts)
                 vim.fn.append(to_place, content)
 
                 -- Place cursor after annotations and start editing
+                -- First and last extmarks are needed to know the range of inserted content
                 if neogen.configuration.input_after_comment == true then
                     -- Creates extmark for the beggining of the content
                     neogen.utilities.cursor.create(to_place + 1, start_column)
@@ -113,9 +114,15 @@ function neogen.jump_next()
     neogen.utilities.cursor.jump()
 end
 
-function neogen.jumpable()
-    return neogen.utilities.cursor.jumpable()
+function neogen.jump_prev()
+    neogen.utilities.cursor.jump_prev()
 end
+
+function neogen.jumpable(reverse)
+    return neogen.utilities.cursor.jumpable(reverse)
+end
+
+
 
 function neogen.generate_command()
     vim.api.nvim_command('command! -range -bar Neogen lua require("neogen").generate()')
