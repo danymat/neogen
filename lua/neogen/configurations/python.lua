@@ -121,6 +121,24 @@ return {
         annotation_convention = "google_docstrings", -- required: Which annotation convention to use (default_generator)
         append = { position = "after", child_name = "block" }, -- optional: where to append the text (default_generator)
         use_default_comment = false, -- If you want to prefix the template with the default comment for the language, e.g for python: # (default_generator)
+        position = function(node, type)
+            if type == "file" then
+                -- Checks if the file starts with #!, that means it's a shebang line
+                -- We will then write file annotations just after it
+                for child in node:iter_children() do
+                    if child:type() == "comment" then
+                        local start_row = child:start()
+                        if start_row == 0 then
+                            if vim.startswith(ts_utils.get_node_text(node, 0)[1], "#!") then
+                                return 1, 0
+                            end
+                        end
+                    end
+                end
+                return 0, 0
+            end
+        end,
+
         google_docstrings = {
             { nil, '""" $1 """', { no_results = true, type = { "class", "func" } } },
             { nil, '"""$1', { no_results = true, type = { "file" } } },
