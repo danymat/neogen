@@ -9,7 +9,8 @@ local current_position = 1
 --- @return number
 neogen.utilities.cursor.create = function(line, col)
     current_position = 1
-    return vim.api.nvim_buf_set_extmark(0, neogen_ns, line - 1, col - 1, {})
+    local new_col = col == 0 and 0 or col -1
+    return vim.api.nvim_buf_set_extmark(0, neogen_ns, line - 1, new_col, {})
 end
 
 --- Find next created extmark and goes to it.
