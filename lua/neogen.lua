@@ -94,9 +94,15 @@ neogen.generate = function(opts)
                     neogen.utilities.cursor.create(to_place + 1, start_column)
                     -- Creates extmarks for the content
                     for i, value in pairs(content_with_marks) do
-                        local input_start, _ = string.find(value, jump_text)
-                        if input_start then
-                            neogen.utilities.cursor.create(to_place + i, input_start)
+                        local start = 0
+                        local count = 0
+                        while true do
+                            start = string.find(value, jump_text, start + 1)
+                            if not start then
+                                break
+                            end
+                            neogen.utilities.cursor.create(to_place + i, start - count * #jump_text)
+                            count = count + 1
                         end
                     end
 
