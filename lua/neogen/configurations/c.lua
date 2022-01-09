@@ -68,7 +68,7 @@ local c_function_extractor = function(node)
     local res = neogen.utilities.extractors:extract_from_matched(nodes)
 
     if nodes.function_declarator then
-        local subnodes = neogen.utilities.nodes:matching_nodes_from(nodes.function_declarator[1], tree)
+        local subnodes = neogen.utilities.nodes:matching_nodes_from(nodes.function_declarator[1]:parent(), tree)
         local subres = neogen.utilities.extractors:extract_from_matched(subnodes)
         res = vim.tbl_deep_extend("keep", res, subres)
     end
@@ -77,13 +77,16 @@ local c_function_extractor = function(node)
     --- If so, return { true } as we don't need to properly know the content of the node for the template
     --- @return table?
     local has_return_statement = function()
+        if res.primitive_type and res.primitive_type[1] == "void" then
+            return
+        end
         if res.return_statement then
             -- function implementation
             return res.return_statement
         elseif res.function_declarator and (res.primitive_type or res.type_identifier) then
             if res.type_identifier then
                 return { true }
-            elseif res.primitive_type[1] ~= "void" or res.pointer_declarator then
+            elseif res.primitive_type and res.primitive_type[1] ~= "void" or res.pointer_declarator then
                 -- function prototype
                 return { true }
             end
