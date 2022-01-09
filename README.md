@@ -194,6 +194,8 @@ There is a list of supported languages and fields, with their annotation style
 | | [Godoc](https://go.dev/blog/godoc) (`"godoc"`) | |
 | java | | | `func`, `class` |
 | | [Javadoc](https://docs.oracle.com/javase/1.5.0/docs/tooldocs/windows/javadoc.html#documentationcomments) (`"javadoc"`) | |
+| rust | | | `func`, `file` |
+| | [Rustdoc](https://doc.rust-lang.org/rustdoc/what-is-rustdoc.html) (`"rustdoc"`) | |
 
 
 ## Adding Languages

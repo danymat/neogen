@@ -122,8 +122,6 @@ function neogen.jumpable(reverse)
     return neogen.utilities.cursor.jumpable(reverse)
 end
 
-
-
 function neogen.generate_command()
     vim.api.nvim_command('command! -range -bar Neogen lua require("neogen").generate()')
 end
@@ -142,6 +140,7 @@ neogen.setup = function(opts)
             cpp = require("neogen.configurations.c"),
             go = require("neogen.configurations.go"),
             java = require("neogen.configurations.java"),
+            rust = require("neogen.configurations.rust"),
         },
     })
 
