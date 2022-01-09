@@ -69,7 +69,7 @@ You can provide some options for the generate, like so:
 
 ```lua
 require('neogen').generate({
-    type = "func" -- the annotation type to generate. Currently supported: func, class, type
+    type = "func" -- the annotation type to generate. Currently supported: func, class, type, file
 })
 ```
 
@@ -186,9 +186,9 @@ There is a list of supported languages and fields, with their annotation style
 | | [JSDoc](https://jsdoc.app) (`"jsdoc"`) | `@param`, `@returns`, `@class`, `@classdesc` |
 | typescript | | | `func`, `class` |
 | | [JSDoc](https://jsdoc.app) (`"jsdoc"`) | `@param`, `@returns`, `@class`, `@classdesc`, `@type` |
-| c | | | `func` |
+| c | | | `func`, `file`|
 | | [Doxygen](https://www.doxygen.nl/manual/commands.html) (`"doxygen"`) | `@param`, `@return`, `@brief`| 
-| cpp | | | `func` |
+| cpp | | | `func`, `file` |
 | | [Doxygen](https://www.doxygen.nl/manual/commands.html) (`"doxygen"`) | `@param`, `@return`, `@tparam`, `@brief`| 
 | go | | | |
 | | [Godoc](https://go.dev/blog/godoc) (`"godoc"`) | |

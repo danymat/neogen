@@ -1,8 +1,12 @@
+--- @class node_info
+--- @field current userdata the current node from cursor
+--- @field root userdata the root node
+
 --- The default locator tries to find one of the nodes to match in the current node
 --- If it does not find one, will fetch the parents until he finds one
---- @param node_info table a node informations
+--- @param node_info node_info a node informations
 --- @param nodes_to_match table a list of parent nodes to match
---- @return node_info.current node one of the nodes to match directly above the given node
+--- @return userdata node one of the nodes to match directly above the given node
 neogen.default_locator = function(node_info, nodes_to_match)
     -- If we find one of the wanted nodes in current one, return the current node
     if vim.tbl_contains(nodes_to_match, node_info.current:type()) then

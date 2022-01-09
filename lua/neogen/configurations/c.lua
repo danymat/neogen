@@ -113,6 +113,7 @@ return {
             "field_declaration",
             "template_declaration",
         },
+        file = { "translation_unit" },
     },
 
     data = {
@@ -120,6 +121,15 @@ return {
             ["function_declaration|function_definition|declaration|field_declaration|template_declaration"] = {
                 ["0"] = {
                     extract = c_function_extractor,
+                },
+            },
+        },
+        file = {
+            ["translation_unit"] = {
+                ["0"] = {
+                    extract = function()
+                        return {}
+                    end,
                 },
             },
         },
@@ -151,13 +161,15 @@ return {
         use_default_comment = false,
 
         doxygen = {
-            { nil, "/**", { no_results = true } },
-            { nil, " * @brief $1", { no_results = true } },
-            { nil, " */", { no_results = true } },
+            { nil, "/**", { no_results = true, type = { "func", "file" } } },
+            { nil, " * @file", { no_results = true, type = { "file" } } },
+            { nil, " * @brief $1", { no_results = true, type = { "func", "file" } } },
+            { nil, " */", { no_results = true, type = { "func", "file" } } },
+            { nil, "", { no_results = true, type = { "file" } } },
 
-            { nil, "/**" },
-            { nil, " * @brief $1" },
-            { nil, " *" },
+            { nil, "/**", type = { "func" } },
+            { nil, " * @brief $1", type = { "func" } },
+            { nil, " *", type = { "func" } },
             { "tparam", " * @tparam %s $1" },
             { "parameters", " * @param %s $1" },
             { "return_statement", " * @return $1" },
