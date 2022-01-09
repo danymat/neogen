@@ -54,7 +54,7 @@ return {
                 },
             },
             ["expression_statement|variable_declaration"] = {
-                ["1"] = {
+                ["0"] = {
                     extract = function(node)
                         local results = {}
                         local tree = { { retrieve = "all", node_type = "function", subtree = function_tree } }
