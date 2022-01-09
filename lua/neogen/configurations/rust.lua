@@ -1,12 +1,12 @@
 return {
     parent = {
-        func = { "function_item" },
-        class = { "struct_item" },
+        func = { "function_item", "function_signature_item" },
+        class = { "struct_item", "trait_item" },
         file = { "source_file" },
     },
     data = {
         func = {
-            ["function_item"] = {
+            ["function_item|function_signature_item"] = {
                 ["0"] = {
                     extract = function(node)
                         local tree = {
@@ -46,7 +46,7 @@ return {
             },
         },
         class = {
-            ["struct_item"] = {
+            ["struct_item|trait_item"] = {
                 ["0"] = {
                     extract = function(node)
                         local tree = {
