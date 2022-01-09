@@ -1,6 +1,7 @@
 return {
     parent = {
         func = { "function_item" },
+        class = { "struct_item" },
         file = { "source_file" },
     },
     data = {
@@ -22,6 +23,15 @@ return {
                 },
             },
         },
+        class = {
+            ["struct_item"] = {
+                ["0"] = {
+                    extract = function()
+                        return {}
+                    end,
+                },
+            },
+        },
     },
 
     template = {
@@ -30,7 +40,7 @@ return {
             { nil, "! $1", { no_results = true, type = { "file" } } },
             { nil, "", { no_results = true, type = { "file" } } },
 
-            { nil, "/ $1", { no_results = true, type = { "func" } } },
+            { nil, "/ $1", { no_results = true, type = { "func", "class" } } },
         },
     },
 }
