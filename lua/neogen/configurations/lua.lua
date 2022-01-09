@@ -61,6 +61,7 @@ return {
         func = { "function", "local_function", "local_variable_declaration", "field", "variable_declaration" },
         class = { "local_variable_declaration", "variable_declaration" },
         type = { "local_variable_declaration", "variable_declaration" },
+        file = { "program" },
     },
 
     data = {
@@ -119,6 +120,15 @@ return {
                 },
             },
         },
+        file = {
+            ["program"] = {
+                ["0"] = {
+                    extract = function()
+                        return {}
+                    end,
+                },
+            },
+        },
     },
 
     -- Custom lua locator that escapes from comments
@@ -133,7 +143,13 @@ return {
         annotation_convention = "emmylua",
         emmylua = {
             { nil, "- $1", { type = { "class", "func" } } }, -- add this string only on requested types
-            { nil, "- $1", { no_results = true } }, -- Shows only when there's no results from the granulator
+            { nil, "- $1", { no_results = true, type = { "class", "func" } } }, -- Shows only when there's no results from the granulator
+            { nil, "- @module $1", { no_results = true, type = { "file" } } },
+            { nil, "- @author $1", { no_results = true, type = { "file" } } },
+            { nil, "- @license $1", { no_results = true, type = { "file" } } },
+            { nil, "- @license $1", { no_results = true, type = { "file" } } },
+            { nil, "", { no_results = true, type = { "file" } } },
+
             { "parameters", "- @param %s $1|any" },
             { "vararg", "- @vararg $1|any" },
             { "return_statement", "- @return $1|any" },
