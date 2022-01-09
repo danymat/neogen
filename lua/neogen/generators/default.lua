@@ -50,11 +50,26 @@ end
 --- @param required_type string
 --- @return table { line, content, opts }, with line being the line to append the content
 neogen.default_generator = function(parent, data, template, required_type)
-    local start_row, start_column, end_row, end_column = ts_utils.get_node_range(parent)
+    local row_to_place, col_to_place
+    -- You can use a custom position placement
+    if template.position and type(template.position) == "function" then
+        row_to_place, col_to_place = template.position(parent, required_type)
+    end
+
+    -- If the custom placement does not return the correct row and cols, default to the node range
+    -- Same if there is no custom placement
+    if not row_to_place and not col_to_place then
+        -- Because the file type is always at top
+        if required_type == "file" then
+            row_to_place = 0
+            col_to_place = 0
+        else
+            row_to_place, col_to_place, _, _ = ts_utils.get_node_range(parent)
+        end
+    end
+
     local commentstring, generated_template = vim.trim(vim.api.nvim_buf_get_option(0, "commentstring"):format(""))
 
-    local row_to_place = start_row
-    local col_to_place = start_column
     local append = template.append or {}
 
     if append.position == "after" then
@@ -87,9 +102,7 @@ neogen.default_generator = function(parent, data, template, required_type)
             local type = values[1]
             local formatted_string = values[2]
             local opts = vim.deepcopy(values[3]) or {}
-            if not opts.type then
-                opts.type = { required_type }
-            end
+            opts.type = opts.type or { required_type }
 
             if opts.type and vim.tbl_contains(opts.type, required_type) then
                 -- Will append the item before all their nodes
@@ -98,8 +111,6 @@ neogen.default_generator = function(parent, data, template, required_type)
                 end
 
                 -- If there is no data returned, will append the string with opts.no_results
-                --P(data)
-                --P(opts)
                 if opts.no_results == true and vim.tbl_isempty(data) then
                     local inserted = conditional_prefix_inserter(prefix, formatted_string)
                     table.insert(result, inserted)

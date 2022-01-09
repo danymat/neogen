@@ -140,6 +140,11 @@ return {
         if not result then
             return nil
         end
+
+        if node_info.current == nil then
+            return result
+        end
+
         -- if the function happens to be a function template we want to place
         -- the annotation before the template statement and extract the
         -- template parameters names as well
