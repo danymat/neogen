@@ -2,7 +2,7 @@ local ts_utils = require("nvim-treesitter.ts_utils")
 
 return {
     -- Search for these nodes
-    parent = { func = { "function_definition" }, class = { "class_definition" } },
+    parent = { func = { "function_definition" }, class = { "class_definition" }, file = { "module" } },
 
     -- Traverse down these nodes and extract the information as necessary
     data = {
@@ -101,6 +101,15 @@ return {
                 },
             },
         },
+        file = {
+            ["module"] = {
+                ["0"] = {
+                    extract = function()
+                        return {}
+                    end,
+                },
+            },
+        },
     },
 
     -- Use default granulator and generator
@@ -113,16 +122,28 @@ return {
         append = { position = "after", child_name = "block" }, -- optional: where to append the text (default_generator)
         use_default_comment = false, -- If you want to prefix the template with the default comment for the language, e.g for python: # (default_generator)
         google_docstrings = {
+            { nil, '""" $1 """', { no_results = true, type = { "class", "func" } } },
+            { nil, '"""$1', { no_results = true, type = { "file" } } },
+            { nil, "", { no_results = true, type = { "file" } } },
+            { nil, "$1", { no_results = true, type = { "file" } } },
+            { nil, '"""', { no_results = true, type = { "file" } } },
+            { nil, "", { no_results = true, type = { "file" } } },
+
             { nil, '"""$1' },
-            { nil, '""" $1 """', { no_results = true } },
             { "parameters", "\t%s: $1", { before_first_item = { "", "Args:" } } },
             { "attributes", "\t%s: $1", { before_first_item = { "", "Attributes: " } } },
             { "return_statement", "\t$1", { before_first_item = { "", "Returns: " } } },
             { nil, '"""' },
         },
         numpydoc = {
+            { nil, '""" $1 """', { no_results = true, type = { "class", "func" } } },
+            { nil, '"""$1', { no_results = true, type = { "file" } } },
+            { nil, "", { no_results = true, type = { "file" } } },
+            { nil, "$1", { no_results = true, type = { "file" } } },
+            { nil, '"""', { no_results = true, type = { "file" } } },
+            { nil, "", { no_results = true, type = { "file" } } },
+
             { nil, '"""$1' },
-            { nil, '""" $1 """', { no_results = true } },
             { "parameters", "%s: $1", { before_first_item = { "", "Parameters", "----------" } } },
             { "attributes", "%s: $1", { before_first_item = { "", "Attributes", "----------" } } },
             { "return_statement", "$1", { before_first_item = { "", "Returns", "-------" } } },

@@ -179,7 +179,7 @@ There is a list of supported languages and fields, with their annotation style
 | lua | | | `func`, `class`, `type` |
 | | [Emmylua](https://emmylua.github.io/) (`"emmylua"`) | `@param`, `@varargs`, `@return`, `@class`, `@type` |
 | | [Ldoc](https://stevedonovan.github.io/ldoc/manual/doc.md.html) (`"ldoc"`) | `@param`, `@varargs`, `@return`, `@class`, `@type` |
-| python | | | `func`, `class` |
+| python | | | `func`, `class`, `file` |
 | | [Google docstrings](https://google.github.io/styleguide/pyguide.html) (`"google_docstrings"`) | `Args`, `Attributes`, `Returns` |
 | | [Numpydoc](https://numpydoc.readthedocs.io/en/latest/format.html) (`"numpydoc"`)| `Arguments`, `Attributes`, `Returns`|
 | javascript | | | `func`, `class` |
