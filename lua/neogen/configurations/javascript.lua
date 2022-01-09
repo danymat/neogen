@@ -19,6 +19,7 @@ return {
     parent = {
         func = { "function_declaration", "expression_statement", "variable_declaration", "lexical_declaration" },
         class = { "function_declaration", "expression_statement", "variable_declaration", "class_declaration" },
+        file = { "program" },
     },
 
     data = {
@@ -79,6 +80,15 @@ return {
                 },
             },
         },
+        file = {
+            ["program"] = {
+                ["0"] = {
+                    extract = function()
+                        return {}
+                    end,
+                },
+            },
+        },
     },
 
     template = {
@@ -86,7 +96,12 @@ return {
         use_default_comment = false,
 
         jsdoc = {
-            { nil, "/* $1 */", { no_results = true } },
+            { nil, "/* $1 */", { no_results = true, type = { "func", "class" } } },
+
+            { nil, "/**", { no_results = true, type = { "file" } } },
+            { nil, " * @module $1", { no_results = true, type = { "file" } } },
+            { nil, " */", { no_results = true, type = { "file" } } },
+
             { nil, "/**" },
             { "class_tag", " * @classdesc $1", { before_first_item = { " * ", " * @class" }, type = { "class" } } },
             { "parameters", " * @param {any} %s $1" },

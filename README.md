@@ -182,14 +182,14 @@ There is a list of supported languages and fields, with their annotation style
 | python | | | `func`, `class`, `file` |
 | | [Google docstrings](https://google.github.io/styleguide/pyguide.html) (`"google_docstrings"`) | `Args`, `Attributes`, `Returns` |
 | | [Numpydoc](https://numpydoc.readthedocs.io/en/latest/format.html) (`"numpydoc"`)| `Arguments`, `Attributes`, `Returns`|
-| javascript | | | `func`, `class` |
-| | [JSDoc](https://jsdoc.app) (`"jsdoc"`) | `@param`, `@returns`, `@class`, `@classdesc` |
-| typescript | | | `func`, `class` |
-| | [JSDoc](https://jsdoc.app) (`"jsdoc"`) | `@param`, `@returns`, `@class`, `@classdesc`, `@type` |
+| javascript | | | `func`, `class`, `file`|
+| | [JSDoc](https://jsdoc.app) (`"jsdoc"`) | `@param`, `@returns`, `@class`, `@classdesc`, `@module`|
+| typescript | | | `func`, `class`, `file`|
+| | [JSDoc](https://jsdoc.app) (`"jsdoc"`) | `@param`, `@returns`, `@class`, `@classdesc`, `@type`, `@module`|
 | c | | | `func`, `file`|
-| | [Doxygen](https://www.doxygen.nl/manual/commands.html) (`"doxygen"`) | `@param`, `@return`, `@brief`| 
+| | [Doxygen](https://www.doxygen.nl/manual/commands.html) (`"doxygen"`) | `@param`, `@return`, `@brief`, `@file`| 
 | cpp | | | `func`, `file` |
-| | [Doxygen](https://www.doxygen.nl/manual/commands.html) (`"doxygen"`) | `@param`, `@return`, `@tparam`, `@brief`| 
+| | [Doxygen](https://www.doxygen.nl/manual/commands.html) (`"doxygen"`) | `@param`, `@return`, `@tparam`, `@brief`, `@file`| 
 | go | | | |
 | | [Godoc](https://go.dev/blog/godoc) (`"godoc"`) | |
 | java | | | `func`, `class` |
