@@ -17,14 +17,20 @@ local function_tree = {
 
 return {
     parent = {
-        func = { "function_declaration", "expression_statement", "variable_declaration", "lexical_declaration" },
+        func = {
+            "function_declaration",
+            "expression_statement",
+            "variable_declaration",
+            "lexical_declaration",
+            "method_definition",
+        },
         class = { "function_declaration", "expression_statement", "variable_declaration", "class_declaration" },
         file = { "program" },
     },
 
     data = {
         func = {
-            ["function_declaration"] = {
+            ["method_definition|function_declaration"] = {
                 ["0"] = {
 
                     extract = function(node)
@@ -40,7 +46,7 @@ return {
                 },
             },
             ["expression_statement|variable_declaration"] = {
-                ["1"] = {
+                ["0"] = {
                     extract = function(node)
                         local results = {}
                         local tree = { { retrieve = "all", node_type = "function", subtree = function_tree } }
