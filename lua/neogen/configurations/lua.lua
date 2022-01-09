@@ -157,8 +157,9 @@ return {
             { "type", "- @type $1" },
         },
         ldoc = {
-            { nil, "- $1", { no_results = true, type = { "func" } } },
-            { nil, "- $1", { type = { "func" } } },
+            { nil, "- $1", { no_results = true, type = { "func", "class" } } },
+            { nil, "- $1", { type = { "func", "class" } } },
+
             { "parameters", " @tparam $1|any %s " },
             { "return_statement", " @treturn $1|any" },
         },
