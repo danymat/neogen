@@ -166,7 +166,7 @@ return {
                 { required = "parameters" },
                 { type = { "func" } },
             },
-            { "return_statement", " * @returns {$1|any}", { type = { "func" } } },
+            { "return_statement", " * @returns {$1} $1", { type = { "func" } } },
             { nil, " */", { type = { "class", "func" } } },
 
             { "type", "/* @type {$1|any} */", { type = { "type" } } },
