@@ -91,7 +91,7 @@ neogen.generate = function(opts)
                 -- First and last extmarks are needed to know the range of inserted content
                 if neogen.configuration.input_after_comment == true then
                     -- Creates extmark for the beggining of the content
-                    neogen.utilities.cursor.create(to_place + 1, start_column, true)
+                    neogen.utilities.cursor.create(to_place + 1, start_column)
                     -- Creates extmarks for the content
                     for i, value in pairs(content_with_marks) do
                         local start = 0
@@ -106,8 +106,12 @@ neogen.generate = function(opts)
                         end
                     end
 
+                    -- Create extmark to jump back to current location
+                    local pos = vim.api.nvim_win_get_cursor(0)
+                    neogen.utilities.cursor.create(pos[1], pos[2])
+
                     -- Creates extmark for the end of the content
-                    neogen.utilities.cursor.create(to_place + #content + 1, 0, true)
+                    neogen.utilities.cursor.create(to_place + #content + 1, 0)
 
                     neogen.utilities.cursor.jump({ first_time = true })
                 end
