@@ -26,6 +26,7 @@ return {
         },
         class = { "function_declaration", "expression_statement", "variable_declaration", "class_declaration" },
         file = { "program" },
+        type = { "variable_declaration", "lexical_declaration" },
     },
 
     data = {
@@ -95,6 +96,15 @@ return {
                 },
             },
         },
+        type = {
+            ["variable_declaration|lexical_declaration"] = {
+                ["0"] = {
+                    extract = function()
+                        return {}
+                    end,
+                },
+            },
+        },
     },
 
     template = {
@@ -103,16 +113,17 @@ return {
 
         jsdoc = {
             { nil, "/* $1 */", { no_results = true, type = { "func", "class" } } },
+            { nil, "/* @type $1 */", { no_results = true, type = { "type" } } },
 
             { nil, "/**", { no_results = true, type = { "file" } } },
             { nil, " * @module $1", { no_results = true, type = { "file" } } },
             { nil, " */", { no_results = true, type = { "file" } } },
 
-            { nil, "/**" },
+            { nil, "/**", { type = { "class", "func" } } },
             { "class_tag", " * @classdesc $1", { before_first_item = { " * ", " * @class" }, type = { "class" } } },
-            { "parameters", " * @param {any} %s $1" },
-            { "return_statement", " * @returns {$1|any}" },
-            { nil, " */" },
+            { "parameters", " * @param {any} %s $1", { type = { "func" } } },
+            { "return_statement", " * @returns {$1|any}", { type = { "func" } } },
+            { nil, " */", { type = { "class", "func" } } },
         },
     },
 }

@@ -182,8 +182,8 @@ There is a list of supported languages and fields, with their annotation style
 | python | | | `func`, `class`, `file` |
 | | [Google docstrings](https://google.github.io/styleguide/pyguide.html) (`"google_docstrings"`) | `Args`, `Attributes`, `Returns` |
 | | [Numpydoc](https://numpydoc.readthedocs.io/en/latest/format.html) (`"numpydoc"`)| `Arguments`, `Attributes`, `Returns`|
-| javascript | | | `func`, `class`, `file`|
-| | [JSDoc](https://jsdoc.app) (`"jsdoc"`) | `@param`, `@returns`, `@class`, `@classdesc`, `@module`|
+| javascript | | | `func`, `class`, `file`, `type`|
+| | [JSDoc](https://jsdoc.app) (`"jsdoc"`) | `@param`, `@returns`, `@class`, `@classdesc`, `@module`, `@type`|
 | typescript | | | `func`, `class`, `file`, `type` |
 | | [JSDoc](https://jsdoc.app) (`"jsdoc"`) | `@param`, `@returns`, `@class`, `@classdesc`, `@type`, `@module`|
 | c | | | `func`, `file`|
