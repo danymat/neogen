@@ -91,9 +91,9 @@ return {
 
             { nil, "/ $1", { type = { "func", "class" } } },
             { nil, "/", { type = { "class", "func" } } },
-            { "field_identifier", "/ * %s: $1", { type = { "class" } } },
-            { "type_identifier", "/ * %s: $1", { type = { "func" } } },
-            { "identifier", "/ * %s: $1", { type = { "func" } } },
+            { "field_identifier", "/ * `%s`: $1", { type = { "class" } } },
+            { "type_identifier", "/ * `%s`: $1", { type = { "func" } } },
+            { "identifier", "/ * `%s`: $1", { type = { "func" } } },
         },
     },
 }
