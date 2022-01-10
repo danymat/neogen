@@ -184,7 +184,7 @@ There is a list of supported languages and fields, with their annotation style
 | | [Numpydoc](https://numpydoc.readthedocs.io/en/latest/format.html) (`"numpydoc"`)| `Arguments`, `Attributes`, `Returns`|
 | javascript | | | `func`, `class`, `file`|
 | | [JSDoc](https://jsdoc.app) (`"jsdoc"`) | `@param`, `@returns`, `@class`, `@classdesc`, `@module`|
-| typescript | | | `func`, `class`, `file`|
+| typescript | | | `func`, `class`, `file`, `type` |
 | | [JSDoc](https://jsdoc.app) (`"jsdoc"`) | `@param`, `@returns`, `@class`, `@classdesc`, `@type`, `@module`|
 | c | | | `func`, `file`|
 | | [Doxygen](https://www.doxygen.nl/manual/commands.html) (`"doxygen"`) | `@param`, `@return`, `@brief`, `@file`| 
