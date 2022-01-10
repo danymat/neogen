@@ -10,10 +10,10 @@ local current_position = 1
 --- @return number
 neogen.utilities.cursor.create = function(line, col, delimiters)
     local opts = delimiters == true and {}
-        or { virt_text = { { ">", "TSTitle" } }, virt_text_pos = "overlay", virt_text_hide = true }
+        or { virt_text = { { "TODO", "TSTitle" } }, virt_text_pos = "overlay", virt_text_hide = true }
     current_position = 1
     local new_col = col == 0 and 0 or col - 1
-    vim.api.nvim_buf_set_extmark(0, neogen_virt_text_ns, line - 1, new_col, opts)
+    -- vim.api.nvim_buf_set_extmark(0, neogen_virt_text_ns, line - 1, new_col, opts)
     return vim.api.nvim_buf_set_extmark(0, neogen_ns, line - 1, new_col, {})
 end
 
@@ -30,7 +30,7 @@ neogen.utilities.cursor.go_next_extmark = function()
         local virt_text = vim.tbl_filter(function(e)
             return e[2] == extm_list[position][2] and e[3] == extm_list[position][3]
         end, virt_text_extm)[1]
-        if #virt_text > 0 then
+        if virt_text and #virt_text > 0 then
             vim.api.nvim_buf_del_extmark(0, neogen_virt_text_ns, virt_text[1])
         end
 
