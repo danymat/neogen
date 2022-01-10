@@ -46,7 +46,7 @@ return {
     parent = {
         func = { "function_declaration", "expression_statement", "variable_declaration", "lexical_declaration" },
         class = { "function_declaration", "expression_statement", "variable_declaration", "class_declaration" },
-        type = { "variable_declaration" },
+        type = { "variable_declaration", "lexical_declaration" },
         file = { "program" },
     },
 
@@ -117,7 +117,7 @@ return {
             },
         },
         type = {
-            ["variable_declaration"] = {
+            ["variable_declaration|lexical_declaration"] = {
                 ["1"] = {
                     extract = function(node)
                         local res = {}
@@ -158,12 +158,18 @@ return {
             { nil, " * @module $1", { no_results = true, type = { "file" } } },
             { nil, " */", { no_results = true, type = { "file" } } },
 
-            { nil, "/**" },
+            { nil, "/**", { type = { "class", "func" } } },
             { "class_tag", " * @classdesc $1", { before_first_item = { " * ", " * @class" }, type = { "class" } } },
-            { { "type_annotation", "parameters" }, " * @param {%s} %s $1", { required = "parameters" } },
-            { "return_statement", " * @returns {$1|any}" },
-            { "type", " * @type {$1|any}", { type = { "type" } } },
-            { nil, " */" },
+            {
+                { "type_annotation", "parameters" },
+                " * @param {%s} %s $1",
+                { required = "parameters" },
+                { type = { "func" } },
+            },
+            { "return_statement", " * @returns {$1|any}", { type = { "func" } } },
+            { nil, " */", { type = { "class", "func" } } },
+
+            { "type", "/* @type {$1|any} */", { type = { "type" } } },
         },
     },
 }
