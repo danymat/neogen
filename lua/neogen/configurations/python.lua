@@ -2,7 +2,12 @@ local ts_utils = require("nvim-treesitter.ts_utils")
 
 return {
     -- Search for these nodes
-    parent = { func = { "function_definition" }, class = { "class_definition" }, file = { "module" } },
+    parent = {
+        func = { "function_definition" },
+        class = { "class_definition" },
+        file = { "module" },
+        type = { "expression_statement" },
+    },
 
     -- Traverse down these nodes and extract the information as necessary
     data = {
@@ -110,6 +115,13 @@ return {
                 },
             },
         },
+        type = {
+            ["0"] = {
+                extract = function()
+                    return {}
+                end,
+            },
+        },
     },
 
     -- Use default granulator and generator
@@ -147,6 +159,8 @@ return {
             { nil, '"""', { no_results = true, type = { "file" } } },
             { nil, "", { no_results = true, type = { "file" } } },
 
+            { nil, "# $1", { no_results = true, type = { "type" } } },
+
             { nil, '"""$1' },
             { "parameters", "\t%s: $1", { before_first_item = { "", "Args:" } } },
             { "attributes", "\t%s: $1", { before_first_item = { "", "Attributes: " } } },
@@ -160,6 +174,8 @@ return {
             { nil, "$1", { no_results = true, type = { "file" } } },
             { nil, '"""', { no_results = true, type = { "file" } } },
             { nil, "", { no_results = true, type = { "file" } } },
+
+            { nil, "# $1", { no_results = true, type = { "type" } } },
 
             { nil, '"""$1' },
             { "parameters", "%s: $1", { before_first_item = { "", "Parameters", "----------" } } },
