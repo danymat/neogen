@@ -1,3 +1,11 @@
+local reconstruct_type_annotation = function(t)
+    if t then
+        t = vim.tbl_map(function(s)
+            return string.gsub(s, ":%s*", "")
+        end, t)
+    end
+    return t
+end
 local function_tree = {
     {
         retrieve = "first",
@@ -8,6 +16,11 @@ local function_tree = {
                 node_type = "required_parameter",
                 subtree = {
                     { retrieve = "all", node_type = "identifier", extract = true },
+                    {
+                        retrieve = "all",
+                        node_type = "type_annotation",
+                        extract = true,
+                    },
                 },
             },
             {
@@ -15,6 +28,7 @@ local function_tree = {
                 node_type = "optional_parameter",
                 subtree = {
                     { retrieve = "all", node_type = "identifier", extract = true },
+                    { retrieve = "all", node_type = "type_annotation", extract = true },
                 },
             },
         },
@@ -47,8 +61,11 @@ return {
                         local nodes = neogen.utilities.nodes:matching_nodes_from(node, tree)
                         local res = neogen.utilities.extractors:extract_from_matched(nodes)
 
+                        res.type_annotation = reconstruct_type_annotation(res.type_annotation)
+
                         results.parameters = res.identifier
                         results.return_statement = res.return_statement
+                        results.type_annotation = res.type_annotation
                         return results
                     end,
                 },
@@ -61,8 +78,11 @@ return {
                         local nodes = neogen.utilities.nodes:matching_nodes_from(node, tree)
                         local res = neogen.utilities.extractors:extract_from_matched(nodes)
 
+                        res.type_annotation = reconstruct_type_annotation(res.type_annotation)
+
                         results.parameters = res.identifier
                         results.return_statement = res.return_statement
+                        results.type_annotation = res.type_annotation
                         return results
                     end,
                 },
@@ -75,8 +95,10 @@ return {
                         local nodes = neogen.utilities.nodes:matching_nodes_from(node, tree)
                         local res = neogen.utilities.extractors:extract_from_matched(nodes)
 
+                        res.type_annotation = reconstruct_type_annotation(res.type_annotation)
                         results.parameters = res.identifier
                         results.return_statement = res.return_statement
+                        results.type_annotation = res.type_annotation
                         return results
                     end,
                 },
@@ -138,7 +160,7 @@ return {
 
             { nil, "/**" },
             { "class_tag", " * @classdesc $1", { before_first_item = { " * ", " * @class" }, type = { "class" } } },
-            { "parameters", " * @param {any} %s $1" },
+            { { "type_annotation", "parameters" }, " * @param {%s} %s $1", { required = "parameters" } },
             { "return_statement", " * @returns {$1|any}" },
             { "type", " * @type {$1|any}", { type = { "type" } } },
             { nil, " */" },
