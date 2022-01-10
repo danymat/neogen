@@ -99,14 +99,15 @@ neogen.default_generator = function(parent, data, template, required_type)
         local prefix = prefix_generator(template, commentstring, col_to_place)
 
         for _, values in ipairs(generated_template) do
-            local type = values[1]
+            local inserted_type = values[1]
             local formatted_string = values[2]
             local opts = vim.deepcopy(values[3]) or {}
+
             opts.type = opts.type or { required_type }
 
             if opts.type and vim.tbl_contains(opts.type, required_type) then
                 -- Will append the item before all their nodes
-                if opts.before_first_item and data[type] then
+                if opts.before_first_item and data[inserted_type] then
                     result = add_values_to_result(result, opts.before_first_item, prefix)
                 end
 
@@ -116,15 +117,42 @@ neogen.default_generator = function(parent, data, template, required_type)
                     table.insert(result, inserted)
                 else
                     -- append the output as is
-                    if type == nil and opts.no_results ~= true and not vim.tbl_isempty(data) then
+                    if inserted_type == nil and opts.no_results ~= true and not vim.tbl_isempty(data) then
                         local inserted = conditional_prefix_inserter(prefix, formatted_string:format(""))
                         table.insert(result, inserted)
-                    else
+                    elseif inserted_type then
                         -- Format the output with the corresponding data
-                        if data[type] then
-                            for _, value in ipairs(data[type]) do
+                        if type(inserted_type) == "string" and data[inserted_type] then
+                            for _, value in ipairs(data[inserted_type]) do
                                 local inserted = conditional_prefix_inserter(prefix, formatted_string:format(value))
                                 table.insert(result, inserted)
+                            end
+                        elseif type(inserted_type) == "table" and #inserted_type >= 1 then
+                            -- First item in the template item can be a table.
+                            -- in this case, the template will use provided types to generate the line.
+                            -- e.g {{ "type", "parameter"}, "* @type {%s} %s"}
+                            -- will replace every %s with the provided data from those types
+
+                            -- If one item is missing, it'll use the required option to iterate
+                            -- and will replace the missing item with default jump_text
+                            local count = opts.required and #data[opts.required] or #data[inserted_type[1]]
+                            for i = 1, count do
+                                local _values = {}
+                                for _, v in ipairs(inserted_type) do
+                                    if data[v] and data[v][i] then
+                                        table.insert(_values, data[v][i])
+                                    else
+                                        local jump_text = neogen.configuration.jump_text
+                                        table.insert(_values, jump_text)
+                                    end
+                                end
+                                if not vim.tbl_isempty(_values) then
+                                    local inserted = conditional_prefix_inserter(
+                                        prefix,
+                                        formatted_string:format(unpack(_values))
+                                    )
+                                    table.insert(result, inserted)
+                                end
                             end
                         end
                     end
