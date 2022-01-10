@@ -1,3 +1,49 @@
+local function_tree = {
+    {
+        retrieve = "first",
+        node_type = "formal_parameters",
+        subtree = {
+            {
+                retrieve = "all",
+                node_type = "formal_parameter",
+                subtree = {
+                    { retrieve = "all", node_type = "identifier", extract = true },
+                },
+            },
+        },
+    },
+    {
+        retrieve = "all",
+        node_type = "throws",
+        extract = true,
+    },
+    {
+        retrieve = "first",
+        node_type = "block|constructor_body",
+        subtree = {
+            { retrieve = "first", node_type = "return_statement", extract = true },
+            { retrieve = "all", recursive = true, node_type = "throw_statement", extract = true },
+            {
+                retrieve = "first",
+                node_type = "try_statement",
+                subtree = {
+                    {
+                        retrieve = "first",
+                        node_type = "block",
+                        subtree = {
+                            {
+                                retrieve = "first",
+                                node_type = "return_statement",
+                                extract = true,
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    },
+}
+
 return {
     parent = {
         class = { "class_declaration" },
@@ -8,8 +54,20 @@ return {
         func = {
             ["constructor_declaration"] = {
                 ["0"] = {
-                    extract = function(_)
-                        return { class_declaration = {} }
+                    extract = function(node)
+                        local results = {}
+                        local tree = function_tree
+
+                        local nodes = neogen.utilities.nodes:matching_nodes_from(node, tree)
+                        local res = neogen.utilities.extractors:extract_from_matched(nodes)
+
+                        if res.throws then
+                            results.throw_statement = res.throws
+                        else
+                            results.throw_statement = res.throw_statement
+                        end
+                        results.parameters = res.identifier
+                        return results
                     end,
                 },
             },
@@ -17,50 +75,17 @@ return {
                 ["0"] = {
                     extract = function(node)
                         local results = {}
-                        local tree = {
-                            {
-                                retrieve = "first",
-                                node_type = "formal_parameters",
-                                subtree = {
-                                    {
-                                        retrieve = "all",
-                                        node_type = "formal_parameter",
-                                        subtree = {
-                                            { retrieve = "all", node_type = "identifier", extract = true },
-                                        },
-                                    },
-                                },
-                            },
-                            {
-                                retrieve = "first",
-                                node_type = "block",
-                                subtree = {
-                                    { retrieve = "first", node_type = "return_statement", extract = true },
-                                    {
-                                        retrieve = "first",
-                                        node_type = "try_statement",
-                                        subtree = {
-                                            {
-                                                retrieve = "first",
-                                                node_type = "block",
-                                                subtree = {
-                                                    {
-                                                        retrieve = "first",
-                                                        node_type = "return_statement",
-                                                        extract = true,
-                                                    },
-                                                },
-                                            },
-                                        },
-                                    },
-                                },
-                            },
-                        }
+                        local tree = function_tree
 
                         local nodes = neogen.utilities.nodes:matching_nodes_from(node, tree)
                         local res = neogen.utilities.extractors:extract_from_matched(nodes)
 
                         results.parameters = res.identifier
+                        if res.throws then
+                            results.throw_statement = res.throws
+                        else
+                            results.throw_statement = res.throw_statement
+                        end
                         results.return_statement = res.return_statement
                         return results
                     end,
@@ -89,14 +114,16 @@ return {
         use_default_comment = false,
 
         javadoc = {
-            { nil, "/**", { no_results = true } },
-            { nil, " * $1", { no_results = true } },
-            { nil, " */", { no_results = true } },
+            { nil, "/**", { no_results = true, type = { "class", "func" } } },
+            { nil, " * $1", { no_results = true, type = { "class", "func" } } },
+            { nil, " */", { no_results = true, type = { "class", "func" } } },
 
             { nil, "/**" },
             { nil, " * $1" },
+            { nil, " *" },
             { "parameters", " * @param %s $1" },
             { "return_statement", " * @return $1" },
+            { "throw_statement", " * @throws $1" },
             { nil, " */" },
         },
     },
