@@ -135,23 +135,25 @@ neogen.default_generator = function(parent, data, template, required_type)
 
                             -- If one item is missing, it'll use the required option to iterate
                             -- and will replace the missing item with default jump_text
-                            local count = opts.required and #data[opts.required] or #data[inserted_type[1]]
-                            for i = 1, count do
-                                local _values = {}
-                                for _, v in ipairs(inserted_type) do
-                                    if data[v] and data[v][i] then
-                                        table.insert(_values, data[v][i])
-                                    else
-                                        local jump_text = neogen.configuration.jump_text
-                                        table.insert(_values, jump_text)
+                            if data[opts.required] or data[inserted_type[1]] then
+                                local count = opts.required and #data[opts.required] or #data[inserted_type[1]]
+                                for i = 1, count do
+                                    local _values = {}
+                                    for _, v in ipairs(inserted_type) do
+                                        if data[v] and data[v][i] then
+                                            table.insert(_values, data[v][i])
+                                        else
+                                            local jump_text = neogen.configuration.jump_text
+                                            table.insert(_values, jump_text)
+                                        end
                                     end
-                                end
-                                if not vim.tbl_isempty(_values) then
-                                    local inserted = conditional_prefix_inserter(
-                                        prefix,
-                                        formatted_string:format(unpack(_values))
-                                    )
-                                    table.insert(result, inserted)
+                                    if not vim.tbl_isempty(_values) then
+                                        local inserted = conditional_prefix_inserter(
+                                            prefix,
+                                            formatted_string:format(unpack(_values))
+                                        )
+                                        table.insert(result, inserted)
+                                    end
                                 end
                             end
                         end
