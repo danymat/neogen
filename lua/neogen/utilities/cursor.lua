@@ -100,7 +100,7 @@ neogen.utilities.cursor.jumpable = function(reverse)
 
     if reverse == -1 then
         -- Check first boundaries
-        if current_position == 1 then
+        if current_position == 2 then
             return false
         end
     end
