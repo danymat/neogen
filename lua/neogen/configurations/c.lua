@@ -107,7 +107,7 @@ local c_function_extractor = function(node)
     }
 end
 
-return {
+local c_config = {
     parent = {
         func = {
             "function_declaration",
@@ -175,13 +175,60 @@ return {
             { nil, " */", { no_results = true, type = { "func", "file" } } },
             { nil, "", { no_results = true, type = { "file" } } },
 
-            { nil, "/**", type = { "func" } },
-            { nil, " * @brief $1", type = { "func" } },
-            { nil, " *", type = { "func" } },
+            { nil, "/**", { type = { "func" } } },
+            { nil, " * @brief $1", { type = { "func" } } },
+            { nil, " *", { type = { "func" } } },
             { "tparam", " * @tparam %s $1" },
             { "parameters", " * @param %s $1" },
             { "return_statement", " * @return $1" },
             { nil, " */" },
         },
     },
+}
+
+local cpp_config = {
+    parent = {
+        class = { "class_specifier" },
+    },
+    data = {
+        class = {
+            ["class_specifier"] = {
+                ["0"] = {
+                    extract = function(node)
+                        local tree = {
+                            { retrieve = "first", node_type = "type_identifier", extract = true },
+                        }
+                        local nodes = neogen.utilities.nodes:matching_nodes_from(node, tree)
+                        local res = neogen.utilities.extractors:extract_from_matched(nodes)
+                        return res
+                    end,
+                },
+            },
+        },
+    },
+    template = {
+
+        doxygen = {
+            { nil, "/**", { no_results = true, type = { "func", "file", "class" } } },
+            { nil, " * @file", { no_results = true, type = { "file" } } },
+            { nil, " * @brief $1", { no_results = true, type = { "func", "file", "class" } } },
+            { nil, " */", { no_results = true, type = { "func", "file", "class" } } },
+            { nil, "", { no_results = true, type = { "file" } } },
+
+            { nil, "/**", { type = { "func", "class" } } },
+            { "type_identifier", " * @class %s", { type = { "class" } } },
+            { nil, " * @brief $1", { type = { "func", "class" } } },
+            { nil, " *", { type = { "func", "class" } } },
+            { "tparam", " * @tparam %s $1" },
+            { "parameters", " * @param %s $1" },
+            { "return_statement", " * @return $1" },
+            { nil, " */", { type = { "func", "class" } } },
+        },
+    },
+}
+cpp_config = vim.tbl_deep_extend("force", c_config, cpp_config)
+
+return {
+    c_config = c_config,
+    cpp_config = cpp_config,
 }
