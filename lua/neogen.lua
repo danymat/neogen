@@ -131,8 +131,19 @@ function neogen.jumpable(reverse)
     return neogen.utilities.cursor.jumpable(reverse)
 end
 
+function neogen.match_commands()
+    return { "func", "class", "type", "file" }
+end
+
 function neogen.generate_command()
-    vim.api.nvim_command('command! -nargs=? -range -bar Neogen lua require("neogen").generate({ type = <q-args>})')
+    vim.api.nvim_command([[
+        function! s:match_commands(arg, line, pos)
+            return luaeval('require("neogen").match_commands("' .. a:arg .. '")')
+        endfunction
+    ]])
+    vim.api.nvim_command(
+        'command! -nargs=? -complete=customlist,s:match_commands -range -bar Neogen lua require("neogen").generate({ type = <q-args>})'
+    )
 end
 
 neogen.setup = function(opts)
