@@ -9,23 +9,26 @@ neogen.utilities = {}
 require("neogen.utilities.extractors")
 require("neogen.utilities.nodes")
 require("neogen.utilities.cursor")
+require("neogen.utilities.helpers")
 
 -- Require defaults
 require("neogen.locators.default")
 require("neogen.granulators.default")
 require("neogen.generators.default")
 
+local notify = neogen.utilities.helpers.notify
+
 neogen.generate = function(opts)
     opts = opts or {}
     opts.type = (opts.type == nil or opts.type == "") and "func" or opts.type -- Default type
 
     if not neogen.configuration.enabled then
-        vim.notify("Neogen not enabled. Please enable it.", vim.log.levels.WARN)
+        notify("Neogen not enabled. Please enable it.", vim.log.levels.WARN)
         return
     end
 
     if vim.bo.filetype == "" then
-        vim.notify("No filetype detected", vim.log.levels.WARN)
+        notify("No filetype detected", vim.log.levels.WARN)
         return
     end
 
@@ -36,7 +39,7 @@ neogen.generate = function(opts)
     local language = neogen.configuration.languages[vim.bo.filetype]
 
     if not language then
-        vim.notify("Language " .. vim.bo.filetype .. " not supported.", vim.log.levels.WARN)
+        notify("Language " .. vim.bo.filetype .. " not supported.", vim.log.levels.WARN)
         return
     end
 
@@ -45,7 +48,7 @@ neogen.generate = function(opts)
     language.generator = language.generator or neogen.default_generator
 
     if not language.parent[opts.type] or not language.data[opts.type] then
-        vim.notify("Type `" .. opts.type .. "` not supported", vim.log.levels.WARN)
+        notify("Type `" .. opts.type .. "` not supported", vim.log.levels.WARN)
         return
     end
 
