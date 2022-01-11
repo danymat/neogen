@@ -16,7 +16,7 @@ jobs:
       - name: Install md2vim
         run: go get github.com/FooSoft/md2vim
       - name: Generate vim docs
-        run: make docs
+        run: make documentation
       - name: Commit changes
         env:
           COMMIT_MSG: |
