@@ -12,219 +12,211 @@
 
 - [Neogen - Your Annotation Toolkit](#neogen---your-annotation-toolkit)
 - [Table Of Contents](#table-of-contents)
-
   - [Features](#features)
-
   - [Requirements](#requirements)
-
   - [Installation](#installation)
-
   - [Usage](#usage)
-
     - [Cycle between annotations](#cycle-between-annotations)
-
   - [Configuration](#configuration)
-
   - [Supported Languages](#supported-languages)
-
   - [Adding Languages](#adding-languages)
-
   - [GIFS](#gifs)
-
-  - [Credits](#credits)
-
-## Features
-
-- Create annotations with one keybind, and jump your cursor in the inserted annotation
-- Defaults for multiple languages and annotation conventions
-- Extremely customizable and extensible
-- Written in lua (and uses Tree-sitter)
-
-![screen2](https://user-images.githubusercontent.com/5306901/135055065-08def797-e5af-49c9-b530-dd5973045c4e.gif)
-
-## Requirements
-
-- Install [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter)
-
-## Installation
-
-Use your favorite package manager to install Neogen, e.g:
-
-```lua
-use {
-    "danymat/neogen",
-    config = function()
-        require('neogen').setup {
-            enabled = true
-        }
-    end,
-    requires = "nvim-treesitter/nvim-treesitter"
-}
-```
-
-## Usage
-
-- If you want to keep it simple, you can use the `:Neogen` command:
-
-```vim
-" will generate annotation for the function you're inside
-:Neogen
-" or you can force a certain type of annotation.
-" It'll find the next upper node that matches the type
-" E.g if you're on a method of a class and do `:Neogen class`, it'll find the class declaration and generate the annotation.
-:Neogen func|class|type|...
-```
-
-- If you like to use the lua API, I exposed a function to generate the annotations.
-
-```lua
-require('neogen').generate()
-```
-
-You can bind it to your keybind of choice, like so:
-
-```lua
-local opts = { noremap = true, silent = true }
-vim.api.nvim_set_keymap("n", "<Leader>nf", ":lua require('neogen').generate()<CR>", opts)
-```
-
-Calling the `generate` function without any parameters will try to generate annotations for the current function.
-
-You can provide some options for the generate, like so:
-
-```lua
-require('neogen').generate({
-    type = "func" -- the annotation type to generate. Currently supported: func, class, type, file
-})
-```
-
-For example, I can add an other keybind to generate class annotations:
-
-```lua
-local opts = { noremap = true, silent = true }
-vim.api.nvim_set_keymap("n", "<Leader>nc", ":lua require('neogen').generate({ type = 'class' })<CR>", opts)
-```
-
-### Cycle between annotations
-
-I added support passing cursor positionings in templates. That means you can now cycle your cursor between different parts of the annotation.
-
-To configure it to the keybind of your choice, you can do something like this:
-
-```lua
-local opts = { noremap = true, silent = true }
-vim.api.nvim_set_keymap("n", "<C-n>", ":lua require('neogen').jump_next()<CR>", opts)
-vim.api.nvim_set_keymap("n", "<C-p>", ":lua require('neogen').jump_prev()<CR>", opts)
-```
-
-If you want to use a key that's already used for completion purposes, take a look at the code snippet here:
-
-<details>
-   <summary>nvim-cmp</summary>
-
-```lua
-local cmp = require('cmp')
-local neogen = require('neogen')
-
-local t = function(str)
-    return vim.api.nvim_replace_termcodes(str, true, true, true)
-end
-
-local check_back_space = function()
-    local col = vim.fn.col '.' - 1
-    return col == 0 or vim.fn.getline('.'):sub(col, col):match '%s' ~= nil
-end
-
-cmp.setup {
-    ...
-
-    -- You must set mapping if you want.
-    mapping = {
-		["<tab>"] = cmp.mapping(function(fallback)
-			if neogen.jumpable() then
-				vim.fn.feedkeys(t("<cmd>lua require('neogen').jump_next()<CR>"), "")
-			else
-				fallback()
-			end
-		end, {
-			"i",
-			"s",
-		}),
-		["<S-tab>"] = cmp.mapping(function(fallback)
-			if neogen.jumpable(-1) then
-				vim.fn.feedkeys(t("<cmd>lua require('neogen').jump_prev()<CR>"), "")
-			else
-				fallback()
-			end
-		end, {
-			"i",
-			"s",
-		}),
-    },
-    ...
-}
-```
-
-  </details>
-
-## Configuration
-
-```lua
-require('neogen').setup {
-        enabled = true,             --if you want to disable Neogen
-        input_after_comment = true, -- (default: true) automatic jump (with insert mode) on inserted annotation
-        -- jump_map = "<C-e>"       -- (DROPPED SUPPORT, see [here](#cycle-between-annotations) !) The keymap in order to jump in the annotation fields (in insert mode)
-    }
-}
-```
-
-If you're not satisfied with the default configuration for a language, you can change the defaults like this:
-
-```lua
-require('neogen').setup {
-    enabled = true,
-	languages = {
-	    lua = {
-	        template = {
-                    annotation_convention = "emmylua" -- for a full list of annotation_conventions, see supported-languages below,
-		    ... -- for more template configurations, see the language's configuration file in configurations/{lang}.lua
-		}
-	    },
-	    ...
-    }
-}
-```
-
-## Supported Languages
-
-There is a list of supported languages and fields, with their annotation style
-
-| Language   | Annotation conventions                                                                                                 | Supported annotation types      |
-| ---------- | ---------------------------------------------------------------------------------------------------------------------- | ------------------------------- |
-| lua        |                                                                                                                        | `func`, `class`, `type`, `file` |
-|            | [Emmylua](https://emmylua.github.io/) (`"emmylua"`)                                                                    |
-|            | [Ldoc](https://stevedonovan.github.io/ldoc/manual/doc.md.html) (`"ldoc"`)                                              |
-| python     |                                                                                                                        | `func`, `class`, `file`, `type` |
-|            | [Google docstrings](https://google.github.io/styleguide/pyguide.html) (`"google_docstrings"`)                          |
-|            | [Numpydoc](https://numpydoc.readthedocs.io/en/latest/format.html) (`"numpydoc"`)                                       |
-| javascript |                                                                                                                        | `func`, `class`, `file`, `type` |
-|            | [JSDoc](https://jsdoc.app) (`"jsdoc"`)                                                                                 |
-| typescript |                                                                                                                        | `func`, `class`, `file`, `type` |
-|            | [JSDoc](https://jsdoc.app) (`"jsdoc"`)                                                                                 |
-| c          |                                                                                                                        | `func`, `file`                  |
-|            | [Doxygen](https://www.doxygen.nl/manual/commands.html) (`"doxygen"`)                                                   |
-| cpp        |                                                                                                                        | `func`, `file`                  |
-|            | [Doxygen](https://www.doxygen.nl/manual/commands.html) (`"doxygen"`)                                                   |
-| go         |                                                                                                                        |                                 |
-|            | [Godoc](https://go.dev/blog/godoc) (`"godoc"`)                                                                         |
-| java       |                                                                                                                        | `func`, `class`                 |
-|            | [Javadoc](https://docs.oracle.com/javase/1.5.0/docs/tooldocs/windows/javadoc.html#documentationcomments) (`"javadoc"`) |
-| rust       |                                                                                                                        | `func`, `file`, `class`         |
-|            | [Rustdoc](https://doc.rust-lang.org/rustdoc/what-is-rustdoc.html) (`"rustdoc"`)                                        |
-|            | [Alternative](https://stackoverflow.com/questions/30009650/how-do-you-document-function-arguments) (`"alternative"`)   |
-| csharp     |                                                                                                                        | `func`, `file`, `class`         |
-|            | [Xmldoc](https://docs.microsoft.com/fr-fr/dotnet/csharp/language-reference/xmldoc/) (`"xmldoc"`)                       |
-|            | [Doxygen](https://www.doxygen.nl/manual/commands.html) (`"doxygen"`)                                                   |
+  - [Credits](#credits)
+
+## Features
+
+- Create annotations with one keybind, and jump your cursor in the inserted annotation
+- Defaults for multiple languages and annotation conventions
+- Extremely customizable and extensible
+- Written in lua (and uses Tree-sitter)
+
+![screen2](https://user-images.githubusercontent.com/5306901/135055065-08def797-e5af-49c9-b530-dd5973045c4e.gif)
+
+## Requirements
+
+- Install [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter)
+
+## Installation
+
+Use your favorite package manager to install Neogen, e.g:
+
+```lua
+use {
+    "danymat/neogen",
+    config = function()
+        require('neogen').setup {
+            enabled = true
+        }
+    end,
+    requires = "nvim-treesitter/nvim-treesitter"
+}
+```
+
+## Usage
+
+- If you want to keep it simple, you can use the `:Neogen` command:
+
+```vim
+" will generate annotation for the function you're inside
+:Neogen
+" or you can force a certain type of annotation.
+" It'll find the next upper node that matches the type
+" E.g if you're on a method of a class and do `:Neogen class`, it'll find the class declaration and generate the annotation.
+:Neogen func|class|type|...
+```
+
+- If you like to use the lua API, I exposed a function to generate the annotations.
+
+```lua
+require('neogen').generate()
+```
+
+You can bind it to your keybind of choice, like so:
+
+```lua
+local opts = { noremap = true, silent = true }
+vim.api.nvim_set_keymap("n", "<Leader>nf", ":lua require('neogen').generate()<CR>", opts)
+```
+
+Calling the `generate` function without any parameters will try to generate annotations for the current function.
+
+You can provide some options for the generate, like so:
+
+```lua
+require('neogen').generate({
+    type = "func" -- the annotation type to generate. Currently supported: func, class, type, file
+})
+```
+
+For example, I can add an other keybind to generate class annotations:
+
+```lua
+local opts = { noremap = true, silent = true }
+vim.api.nvim_set_keymap("n", "<Leader>nc", ":lua require('neogen').generate({ type = 'class' })<CR>", opts)
+```
+
+### Cycle between annotations
+
+I added support passing cursor positionings in templates. That means you can now cycle your cursor between different parts of the annotation.
+
+To configure it to the keybind of your choice, you can do something like this:
+
+```lua
+local opts = { noremap = true, silent = true }
+vim.api.nvim_set_keymap("n", "<C-n>", ":lua require('neogen').jump_next()<CR>", opts)
+vim.api.nvim_set_keymap("n", "<C-p>", ":lua require('neogen').jump_prev()<CR>", opts)
+```
+
+If you want to use a key that's already used for completion purposes, take a look at the code snippet here:
+
+<details>
+   <summary>nvim-cmp</summary>
+
+```lua
+local cmp = require('cmp')
+local neogen = require('neogen')
+
+local t = function(str)
+    return vim.api.nvim_replace_termcodes(str, true, true, true)
+end
+
+local check_back_space = function()
+    local col = vim.fn.col '.' - 1
+    return col == 0 or vim.fn.getline('.'):sub(col, col):match '%s' ~= nil
+end
+
+cmp.setup {
+    ...
+
+    -- You must set mapping if you want.
+    mapping = {
+		["<tab>"] = cmp.mapping(function(fallback)
+			if neogen.jumpable() then
+				vim.fn.feedkeys(t("<cmd>lua require('neogen').jump_next()<CR>"), "")
+			else
+				fallback()
+			end
+		end, {
+			"i",
+			"s",
+		}),
+		["<S-tab>"] = cmp.mapping(function(fallback)
+			if neogen.jumpable(-1) then
+				vim.fn.feedkeys(t("<cmd>lua require('neogen').jump_prev()<CR>"), "")
+			else
+				fallback()
+			end
+		end, {
+			"i",
+			"s",
+		}),
+    },
+    ...
+}
+```
+
+  </details>
+
+## Configuration
+
+```lua
+require('neogen').setup {
+        enabled = true,             --if you want to disable Neogen
+        input_after_comment = true, -- (default: true) automatic jump (with insert mode) on inserted annotation
+        -- jump_map = "<C-e>"       -- (DROPPED SUPPORT, see [here](#cycle-between-annotations) !) The keymap in order to jump in the annotation fields (in insert mode)
+    }
+}
+```
+
+If you're not satisfied with the default configuration for a language, you can change the defaults like this:
+
+```lua
+require('neogen').setup {
+    enabled = true,
+	languages = {
+	    lua = {
+	        template = {
+                    annotation_convention = "emmylua" -- for a full list of annotation_conventions, see supported-languages below,
+		    ... -- for more template configurations, see the language's configuration file in configurations/{lang}.lua
+		}
+	    },
+	    ...
+    }
+}
+```
+
+## Supported Languages
+
+There is a list of supported languages and fields, with their annotation style
+
+- Supported annotation types includes `func`, `class`, `type`, `file`
+
+| Language   | Annotation conventions                                                                                                 | Supported fields                                                 |
+| ---------- | ---------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| lua        |                                                                                                                        |                                                                  |
+|            | [Emmylua](https://emmylua.github.io/) (`"emmylua"`)                                                                    | `@param`, `@varargs`, `@return`, `@class`, `@type`, `@module`    |
+|            | [Ldoc](https://stevedonovan.github.io/ldoc/manual/doc.md.html) (`"ldoc"`)                                              | `@param`, `@varargs`, `@return`, `@class`, `@type`               |
+| python     |                                                                                                                        |                                                                  |
+|            | [Google docstrings](https://google.github.io/styleguide/pyguide.html) (`"google_docstrings"`)                          | `Args`, `Attributes`, `Returns`                                  |
+|            | [Numpydoc](https://numpydoc.readthedocs.io/en/latest/format.html) (`"numpydoc"`)                                       | `Arguments`, `Attributes`, `Returns`                             |
+| javascript |                                                                                                                        |                                                                  |
+|            | [JSDoc](https://jsdoc.app) (`"jsdoc"`)                                                                                 | `@param`, `@returns`, `@class`, `@classdesc`, `@module`, `@type` |
+| typescript |                                                                                                                        |                                                                  |
+|            | [JSDoc](https://jsdoc.app) (`"jsdoc"`)                                                                                 | `@param`, `@returns`, `@class`, `@classdesc`, `@type`, `@module` |
+| c          |                                                                                                                        |                                                                  |
+|            | [Doxygen](https://www.doxygen.nl/manual/commands.html) (`"doxygen"`)                                                   | `@param`, `@return`, `@brief`, `@file`                           |
+| cpp        |                                                                                                                        |                                                                  |
+|            | [Doxygen](https://www.doxygen.nl/manual/commands.html) (`"doxygen"`)                                                   | `@param`, `@return`, `@tparam`, `@brief`, `@file`                |
+| go         |                                                                                                                        |                                                                  |
+|            | [Godoc](https://go.dev/blog/godoc) (`"godoc"`)                                                                         |                                                                  |
+| java       |                                                                                                                        |                                                                  |
+|            | [Javadoc](https://docs.oracle.com/javase/1.5.0/docs/tooldocs/windows/javadoc.html#documentationcomments) (`"javadoc"`) | `@param`, `@return`, `@throws`                                   |
+| rust       |                                                                                                                        |                                                                  |
+|            | [Rustdoc](https://doc.rust-lang.org/rustdoc/what-is-rustdoc.html) (`"rustdoc"`)                                        |                                                                  |
+|            | [Alternative](https://stackoverflow.com/questions/30009650/how-do-you-document-function-arguments) (`"alternative"`)   |                                                                  |
+| csharp     |                                                                                                                        |                                                                  |
+|            | [Xmldoc](https://docs.microsoft.com/fr-fr/dotnet/csharp/language-reference/xmldoc/) (`"xmldoc"`)                       | `<summary>`, `<param>`,`<returns>`                               |
+|            | [Doxygen](https://www.doxygen.nl/manual/commands.html) (`"doxygen"`)                                                   | `@param`, `@return`, `@brief`                                    |
 
 ## Adding Languages
 
