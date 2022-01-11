@@ -199,6 +199,7 @@ There is a list of supported languages and fields, with their annotation style
 | | [Alternative](https://stackoverflow.com/questions/30009650/how-do-you-document-function-arguments) (`"alternative"`) | |
 | csharp | | | `func`, `file`, `class`|
 | | [Xmldoc](https://docs.microsoft.com/fr-fr/dotnet/csharp/language-reference/xmldoc/) (`"xmldoc"`) | `<summary>`, `<param>`,`<returns>`|
+| | [Doxygen](https://www.doxygen.nl/manual/commands.html) (`"doxygen"`) | `@param`, `@return`, `@brief`| 
 
 
 ## Adding Languages

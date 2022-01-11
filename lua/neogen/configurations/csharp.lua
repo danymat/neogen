@@ -120,5 +120,18 @@ return {
             { "return_statement", "/// <returns>$1</returns>", { type = { "func", "type" } } },
             { nil, "/// </summary>", {} },
         },
+
+        doxygen = {
+            { nil, "/**", { no_results = true, type = { "func", "class" } } },
+            { nil, " * @brief $1", { no_results = true, type = { "func", "class" } } },
+            { nil, " */", { no_results = true, type = { "func", "class" } } },
+
+            { nil, "/**" },
+            { nil, " * @brief $1" },
+            { nil, " *" },
+            { "identifier", " * @param %s $1" },
+            { "return_statement", " * @return $1" },
+            { nil, " */" },
+        },
     },
 }
