@@ -108,7 +108,7 @@ neogen.generate = function(opts)
 
                     -- Create extmark to jump back to current location
                     local pos = vim.api.nvim_win_get_cursor(0)
-                    neogen.utilities.cursor.create(pos[1], pos[2])
+                    neogen.utilities.cursor.create(pos[1], pos[2] + 2)
 
                     -- Creates extmark for the end of the content
                     neogen.utilities.cursor.create(to_place + #content + 1, 0)
@@ -151,7 +151,7 @@ neogen.setup = function(opts)
             go = require("neogen.configurations.go"),
             java = require("neogen.configurations.java"),
             rust = require("neogen.configurations.rust"),
-            cs = require("neogen.configurations.csharp")
+            cs = require("neogen.configurations.csharp"),
         },
     })
 
