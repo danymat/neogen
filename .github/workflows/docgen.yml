@@ -3,7 +3,7 @@ name: docgen
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   docgen:
