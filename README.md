@@ -180,6 +180,8 @@ require('neogen').setup {
     }
 }
 ```
+	
+Check out `:h neogen-advanced_configurations` for more information !
 
 ## Supported Languages
 
