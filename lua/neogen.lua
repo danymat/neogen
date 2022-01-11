@@ -132,10 +132,14 @@ function neogen.jumpable(reverse)
 end
 
 function neogen.match_commands()
+    if vim.bo.filetype == "" then
+        return {}
+    end
+
     local language = neogen.configuration.languages[vim.bo.filetype]
 
     if not language or not language.parent then
-        return { "func", "class", "type", "file" }
+        return {}
     end
 
     return vim.tbl_keys(language.parent)
