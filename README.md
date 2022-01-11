@@ -50,7 +50,17 @@ use {
 
 ## Usage
 
-I exposed a function to generate the annotations.
+- If you want to keep it simple, you can use the `:Neogen` command:
+
+```vim
+" will generate annotation for the function you're inside
+:Neogen
+" or you can force a certain type of annotation. It'll find the next upper node that matches the type
+" E.g if you're on a method of a class and do :Neogen class, it'll find the class declaration and generate the annotation.
+:Neogen func|class|type|... 
+```
+
+- If you like to use the lua API, I exposed a function to generate the annotations.
 
 ```lua
 require('neogen').generate()
