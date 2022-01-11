@@ -55,8 +55,9 @@ use {
 ```vim
 " will generate annotation for the function you're inside
 :Neogen
-" or you can force a certain type of annotation. It'll find the next upper node that matches the type
-" E.g if you're on a method of a class and do :Neogen class, it'll find the class declaration and generate the annotation.
+" or you can force a certain type of annotation. 
+" It'll find the next upper node that matches the type
+" E.g if you're on a method of a class and do `:Neogen class`, it'll find the class declaration and generate the annotation.
 :Neogen func|class|type|... 
 ```
 
