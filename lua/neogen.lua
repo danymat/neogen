@@ -16,9 +16,8 @@ require("neogen.granulators.default")
 require("neogen.generators.default")
 
 neogen.generate = function(opts)
-    opts = opts or {
-        type = "func",
-    }
+    opts = opts or {}
+    opts.type = (opts.type == nil or opts.type == "") and "func" or opts.type -- Default type
 
     local parser = vim.treesitter.get_parser(0, vim.bo.filetype)
     local tstree = parser:parse()[1]
@@ -133,7 +132,7 @@ function neogen.jumpable(reverse)
 end
 
 function neogen.generate_command()
-    vim.api.nvim_command('command! -range -bar Neogen lua require("neogen").generate()')
+    vim.api.nvim_command('command! -nargs=? -range -bar Neogen lua require("neogen").generate({ type = <q-args>})')
 end
 
 neogen.setup = function(opts)
