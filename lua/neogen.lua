@@ -151,6 +151,7 @@ neogen.setup = function(opts)
             go = require("neogen.configurations.go"),
             java = require("neogen.configurations.java"),
             rust = require("neogen.configurations.rust"),
+            cs = require("neogen.configurations.csharp")
         },
     })
 

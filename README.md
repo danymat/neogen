@@ -197,6 +197,8 @@ There is a list of supported languages and fields, with their annotation style
 | rust | | | `func`, `file`, `class` |
 | | [Rustdoc](https://doc.rust-lang.org/rustdoc/what-is-rustdoc.html) (`"rustdoc"`) | |
 | | [Alternative](https://stackoverflow.com/questions/30009650/how-do-you-document-function-arguments) (`"alternative"`) | |
+| csharp | | | `func`, `file`, `class`|
+| | [Xmldoc](https://docs.microsoft.com/fr-fr/dotnet/csharp/language-reference/xmldoc/) (`"xmldoc"`) | `<summary>`, `<param>`,`<returns>`|
 
 
 ## Adding Languages
