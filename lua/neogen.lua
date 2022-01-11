@@ -163,11 +163,6 @@ function neogen.match_commands()
 end
 
 function neogen.generate_command()
-    vim.api.nvim_command([[
-        function! s:match_commands(arg, line, pos)
-            return luaeval('require("neogen").match_commands("' .. a:arg .. '")')
-        endfunction
-    ]])
     vim.api.nvim_command(
         'command! -nargs=? -complete=customlist,v:lua.neogen.match_commands -range -bar Neogen lua require("neogen").generate({ type = <q-args>})'
     )
