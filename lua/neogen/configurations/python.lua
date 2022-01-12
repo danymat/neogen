@@ -32,7 +32,10 @@ return {
                                     {
                                         retrieve = "all",
                                         node_type = "typed_parameter",
-                                        subtree = { { retrieve = "all", node_type = "identifier", extract = true } },
+                                        subtree = {
+                                            { retrieve = "all", node_type = "identifier", extract = true },
+                                            { retrieve = "all", node_type = "type", extract = true },
+                                        },
                                     },
                                     {
                                         retrieve = "all",
@@ -52,6 +55,7 @@ return {
                         local nodes = neogen.utilities.nodes:matching_nodes_from(node, tree)
                         local res = neogen.utilities.extractors:extract_from_matched(nodes)
 
+                        results.type = res.type
                         results.parameters = res.identifier
                         results.return_statement = res.return_statement
                         return results
@@ -130,7 +134,7 @@ return {
     generator = nil,
 
     template = {
-        annotation_convention = "google_docstrings", -- required: Which annotation convention to use (default_generator)
+        annotation_convention = "numpydoc", -- required: Which annotation convention to use (default_generator)
         append = { position = "after", child_name = "block" }, -- optional: where to append the text (default_generator)
         use_default_comment = false, -- If you want to prefix the template with the default comment for the language, e.g for python: # (default_generator)
         position = function(node, type)
@@ -162,7 +166,7 @@ return {
             { nil, "# $1", { no_results = true, type = { "type" } } },
 
             { nil, '"""$1' },
-            { "parameters", "\t%s: $1", { before_first_item = { "", "Args:" } } },
+            { { "parameters", "type" }, "\t%s (%s): $1", { before_first_item = { "", "Args:" }, type = { "func" } } },
             { "attributes", "\t%s: $1", { before_first_item = { "", "Attributes: " } } },
             { "return_statement", "\t$1", { before_first_item = { "", "Returns: " } } },
             { nil, '"""' },
@@ -178,7 +182,12 @@ return {
             { nil, "# $1", { no_results = true, type = { "type" } } },
 
             { nil, '"""$1' },
-            { "parameters", "%s: $1", { before_first_item = { "", "Parameters", "----------" } } },
+            {
+                { "parameters", "type" },
+                "%s: %s",
+                { before_first_item = { "", "Parameters", "----------" }, type = { "func" } },
+            },
+            { { "parameters", "type" }, "\t$1", { required = "type" } },
             { "attributes", "%s: $1", { before_first_item = { "", "Attributes", "----------" } } },
             { "return_statement", "$1", { before_first_item = { "", "Returns", "-------" } } },
             { nil, '"""' },
