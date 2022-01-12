@@ -213,7 +213,8 @@ There is a list of supported languages and fields, with their annotation style
 | csharp | | | `func`, `file`, `class`|
 | | [Xmldoc](https://docs.microsoft.com/fr-fr/dotnet/csharp/language-reference/xmldoc/) (`"xmldoc"`) | `<summary>`, `<param>`,`<returns>`|
 | | [Doxygen](https://www.doxygen.nl/manual/commands.html) (`"doxygen"`) | `@param`, `@return`, `@brief`| 
-
+| php | | | `func`, `type` |
+| | [Php-doc](https://docs.phpdoc.org/3.0/guide/references/phpdoc/index.html) (`"phpdoc"`) | `@var`, `@param`, `@return` |
 
 ## Adding Languages
 
