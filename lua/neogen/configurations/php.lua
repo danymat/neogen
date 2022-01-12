@@ -2,6 +2,7 @@ return {
     parent = {
         type = { "property_declaration", "const_declaration", "foreach_statement" },
         func = { "function_definition" },
+        class = { "class_declaration" },
     },
     data = {
         type = {
@@ -60,6 +61,15 @@ return {
                 },
             },
         },
+        class = {
+            ["class_declaration"] = {
+                ["0"] = {
+                    extract = function()
+                        return {}
+                    end,
+                },
+            },
+        },
     },
     template = {
         annotation_convention = "phpdoc",
@@ -68,9 +78,9 @@ return {
         phpdoc = {
             { nil, "/** @var $1 */", { no_results = true, type = { "type" } } },
 
-            { nil, "/**", { no_results = true, type = { "func" } } },
-            { nil, " * $1", { no_results = true, type = { "func" } } },
-            { nil, "*/", { no_results = true, type = { "func" } } },
+            { nil, "/**", { no_results = true, type = { "func", "class" } } },
+            { nil, " * $1", { no_results = true, type = { "func", "class" } } },
+            { nil, " */", { no_results = true, type = { "func", "class" } } },
 
             { nil, "/**", { type = { "type", "func" } } },
             { nil, " * $1", { type = { "func" } } },
@@ -78,7 +88,7 @@ return {
             { "property_element", " * @var $1", { type = { "type" } } },
             { "variable_name", " * @param $1 %s $1", { type = { "func" } } },
             { "return_statement", " * @return $1", { type = { "func" } } },
-            { nil, "*/", { type = { "type", "func" } } },
+            { nil, " */", { type = { "type", "func" } } },
         },
     },
 }
