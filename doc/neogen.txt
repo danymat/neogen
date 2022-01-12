@@ -94,6 +94,9 @@ The defaults are provided here: https://github.com/danymat/neogen/tree/main/lua/
     Change the annotation convention to use with the language.
 *   `template.use_default_comment` (default: `true`)
     Prepend any template line with the default comment for the filetype
+*   `template.position` (`fun(node: userdata, type: string):(number,number)?`)
+    Provide an absolute position for the annotation.
+    If return values are `nil`, use default position
 *   `template.append`
     If you want to customize the position of the annotation
 *   `template.append.child_name`
