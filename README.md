@@ -201,8 +201,8 @@ There is a list of supported languages and fields, with their annotation style
 | | [JSDoc](https://jsdoc.app) (`"jsdoc"`) | `@param`, `@returns`, `@class`, `@classdesc`, `@type`, `@module`|
 | c | | | `func`, `file`|
 | | [Doxygen](https://www.doxygen.nl/manual/commands.html) (`"doxygen"`) | `@param`, `@return`, `@brief`, `@file`| 
-| cpp | | | `func`, `file` |
-| | [Doxygen](https://www.doxygen.nl/manual/commands.html) (`"doxygen"`) | `@param`, `@return`, `@tparam`, `@brief`, `@file`| 
+| cpp | | | `func`, `file`, `class`|
+| | [Doxygen](https://www.doxygen.nl/manual/commands.html) (`"doxygen"`) | `@param`, `@return`, `@tparam`, `@brief`, `@file`, `@class`| 
 | go | | | |
 | | [Godoc](https://go.dev/blog/godoc) (`"godoc"`) | |
 | java | | | `func`, `class` |
