@@ -203,7 +203,7 @@ There is a list of supported languages and fields, with their annotation style
 | | [Doxygen](https://www.doxygen.nl/manual/commands.html) (`"doxygen"`) | `@param`, `@return`, `@brief`, `@file`| 
 | cpp | | | `func`, `file`, `class`|
 | | [Doxygen](https://www.doxygen.nl/manual/commands.html) (`"doxygen"`) | `@param`, `@return`, `@tparam`, `@brief`, `@file`, `@class`| 
-| go | | | |
+| go | | | `func`, `type` |
 | | [Godoc](https://go.dev/blog/godoc) (`"godoc"`) | |
 | java | | | `func`, `class` |
 | | [Javadoc](https://docs.oracle.com/javase/1.5.0/docs/tooldocs/windows/javadoc.html#documentationcomments) (`"javadoc"`) | `@param`, `@return`, `@throws`|
