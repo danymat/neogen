@@ -135,7 +135,7 @@ neogen.default_generator = function(parent, data, template, required_type)
 
                             -- If one item is missing, it'll use the required option to iterate
                             -- and will replace the missing item with default jump_text
-                            if data[opts.required] or data[inserted_type[1]] then
+                            if data[opts.required] or (data[inserted_type[1]] and opts.required == nil) then
                                 local count = opts.required and #data[opts.required] or #data[inserted_type[1]]
                                 for i = 1, count do
                                     local _values = {}
