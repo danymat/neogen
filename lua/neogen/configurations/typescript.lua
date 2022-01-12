@@ -163,8 +163,7 @@ return {
             {
                 { "type_annotation", "parameters" },
                 " * @param {%s} %s $1",
-                { required = "parameters" },
-                { type = { "func" } },
+                { { required = "parameters" }, { type = { "func" } } },
             },
             { "return_statement", " * @returns {$1} $1", { type = { "func" } } },
             { nil, " */", { type = { "class", "func" } } },
