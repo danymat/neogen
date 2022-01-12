@@ -184,6 +184,7 @@ neogen.setup = function(opts)
             java = require("neogen.configurations.java"),
             rust = require("neogen.configurations.rust"),
             cs = require("neogen.configurations.csharp"),
+            php = require("neogen.configurations.php"),
         },
     })
 
