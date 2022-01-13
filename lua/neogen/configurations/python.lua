@@ -189,8 +189,8 @@ return {
 
             { nil, '"""$1' },
             {
-                { "parameters", "type" },
-                "%s: %s",
+                "parameters",
+                "%s: $1",
                 { before_first_item = { "", "Parameters", "----------" }, type = { "func" } },
             },
             { "parameters", "\t$1", {} },
