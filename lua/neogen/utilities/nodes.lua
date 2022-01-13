@@ -91,7 +91,13 @@ neogen.utilities.nodes = {
                     if result[name] == nil then
                         result[name] = {}
                     end
-                    table.insert(result[name], child)
+                    local res = child
+                    if subtree.subtree then
+                        res = { res }
+                        local nodes = self:matching_nodes_from(child, subtree.subtree)
+                        table.insert(res, nodes)
+                    end
+                    table.insert(result[name], res)
                 else
                     local nodes = self:matching_nodes_from(child, subtree.subtree, result)
                     result = vim.tbl_deep_extend("keep", result, nodes)
