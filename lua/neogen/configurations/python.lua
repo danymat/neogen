@@ -172,7 +172,7 @@ return {
             { nil, "# $1", { no_results = true, type = { "type" } } },
 
             { nil, '"""$1' },
-            { { "parameters", "type" }, "\t%s (%s): $1", { before_first_item = { "", "Args:" }, type = { "func" } } },
+            { "parameters", "\t%s ($1): $1", { before_first_item = { "", "Args:" }, type = { "func" } } },
             { "attributes", "\t%s: $1", { before_first_item = { "", "Attributes: " } } },
             { "return_statement", "\t$1", { before_first_item = { "", "Returns: " } } },
             { nil, '"""' },
@@ -193,7 +193,7 @@ return {
                 "%s: %s",
                 { before_first_item = { "", "Parameters", "----------" }, type = { "func" } },
             },
-            { { "parameters", "type" }, "\t$1", { required = "type" } },
+            { "parameters", "\t$1", {} },
             { "attributes", "%s: $1", { before_first_item = { "", "Attributes", "----------" } } },
             { "return_statement", "$1", { before_first_item = { "", "Returns", "-------" } } },
             { nil, '"""' },
