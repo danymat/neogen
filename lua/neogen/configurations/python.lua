@@ -51,13 +51,19 @@ return {
                                     { retrieve = "all", node_type = "return_statement", extract = true },
                                 },
                             },
+                            {
+                                retrieve = "all",
+                                node_type = "type",
+                                as = "return_statement",
+                                extract = true,
+                            },
                         }
                         local nodes = neogen.utilities.nodes:matching_nodes_from(node, tree)
                         local res = neogen.utilities.extractors:extract_from_matched(nodes)
 
                         results.type = res.type
                         results.parameters = res.identifier
-                        results.return_statement = res.return_statement
+                        results.return_statement = res.return_statement and { res.return_statement[1] } or nil
                         return results
                     end,
                 },

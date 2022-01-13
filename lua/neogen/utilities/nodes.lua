@@ -87,7 +87,7 @@ neogen.utilities.nodes = {
 
             for _, child in pairs(matched) do
                 if subtree.extract == true then
-                    local name = subtree.node_type or "_"
+                    local name = subtree.as and subtree.as or (subtree.node_type or "_")
                     if result[name] == nil then
                         result[name] = {}
                     end
