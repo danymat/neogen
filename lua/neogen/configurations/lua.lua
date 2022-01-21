@@ -40,10 +40,15 @@ local extract_from_var = function(node)
     local tree = {
         {
             retrieve = "first",
-            node_type = "variable_declarator",
+            node_type = "assignment_statement",
             subtree = {
-                { retrieve = "first", node_type = "identifier", extract = true },
-                { retrieve = "first", node_type = "field_expression", extract = true },
+                {
+                    retrieve = "first",
+                    node_type = "variable_list",
+                    subtree = {
+                        { retrieve = "all", node_type = "identifier", extract = true },
+                    },
+                },
             },
         },
         {
