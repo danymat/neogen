@@ -1,7 +1,6 @@
 local ok, ts_utils = pcall(require, "nvim-treesitter.ts_utils")
 assert(ok, "neogen requires nvim-treesitter to operate :(")
 
----@diagnostic disable-next-line: lowercase-global
 neogen = {}
 
 -- Require utilities
@@ -19,6 +18,7 @@ require("neogen.generators.default")
 local notify = neogen.utilities.helpers.notify
 
 neogen.generate = function(opts)
+    P("here")
     opts = opts or {}
     opts.type = (opts.type == nil or opts.type == "") and "func" or opts.type -- Default type
 
