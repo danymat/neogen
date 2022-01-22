@@ -127,7 +127,7 @@ neogen.default_generator = function(parent, data, template, required_type)
                                 local inserted = conditional_prefix_inserter(prefix, formatted_string:format(value))
                                 table.insert(result, inserted)
                             end
-                        elseif type(inserted_type) == "table" and #inserted_type >= 1 then
+                        elseif type(inserted_type) == "table" and data[opts.required] then
                             -- First item in the template item can be a table.
                             -- in this case, the template will use provided types to generate the line.
                             -- e.g {{ "type", "parameter"}, "* @type {%s} %s"}
@@ -135,25 +135,22 @@ neogen.default_generator = function(parent, data, template, required_type)
 
                             -- If one item is missing, it'll use the required option to iterate
                             -- and will replace the missing item with default jump_text
-                            if data[opts.required] or (data[inserted_type[1]] and opts.required == nil) then
-                                local count = opts.required and #data[opts.required] or #data[inserted_type[1]]
-                                for i = 1, count do
-                                    local _values = {}
-                                    for _, v in ipairs(inserted_type) do
-                                        if data[v] and data[v][i] then
-                                            table.insert(_values, data[v][i])
-                                        else
-                                            local jump_text = neogen.configuration.jump_text
-                                            table.insert(_values, jump_text)
-                                        end
+                            for _, tbl in pairs(data[opts.required]) do
+                                local _values = {}
+                                for _, v in ipairs(inserted_type) do
+                                    if tbl[v] then
+                                        table.insert(_values, tbl[v][1])
+                                    else
+                                        local jump_text = neogen.configuration.jump_text
+                                        table.insert(_values, jump_text)
                                     end
-                                    if not vim.tbl_isempty(_values) then
-                                        local inserted = conditional_prefix_inserter(
-                                            prefix,
-                                            formatted_string:format(unpack(_values))
-                                        )
-                                        table.insert(result, inserted)
-                                    end
+                                end
+                                if not vim.tbl_isempty(_values) then
+                                    local inserted = conditional_prefix_inserter(
+                                        prefix,
+                                        formatted_string:format(unpack(_values))
+                                    )
+                                    table.insert(result, inserted)
                                 end
                             end
                         end
