@@ -205,6 +205,7 @@ return {
                 { before_first_item = { "", "Parameters", "----------" }, type = { "func" } },
             },
             { "parameters", "\t$1", {} },
+            { { "identifier", "type" }, "\t%s (%s): $1", { required = "typed_parameters", type = { "func" } } },
             { "attributes", "%s: $1", { before_first_item = { "", "Attributes", "----------" } } },
             { "return_statement", "$1", { before_first_item = { "", "Returns", "-------" } } },
             { nil, '"""' },
