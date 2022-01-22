@@ -32,14 +32,12 @@ return {
                                     {
                                         retrieve = "all",
                                         node_type = "typed_parameter",
-                                        subtree = {
-                                            { retrieve = "all", node_type = "identifier", extract = true },
-                                            { retrieve = "all", node_type = "type", extract = true },
-                                        },
+                                        extract = true,
                                     },
                                     {
                                         retrieve = "all",
                                         node_type = "typed_default_parameter",
+                                        extract = true,
                                         subtree = { { retrieve = "all", node_type = "identifier", extract = true } },
                                     },
                                 },
@@ -59,6 +57,18 @@ return {
                             },
                         }
                         local nodes = neogen.utilities.nodes:matching_nodes_from(node, tree)
+                        if nodes["typed_parameter"] then
+                            results["typed_parameters"] = {}
+                            for _, n in pairs(nodes["typed_parameter"]) do
+                                local type_subtree = {
+                                    { retrieve = "all", node_type = "identifier", extract = true },
+                                    { retrieve = "all", node_type = "type", extract = true },
+                                }
+                                local typed_parameters = neogen.utilities.nodes:matching_nodes_from(n, type_subtree)
+                                typed_parameters = neogen.utilities.extractors:extract_from_matched(typed_parameters)
+                                table.insert(results["typed_parameters"], typed_parameters)
+                            end
+                        end
                         local res = neogen.utilities.extractors:extract_from_matched(nodes)
 
                         results.type = res.type
@@ -173,6 +183,7 @@ return {
 
             { nil, '"""$1' },
             { "parameters", "\t%s ($1): $1", { before_first_item = { "", "Args:" }, type = { "func" } } },
+            { { "identifier", "type" }, "\t%s (%s): $1", { required = "typed_parameters", type = { "func" } } },
             { "attributes", "\t%s: $1", { before_first_item = { "", "Attributes: " } } },
             { "return_statement", "\t$1", { before_first_item = { "", "Returns: " } } },
             { nil, '"""' },
