@@ -18,7 +18,6 @@ require("neogen.generators.default")
 local notify = neogen.utilities.helpers.notify
 
 neogen.generate = function(opts)
-    P("here")
     opts = opts or {}
     opts.type = (opts.type == nil or opts.type == "") and "func" or opts.type -- Default type
 
