@@ -108,6 +108,17 @@ The defaults are provided here: https://github.com/danymat/neogen/tree/main/lua/
     To know more about how to create your own template, go here:
     https://github.com/danymat/neogen/blob/main/docs/adding-languages.md#default-generator
 
+For example, changing the default annotation convention is as simple as this:
+>
+    require('neogen').setup {
+        languages = {
+            csharp = {
+                template = { annotation_convention = "..." }
+            }
+        }
+    }
+<
+
 ================================================================================
 DEVELOP                                                           *neogen-develop*
 
