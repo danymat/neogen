@@ -152,7 +152,6 @@ return {
             { nil, "- @module $1", { no_results = true, type = { "file" } } },
             { nil, "- @author $1", { no_results = true, type = { "file" } } },
             { nil, "- @license $1", { no_results = true, type = { "file" } } },
-            { nil, "- @license $1", { no_results = true, type = { "file" } } },
             { nil, "", { no_results = true, type = { "file" } } },
 
             { "parameters", "- @param %s $1|any" },
