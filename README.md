@@ -195,27 +195,18 @@ There is a list of supported languages and fields, with their annotation style
 | --------------- | ---------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------- |
 | lua             | [Emmylua](https://emmylua.github.io/) (`"emmylua"`)                                                                    | `@func`, `@class`, `@type`, `@file`                           |
 |                 | [Ldoc](https://stevedonovan.github.io/ldoc/manual/doc.md.html) (`"ldoc"`)                                              |                                                               |
-|                 |                                                                                                                        |                                                               |
 | python          | [Google docstrings](https://google.github.io/styleguide/pyguide.html) (`"google_docstrings"`)                          |                                                               |
 |                 | [Numpydoc](https://numpydoc.readthedocs.io/en/latest/format.html) (`"numpydoc"`)                                       |                                                               |
-|                 |                                                                                                                        |                                                               |
 | javascript      | [JSDoc](https://jsdoc.app) (`"jsdoc"`)                                                                                 |                                                               |
 | typescript      |                                                                                                                        |                                                               |
-|                 |                                                                                                                        |                                                               |
 | c               | [Doxygen](https://www.doxygen.nl/manual/commands.html) (`"doxygen"`)                                                   | `@func`, `@file`                                              |
-|                 |                                                                                                                        |                                                               |
 | cpp             | [Doxygen](https://www.doxygen.nl/manual/commands.html) (`"doxygen"`)                                                   | `@func`, `@file`, `@class`                                    |
-|                 |                                                                                                                        |                                                               |
 | go              | [GoDoc](https://go.dev/blog/godoc) (`"godoc"`)                                                                         | `@func`, `@type`                                              |
-|                 |                                                                                                                        |                                                               |
 | java            | [Javadoc](https://docs.oracle.com/javase/1.5.0/docs/tooldocs/windows/javadoc.html#documentationcomments) (`"javadoc`)  | `@func`, `@class`                                             |
-|                 |                                                                                                                        |                                                               |
 | rust            | [RustDoc](https://doc.rust-lang.org/rustdoc/what-is-rustdoc.html) (`"rustdoc"`)                                        | `@func`, `@file`, `@class`                                    |
 |                 | [Alternative](https://stackoverflow.com/questions/30009650/how-do-you-document-function-arguments) (`"alternative"`)   |                                                               |
-|                 |                                                                                                                        |                                                               |
 | csharp          | [Xmldoc](https://docs.microsoft.com/fr-fr/dotnet/csharp/language-reference/xmldoc/) (`"xmldoc"`)                       |                                                               |
 |                 | [Doxygen](https://www.doxygen.nl/manual/commands.html) (`"doxygen"`)                                                   |                                                               |
-|                 |                                                                                                                        |                                                               |
 | php             | [Ph-doc](https://docs.phpdoc.org/3.0/guide/references/phpdoc/index.html) (`"phpdoc"`)                                  | `@func`, `@type`, `@class`                                    |
 
 ## Adding Languages
