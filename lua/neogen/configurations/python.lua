@@ -53,7 +53,7 @@ return {
                                         subtree = {
                                             {
                                                 retrieve = "all",
-                                                node_type = "true|false|integer|binary_operator",
+                                                node_type = "true|false|integer|binary_operator|expression_list",
                                                 as = "anonymous_return",
                                                 extract = true,
                                             },
