@@ -71,6 +71,7 @@ return {
                         end
                         local res = neogen.utilities.extractors:extract_from_matched(nodes)
 
+                        results.has_identifier = res.type or res.identifier and { true } or nil
                         results.type = res.type
                         results.parameters = res.identifier
                         results.return_statement = res.return_statement and { res.return_statement[1] } or nil
@@ -182,7 +183,9 @@ return {
             { nil, "# $1", { no_results = true, type = { "type" } } },
 
             { nil, '"""$1' },
-            { "parameters", "\t%s ($1): $1", { before_first_item = { "", "Args:" }, type = { "func" } } },
+            { "has_identifier", "", { type = { "func" } } },
+            { "has_identifier", "Args:", { type = { "func" } } },
+            { "parameters", "\t%s ($1): $1", { type = { "func" } } },
             { { "identifier", "type" }, "\t%s (%s): $1", { required = "typed_parameters", type = { "func" } } },
             { "attributes", "\t%s: $1", { before_first_item = { "", "Attributes: " } } },
             { "return_statement", "\t$1", { before_first_item = { "", "Returns: " } } },
@@ -199,10 +202,13 @@ return {
             { nil, "# $1", { no_results = true, type = { "type" } } },
 
             { nil, '"""$1' },
+            { "has_identifier", "", { type = { "func" } } },
+            { "has_identifier", "Parameters:", { type = { "func" } } },
+            { "has_identifier", "-----------", { type = { "func" } } },
             {
                 "parameters",
                 "%s: $1",
-                { before_first_item = { "", "Parameters", "----------" }, type = { "func" } },
+                { type = { "func" } },
             },
             { "parameters", "\t$1", {} },
             { { "identifier", "type" }, "\t%s (%s): $1", { required = "typed_parameters", type = { "func" } } },
