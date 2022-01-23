@@ -66,7 +66,7 @@ return {
         func = { "function", "local_function", "local_variable_declaration", "field", "variable_declaration" },
         class = { "local_variable_declaration", "variable_declaration" },
         type = { "local_variable_declaration", "variable_declaration" },
-        file = { "program" },
+        file = { "chunk" },
     },
 
     data = {
@@ -126,7 +126,7 @@ return {
             },
         },
         file = {
-            ["program"] = {
+            ["chunk"] = {
                 ["0"] = {
                     extract = function()
                         return {}
