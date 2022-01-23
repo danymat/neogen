@@ -126,6 +126,9 @@ neogen.default_generator = function(parent, data, template, required_type)
                             for _, value in ipairs(data[inserted_type]) do
                                 local inserted = conditional_prefix_inserter(prefix, formatted_string:format(value))
                                 table.insert(result, inserted)
+                                if opts.after_each then
+                                    table.insert(result, conditional_prefix_inserter(prefix, opts.after_each))
+                                end
                             end
                         elseif type(inserted_type) == "table" and data[opts.required] then
                             -- First item in the template item can be a table.
@@ -151,6 +154,9 @@ neogen.default_generator = function(parent, data, template, required_type)
                                         formatted_string:format(unpack(_values))
                                     )
                                     table.insert(result, inserted)
+                                    if opts.after_each then
+                                        table.insert(result, conditional_prefix_inserter(prefix, opts.after_each))
+                                    end
                                 end
                             end
                         end
