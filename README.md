@@ -1,23 +1,24 @@
 <div align="center">
 <img src="https://user-images.githubusercontent.com/5306901/141127528-ddff21bb-8da3-43da-8efe-9494a4f231d2.png" width=250><br>
-	
+
 # Neogen - Your Annotation Toolkit
 
 [![Neovim](https://img.shields.io/badge/Neovim%200.5+-green.svg?style=for-the-badge&logo=neovim)](https://neovim.io)
 [![Lua](https://img.shields.io/badge/Lua-blue.svg?style=for-the-badge&logo=lua)](http://www.lua.org)
+
 </div>
 
 # Table Of Contents
 
-* [Features](#features)
-* [Requirements](#requirements)
-* [Installation](#installation)
-* [Usage](#usage)
-* [Configuration](#configuration)
-* [Supported Languages](#supported-languages)
-* [Adding Languages](#adding-languages)
-* [GIFS](#gifs)
-
+- [Features](#features)
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Configuration](#configuration)
+- [Supported Languages](#supported-languages)
+- [Adding Languages](#adding-languages)
+- [GIFS](#gifs)
+- [Credits](#credits)
 
 ## Features
 
@@ -37,8 +38,8 @@
 Use your favorite package manager to install Neogen, e.g:
 
 ```lua
-use { 
-    "danymat/neogen", 
+use {
+    "danymat/neogen",
     config = function()
         require('neogen').setup {
             enabled = true
@@ -55,10 +56,10 @@ use {
 ```vim
 " will generate annotation for the function you're inside
 :Neogen
-" or you can force a certain type of annotation. 
+" or you can force a certain type of annotation.
 " It'll find the next upper node that matches the type
 " E.g if you're on a method of a class and do `:Neogen class`, it'll find the class declaration and generate the annotation.
-:Neogen func|class|type|... 
+:Neogen func|class|type|...
 ```
 
 - If you like to use the lua API, I exposed a function to generate the annotations.
@@ -107,7 +108,7 @@ If you want to use a key that's already used for completion purposes, take a loo
 
 <details>
    <summary>nvim-cmp</summary>
-  
+
 ```lua
 local cmp = require('cmp')
 local neogen = require('neogen')
@@ -180,41 +181,26 @@ require('neogen').setup {
     }
 }
 ```
-	
+
 Check out `:h neogen-advanced_configurations` for more information !
 
 ## Supported Languages
 
 There is a list of supported languages and fields, with their annotation style
 
-| Language | Annotation conventions | Supported fields | Supported annotation types
-|---|---|---|---|
-| lua | | | `func`, `class`, `type`, `file` |
-| | [Emmylua](https://emmylua.github.io/) (`"emmylua"`) | `@param`, `@varargs`, `@return`, `@class`, `@type`, `@module` |
-| | [Ldoc](https://stevedonovan.github.io/ldoc/manual/doc.md.html) (`"ldoc"`) | `@param`, `@varargs`, `@return`, `@class`, `@type` |
-| python | | | `func`, `class`, `file`, `type` |
-| | [Google docstrings](https://google.github.io/styleguide/pyguide.html) (`"google_docstrings"`) | `Args`, `Attributes`, `Returns` |
-| | [Numpydoc](https://numpydoc.readthedocs.io/en/latest/format.html) (`"numpydoc"`)| `Arguments`, `Attributes`, `Returns`|
-| javascript | | | `func`, `class`, `file`, `type`|
-| | [JSDoc](https://jsdoc.app) (`"jsdoc"`) | `@param`, `@returns`, `@class`, `@classdesc`, `@module`, `@type`|
-| typescript | | | `func`, `class`, `file`, `type` |
-| | [JSDoc](https://jsdoc.app) (`"jsdoc"`) | `@param`, `@returns`, `@class`, `@classdesc`, `@type`, `@module`|
-| c | | | `func`, `file`|
-| | [Doxygen](https://www.doxygen.nl/manual/commands.html) (`"doxygen"`) | `@param`, `@return`, `@brief`, `@file`| 
-| cpp | | | `func`, `file`, `class`|
-| | [Doxygen](https://www.doxygen.nl/manual/commands.html) (`"doxygen"`) | `@param`, `@return`, `@tparam`, `@brief`, `@file`, `@class`| 
-| go | | | `func`, `type` |
-| | [Godoc](https://go.dev/blog/godoc) (`"godoc"`) | |
-| java | | | `func`, `class` |
-| | [Javadoc](https://docs.oracle.com/javase/1.5.0/docs/tooldocs/windows/javadoc.html#documentationcomments) (`"javadoc"`) | `@param`, `@return`, `@throws`|
-| rust | | | `func`, `file`, `class` |
-| | [Rustdoc](https://doc.rust-lang.org/rustdoc/what-is-rustdoc.html) (`"rustdoc"`) | |
-| | [Alternative](https://stackoverflow.com/questions/30009650/how-do-you-document-function-arguments) (`"alternative"`) | |
-| csharp | | | `func`, `file`, `class`|
-| | [Xmldoc](https://docs.microsoft.com/fr-fr/dotnet/csharp/language-reference/xmldoc/) (`"xmldoc"`) | `<summary>`, `<param>`,`<returns>`|
-| | [Doxygen](https://www.doxygen.nl/manual/commands.html) (`"doxygen"`) | `@param`, `@return`, `@brief`| 
-| php | | | `func`, `type`, `class` |
-| | [Php-doc](https://docs.phpdoc.org/3.0/guide/references/phpdoc/index.html) (`"phpdoc"`) | `@var`, `@param`, `@return` |
+| Languages  | Annotation Conventions                                                                                                                                                                                    | Supported annotation types      |
+| ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------- |
+| c          | [Doxygen](https://www.doxygen.nl/manual/commands.html) (`"doxygen"`)                                                                                                                                      | `func`, `file`                  |
+| csharp     | [Xmldoc](https://docs.microsoft.com/fr-fr/dotnet/csharp/language-reference/xmldoc/) (`"xmldoc"`) <br> [Doxygen](https://www.doxygen.nl/manual/commands.html) (`"doxygen"`)                                | `func`, `file`, `class`         |
+| cpp        | [Doxygen](https://www.doxygen.nl/manual/commands.html) (`"doxygen"`)                                                                                                                                      | `func`, `file`, `class`         |
+| go         | [GoDoc](https://go.dev/blog/godoc) (`"godoc"`)                                                                                                                                                            | `func`, `type`                  |
+| java       | [Javadoc](https://docs.oracle.com/javase/1.5.0/docs/tooldocs/windows/javadoc.html#documentationcomments) (`"javadoc`)                                                                                     | `func`, `class`                 |
+| javascript | [JSDoc](https://jsdoc.app) (`"jsdoc"`)                                                                                                                                                                    | `func`, `class`, `type`, `file` |
+| lua        | [Emmylua](https://emmylua.github.io/) (`"emmylua"`)<br> [Ldoc](https://stevedonovan.github.io/ldoc/manual/doc.md.html) (`"ldoc"`)                                                                         | `func`, `class`, `type`, `file` |
+| php        | [Php-doc](https://docs.phpdoc.org/3.0/guide/references/phpdoc/index.html) (`"phpdoc"`)                                                                                                                    | `func`, `type`, `class`         |
+| python     | [Google docstrings](https://google.github.io/styleguide/pyguide.html) (`"google_docstrings"`) <br> [Numpydoc](https://numpydoc.readthedocs.io/en/latest/format.html) (`"numpydoc"`)                       | `func`, `class`, `type`, `file` |
+| rust       | [RustDoc](https://doc.rust-lang.org/rustdoc/what-is-rustdoc.html) (`"rustdoc"`) <br> [Alternative](https://stackoverflow.com/questions/30009650/how-do-you-document-function-arguments) (`"alternative"`) | `func`, `file`, `class`         |
+| typescript | [JSDoc](https://jsdoc.app) (`"jsdoc"`)                                                                                                                                                                    | `func`, `class`, `type`, `file` |
 
 ## Adding Languages
 
@@ -226,11 +212,11 @@ There is a list of supported languages and fields, with their annotation style
 ![screen1](https://user-images.githubusercontent.com/5306901/135055052-6ee6a5e8-3f30-4c41-872e-e624e21a1e98.gif)
 
 ![screen3](https://user-images.githubusercontent.com/5306901/135055174-2a9d8b88-7b23-4513-af91-135d885783ec.gif)
-	
+
 ![screen4](https://user-images.githubusercontent.com/5306901/135056308-9808c231-b1fd-4c41-80bd-85a08d7286dd.gif)
 
 ## Credits
 
 - Binx, for making that gorgeous logo for free!
-	- [Github](https://github.com/Binx-Codes/)
-	- [Reddit](https://www.reddit.com/u/binxatmachine)
+  - [Github](https://github.com/Binx-Codes/)
+  - [Reddit](https://www.reddit.com/u/binxatmachine)
