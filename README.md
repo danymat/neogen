@@ -10,18 +10,15 @@
 
 # Table Of Contents
 
-- [Neogen - Your Annotation Toolkit](#neogen---your-annotation-toolkit)
-- [Table Of Contents](#table-of-contents)
-	- [Features](#features)
-	- [Requirements](#requirements)
-	- [Installation](#installation)
-	- [Usage](#usage)
-		- [Cycle between annotations](#cycle-between-annotations)
-	- [Configuration](#configuration)
-	- [Supported Languages](#supported-languages)
-	- [Adding Languages](#adding-languages)
-	- [GIFS](#gifs)
-	- [Credits](#credits)
+- [Features](#features)
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Configuration](#configuration)
+- [Supported Languages](#supported-languages)
+- [Adding Languages](#adding-languages)
+- [GIFS](#gifs)
+- [Credits](#credits)
 
 ## Features
 
@@ -191,23 +188,19 @@ Check out `:h neogen-advanced_configurations` for more information !
 
 There is a list of supported languages and fields, with their annotation style
 
-| Languages  | Annotation Conventions                                                                                                | Supported annotation types          |
-| ---------- | --------------------------------------------------------------------------------------------------------------------- | ----------------------------------- |
-| lua        | [Emmylua](https://emmylua.github.io/) (`"emmylua"`)                                                                   | `@func`, `@class`, `@type`, `@file` |
-|            | [Ldoc](https://stevedonovan.github.io/ldoc/manual/doc.md.html) (`"ldoc"`)                                             |                                     |
-| python     | [Google docstrings](https://google.github.io/styleguide/pyguide.html) (`"google_docstrings"`)                         |                                     |
-|            | [Numpydoc](https://numpydoc.readthedocs.io/en/latest/format.html) (`"numpydoc"`)                                      |                                     |
-| javascript | [JSDoc](https://jsdoc.app) (`"jsdoc"`)                                                                                |                                     |
-| typescript |                                                                                                                       |                                     |
-| c          | [Doxygen](https://www.doxygen.nl/manual/commands.html) (`"doxygen"`)                                                  | `@func`, `@file`                    |
-| cpp        | [Doxygen](https://www.doxygen.nl/manual/commands.html) (`"doxygen"`)                                                  | `@func`, `@file`, `@class`          |
-| go         | [GoDoc](https://go.dev/blog/godoc) (`"godoc"`)                                                                        | `@func`, `@type`                    |
-| java       | [Javadoc](https://docs.oracle.com/javase/1.5.0/docs/tooldocs/windows/javadoc.html#documentationcomments) (`"javadoc`) | `@func`, `@class`                   |
-| rust       | [RustDoc](https://doc.rust-lang.org/rustdoc/what-is-rustdoc.html) (`"rustdoc"`)                                       | `@func`, `@file`, `@class`          |
-|            | [Alternative](https://stackoverflow.com/questions/30009650/how-do-you-document-function-arguments) (`"alternative"`)  |                                     |
-| csharp     | [Xmldoc](https://docs.microsoft.com/fr-fr/dotnet/csharp/language-reference/xmldoc/) (`"xmldoc"`)                      |                                     |
-|            | [Doxygen](https://www.doxygen.nl/manual/commands.html) (`"doxygen"`)                                                  |                                     |
-| php        | [Php-doc](https://docs.phpdoc.org/3.0/guide/references/phpdoc/index.html) (`"phpdoc"`)                                | `@func`, `@type`, `@class`          |
+| Languages  | Supported annotation types      | Annotation Conventions                                                                                                                                                                                    |
+| ---------- | ------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| c          | `func`, `file`                  | [Doxygen](https://www.doxygen.nl/manual/commands.html) (`"doxygen"`)                                                                                                                                      |
+| csharp     | `func`, `file`, `class`         | [Xmldoc](https://docs.microsoft.com/fr-fr/dotnet/csharp/language-reference/xmldoc/) (`"xmldoc"`) <br> [Doxygen](https://www.doxygen.nl/manual/commands.html) (`"doxygen"`)                                |
+| cpp        | `func`, `file`, `class`         | [Doxygen](https://www.doxygen.nl/manual/commands.html) (`"doxygen"`)                                                                                                                                      |
+| go         | `func`, `type`                  | [GoDoc](https://go.dev/blog/godoc) (`"godoc"`)                                                                                                                                                            |
+| java       | `func`, `class`                 | [Javadoc](https://docs.oracle.com/javase/1.5.0/docs/tooldocs/windows/javadoc.html#documentationcomments) (`"javadoc`)                                                                                     |
+| javascript | `func`, `class`, `type`, `file` | [JSDoc](https://jsdoc.app) (`"jsdoc"`)                                                                                                                                                                    |
+| lua        | `func`, `class`, `type`, `file` | [Emmylua](https://emmylua.github.io/) (`"emmylua"`)<br> [Ldoc](https://stevedonovan.github.io/ldoc/manual/doc.md.html) (`"ldoc"`)                                                                         |
+| php        | `func`, `type`, `class`         | [Php-doc](https://docs.phpdoc.org/3.0/guide/references/phpdoc/index.html) (`"phpdoc"`)                                                                                                                    |
+| python     | `func`, `class`, `type`, `file` | [Google docstrings](https://google.github.io/styleguide/pyguide.html) (`"google_docstrings"`) <br> [Numpydoc](https://numpydoc.readthedocs.io/en/latest/format.html) (`"numpydoc"`)                       |
+| rust       | `func`, `file`, `class`         | [RustDoc](https://doc.rust-lang.org/rustdoc/what-is-rustdoc.html) (`"rustdoc"`) <br> [Alternative](https://stackoverflow.com/questions/30009650/how-do-you-document-function-arguments) (`"alternative"`) |
+| typescript | `func`, `class`, `type`, `file` | [JSDoc](https://jsdoc.app) (`"jsdoc"`)                                                                                                                                                                    |
 
 ## Adding Languages
 
