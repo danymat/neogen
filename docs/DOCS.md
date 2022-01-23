@@ -93,6 +93,18 @@ require('neogen').setup {
   To know more about how to create your own template, go here:
   https://github.com/danymat/neogen/blob/main/docs/adding-languages.md#default-generator
 
+For example, changing the default annotation convention is as simple as this:
+
+```lua
+require('neogen').setup {
+    languages = {
+        csharp = {
+            template = { annotation_convention = "..." }
+        }
+    }
+}
+```
+
 # Develop
 
 - Want to add a new language?
