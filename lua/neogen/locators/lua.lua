@@ -8,5 +8,18 @@ return function(node_info, nodes_to_match)
         node_info.current = ts_utils.get_node_at_cursor()
     end
 
-    return neogen.default_locator(node_info, nodes_to_match)
+    local found_node = neogen.default_locator(node_info, nodes_to_match)
+
+    -- for functions like "local x = function ()...end" the assignment_statement
+    -- will be fetched just before the variable_declaration
+    -- So we need to make sure to return the variable_declaration instead
+    -- otherwise it'll mess up in our annotation placement
+    if found_node and found_node:type() == "assignment_statement" then
+        local parent = found_node:parent()
+        if parent and parent:type() == "variable_declaration" then
+            return parent
+        end
+    end
+
+    return found_node
 end
