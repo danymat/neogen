@@ -182,8 +182,6 @@ require('neogen').setup {
 }
 ```
 
-Check out `:h neogen-advanced_configurations` for more information !
-
 ## Supported Languages
 
 There is a list of supported languages and fields, with their annotation style
