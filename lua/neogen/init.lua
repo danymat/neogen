@@ -31,6 +31,8 @@ local default_locator = require("neogen.locators.default")
 local default_granulator = require("neogen.granulators.default")
 local default_generator = require("neogen.generators.default")
 
+local autocmd = require("neogen.utilities.autocmd")
+
 -- Module definition ==========================================================
 
 --- Module setup
@@ -39,7 +41,10 @@ local default_generator = require("neogen.generators.default")
 ---
 ---@usage `require('neogen').setup({})` (replace `{}` with your `config` table)
 neogen.setup = function(opts)
-    neogen.configuration = vim.tbl_deep_extend("keep", opts or {}, neogen.configuration)
+    -- Stores the user configuration globally so that we keep his configs when switching languages
+    neogen.user_configuration = opts or {}
+
+    neogen.configuration = vim.tbl_deep_extend("keep", neogen.user_configuration, neogen.configuration)
 
     if neogen.configuration.enabled == true then
         neogen.generate_command()
@@ -94,7 +99,14 @@ end
 ---@eval return MiniDoc.afterlines_to_code(MiniDoc.current.eval_section)
 ---@test # Notes~
 ---
---- - To disable a language, you can do: `languages["java"] = nil`
+--- - to configure a language, just add your configurations in the `languages` table
+---   For example, for the `lua` lang:
+---   >
+---    languages = {
+---      lua = { -- Configuration here }
+---    }
+---   <
+---
 --- - `jump_text` is widely used and will certainly break most language templates.
 ---   I'm thinking of removing it from defaults so that it can't be modified
 neogen.configuration = {
@@ -108,21 +120,7 @@ neogen.configuration = {
     jump_text = "$1",
 
     -- Configuration for default languages
-    languages = {
-        --minidoc_replace_start lua = { -- overwrite the defaults here }
-        lua = require("neogen.configurations.lua"),
-        --minidoc_replace_end
-        python = require("neogen.configurations.python"),
-        javascript = require("neogen.configurations.javascript"),
-        typescript = require("neogen.configurations.typescript"),
-        c = require("neogen.configurations.c").c_config,
-        cpp = require("neogen.configurations.c").cpp_config,
-        go = require("neogen.configurations.go"),
-        java = require("neogen.configurations.java"),
-        rust = require("neogen.configurations.rust"),
-        cs = require("neogen.configurations.csharp"),
-        php = require("neogen.configurations.php"),
-    },
+    languages = {},
 }
 --minidoc_afterlines_end
 
@@ -289,7 +287,7 @@ function neogen.jumpable(reverse)
     return cursor.jumpable(reverse)
 end
 
--- Command generation ==========================================================
+-- Command and autocommands ====================================================
 
 --- Generates the `:Neogen` command, which calls `neogen.generate()`
 ---@private
@@ -298,6 +296,17 @@ function neogen.generate_command()
         'command! -nargs=? -complete=customlist,v:lua.neogen.match_commands -range -bar Neogen lua require("neogen").generate({ type = <q-args>})'
     )
 end
+
+autocmd.subscribe("BufEnter", function()
+    helpers.switch_language()
+end)
+
+vim.cmd([[
+  augroup ___neogen___
+    autocmd!
+    autocmd BufEnter * lua require'neogen.utilities.autocmd'.emit('BufEnter')
+  augroup END
+]])
 
 --- Contribute to Neogen
 ---

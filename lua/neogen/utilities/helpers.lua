@@ -18,4 +18,19 @@ return {
 
         return vim.tbl_keys(language.parent)
     end,
+
+    switch_language = function()
+        local filetype = vim.bo.filetype
+        local ok, ft_configuration = pcall(require, "neogen.configurations." .. filetype)
+
+        if not ok then
+            return
+        end
+
+        neogen.configuration.languages[filetype] = vim.tbl_deep_extend(
+            "keep",
+            neogen.user_configuration.languages and neogen.user_configuration.languages[filetype] or {},
+            ft_configuration
+        )
+    end,
 }
