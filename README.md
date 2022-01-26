@@ -19,6 +19,7 @@
 - [Adding Languages](#adding-languages)
 - [GIFS](#gifs)
 - [Credits](#credits)
+- [Support](#support)
 
 ## Features
 
@@ -218,3 +219,8 @@ There is a list of supported languages and fields, with their annotation style
 - Binx, for making that gorgeous logo for free!
   - [Github](https://github.com/Binx-Codes/)
   - [Reddit](https://www.reddit.com/u/binxatmachine)
+	
+## Support
+	
+You like my plugin and want to express your gratitude 👼 ? You can suppport me by donating the equivalent of my morning coffee (no minimum required). I would really appreciate your support as it can motivate me to continue this journey 💝
+- [Donate here](https://github.com/sponsors/danymat)
