@@ -9,6 +9,12 @@ jobs:
   docgen:
     runs-on: ubuntu-latest
     steps:
+      - name: Install Neovim
+        uses: rhysd/action-setup-vim@v1
+        id: neovim
+        with:
+          neovim: true
+          version: nightly
       - uses: actions/checkout@v2
       - name: Install Mini.nvim
         uses: actions/checkout@v2
