@@ -319,7 +319,7 @@ vim.cmd([[
 ---     I guess you can still read the previous links, as they have some valuable knowledge inside.
 ---     You can go and directly open/edit the configuration file relative to the language you want to contribute to.
 ---
----Feel free to submit a PR, I will be happy to help you !
+--- Feel free to submit a PR, I will be happy to help you !
 ---@tag neogen.develop
 
 return neogen
