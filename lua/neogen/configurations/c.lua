@@ -1,3 +1,7 @@
+local extractors = require("neogen.utilities.extractors")
+local nodes_utils = require("neogen.utilities.nodes")
+local default_locator = require("neogen.locators.default")
+
 local c_params = {
     retrieve = "first",
     node_type = "parameter_list",
@@ -64,12 +68,12 @@ local c_function_extractor = function(node)
         c_params,
     }
 
-    local nodes = neogen.utilities.nodes:matching_nodes_from(node, tree)
-    local res = neogen.utilities.extractors:extract_from_matched(nodes)
+    local nodes = nodes_utils:matching_nodes_from(node, tree)
+    local res = extractors:extract_from_matched(nodes)
 
     if nodes.function_declarator then
-        local subnodes = neogen.utilities.nodes:matching_nodes_from(nodes.function_declarator[1]:parent(), tree)
-        local subres = neogen.utilities.extractors:extract_from_matched(subnodes)
+        local subnodes = nodes_utils:matching_nodes_from(nodes.function_declarator[1]:parent(), tree)
+        local subres = extractors:extract_from_matched(subnodes)
         res = vim.tbl_deep_extend("keep", res, subres)
     end
 
@@ -139,7 +143,7 @@ local c_config = {
     },
 
     locator = function(node_info, nodes_to_match)
-        local result = neogen.default_locator(node_info, nodes_to_match)
+        local result = default_locator(node_info, nodes_to_match)
         if not result then
             return nil
         end
@@ -198,8 +202,8 @@ local cpp_config = {
                         local tree = {
                             { retrieve = "first", node_type = "type_identifier", extract = true },
                         }
-                        local nodes = neogen.utilities.nodes:matching_nodes_from(node, tree)
-                        local res = neogen.utilities.extractors:extract_from_matched(nodes)
+                        local nodes = nodes_utils:matching_nodes_from(node, tree)
+                        local res = extractors:extract_from_matched(nodes)
                         return res
                     end,
                 },

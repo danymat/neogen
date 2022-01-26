@@ -1,6 +1,6 @@
 local ts_utils = require("nvim-treesitter.ts_utils")
 
-neogen.utilities.extractors = {
+return {
     --- Extract the content from each node from data
     --- @param _ any self
     --- @param data table a list of k,v values where k is the node_type and v a table of nodes

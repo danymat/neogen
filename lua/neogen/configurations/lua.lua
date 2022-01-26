@@ -1,3 +1,6 @@
+local extractors = require("neogen.utilities.extractors")
+local nodes_utils = require("neogen.utilities.nodes")
+
 local function_extractor = function(node, type)
     if not vim.tbl_contains({ "local", "function" }, type) then
         error("Incorrect call for function_extractor")
@@ -26,8 +29,8 @@ local function_extractor = function(node, type)
         }
     end
 
-    local nodes = neogen.utilities.nodes:matching_nodes_from(node, tree)
-    local res = neogen.utilities.extractors:extract_from_matched(nodes)
+    local nodes = nodes_utils:matching_nodes_from(node, tree)
+    local res = extractors:extract_from_matched(nodes)
 
     return {
         parameters = res.identifier,
@@ -56,7 +59,7 @@ local extract_from_var = function(node)
             extract = true,
         },
     }
-    local nodes = neogen.utilities.nodes:matching_nodes_from(node, tree)
+    local nodes = nodes_utils:matching_nodes_from(node, tree)
     return nodes
 end
 
@@ -93,7 +96,7 @@ return {
                 ["0"] = {
                     extract = function(node)
                         local nodes = extract_from_var(node)
-                        local res = neogen.utilities.extractors:extract_from_matched(nodes)
+                        local res = extractors:extract_from_matched(nodes)
                         return {
                             class_name = res.identifier,
                         }
@@ -109,7 +112,7 @@ return {
                         result.type = {}
 
                         local nodes = extract_from_var(node)
-                        local res = neogen.utilities.extractors:extract_from_matched(nodes, { type = true })
+                        local res = extractors:extract_from_matched(nodes, { type = true })
 
                         -- We asked the extract_from_var function to find the type node at right assignment.
                         -- We check if it found it, or else will put `any` in the type

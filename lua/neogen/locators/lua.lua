@@ -1,4 +1,5 @@
 local ts_utils = require("nvim-treesitter.ts_utils")
+local default_locator = require("neogen.locators.default")
 
 return function(node_info, nodes_to_match)
     -- We're dealing with a lua comment and we need to escape its grasp
@@ -8,7 +9,7 @@ return function(node_info, nodes_to_match)
         node_info.current = ts_utils.get_node_at_cursor()
     end
 
-    local found_node = neogen.default_locator(node_info, nodes_to_match)
+    local found_node = default_locator(node_info, nodes_to_match)
 
     -- for functions like "local x = function ()...end" the assignment_statement
     -- will be fetched just before the variable_declaration

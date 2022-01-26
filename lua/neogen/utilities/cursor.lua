@@ -1,4 +1,4 @@
-neogen.utilities.cursor = {}
+cursor = {}
 
 local neogen_ns = vim.api.nvim_create_namespace("neogen")
 local neogen_virt_text_ns = vim.api.nvim_create_namespace("neogen_virt_text")
@@ -8,7 +8,7 @@ local current_position = 1
 --- @param line number
 --- @param col number
 --- @return number
-neogen.utilities.cursor.create = function(line, col)
+cursor.create = function(line, col)
     current_position = 1
     local new_col = col == 0 and 0 or col - 1
     return vim.api.nvim_buf_set_extmark(0, neogen_ns, line - 1, new_col, {})
@@ -17,7 +17,7 @@ end
 --- Find next created extmark and goes to it.
 --- It removes the extmark afterwards.
 --- First jumpable extmark is the one after the extmarks responsible of start/end of annotation
-neogen.utilities.cursor.go_next_extmark = function()
+cursor.go_next_extmark = function()
     local extm_list = vim.api.nvim_buf_get_extmarks(0, neogen_ns, 0, -1, {})
     local position = current_position + 1
     table.sort(extm_list, function(a, b)
@@ -37,7 +37,7 @@ end
 --- Goes to next extmark and start insert mode.
 --- If `opts.first_time` is supplied, will try to go to normal mode before going to extmark
 --- @param opts table
-neogen.utilities.cursor.jump = function(opts)
+cursor.jump = function(opts)
     opts = opts or {}
 
     -- This is weird, the first time nvim goes to insert is not the same as when i'm already on insert mode
@@ -46,12 +46,12 @@ neogen.utilities.cursor.jump = function(opts)
         vim.api.nvim_command("startinsert")
     end
 
-    if neogen.utilities.cursor.go_next_extmark() then
+    if cursor.go_next_extmark() then
         vim.api.nvim_command("startinsert")
     end
 end
 
-neogen.utilities.cursor.jump_prev = function()
+cursor.jump_prev = function()
     local marks = vim.api.nvim_buf_get_extmarks(0, neogen_ns, 0, -1, {})
     table.sort(marks, function(a, b)
         return a[1] < b[1]
@@ -69,7 +69,7 @@ neogen.utilities.cursor.jump_prev = function()
 end
 
 --- Delete all active extmarks
-neogen.utilities.cursor.del_extmarks = function()
+cursor.del_extmarks = function()
     local extmarks = vim.api.nvim_buf_get_extmarks(0, neogen_ns, 0, -1, {})
     for _, v in pairs(extmarks) do
         vim.api.nvim_buf_del_extmark(0, neogen_ns, v[1])
@@ -78,7 +78,7 @@ end
 
 --- Checks if there are still possible jump positions to perform
 --- Verifies if the cursor is in the last annotated part
-neogen.utilities.cursor.jumpable = function(reverse)
+cursor.jumpable = function(reverse)
     local extm_list = vim.api.nvim_buf_get_extmarks(0, neogen_ns, 0, -1, {})
     if #extm_list == 0 then
         return false
@@ -106,3 +106,5 @@ neogen.utilities.cursor.jumpable = function(reverse)
         return false
     end
 end
+
+return cursor

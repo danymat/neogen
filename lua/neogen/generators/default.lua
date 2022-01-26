@@ -1,4 +1,5 @@
 local ts_utils = require("nvim-treesitter.ts_utils")
+local nodes = require("neogen.utilities.nodes")
 
 --- Generates the prefix according to `template` options.
 --- Prefix is generated with an offset (currently spaces) repetition of `n` times.
@@ -49,7 +50,7 @@ end
 --- @param template table a template from the configuration
 --- @param required_type string
 --- @return table { line, content, opts }, with line being the line to append the content
-neogen.default_generator = function(parent, data, template, required_type)
+return function(parent, data, template, required_type)
     local row_to_place, col_to_place
     -- You can use a custom position placement
     if template.position and type(template.position) == "function" then
@@ -73,7 +74,7 @@ neogen.default_generator = function(parent, data, template, required_type)
     local append = template.append or {}
 
     if append.position == "after" then
-        local child_node = neogen.utilities.nodes:matching_child_nodes(parent, append.child_name)[1]
+        local child_node = nodes:matching_child_nodes(parent, append.child_name)[1]
         if child_node ~= nil then
             row_to_place, col_to_place, _, _ = child_node:range()
         end

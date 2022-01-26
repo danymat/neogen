@@ -1,4 +1,6 @@
 local ts_utils = require("nvim-treesitter.ts_utils")
+local nodes_utils = require("neogen.utilities.nodes")
+local extractors = require("neogen.utilities.extractors")
 
 return {
     -- Search for these nodes
@@ -74,7 +76,7 @@ return {
                                 extract = true,
                             },
                         }
-                        local nodes = neogen.utilities.nodes:matching_nodes_from(node, tree)
+                        local nodes = nodes_utils:matching_nodes_from(node, tree)
                         if nodes["typed_parameter"] then
                             results["typed_parameters"] = {}
                             for _, n in pairs(nodes["typed_parameter"]) do
@@ -82,15 +84,15 @@ return {
                                     { retrieve = "all", node_type = "identifier", extract = true },
                                     { retrieve = "all", node_type = "type", extract = true },
                                 }
-                                local typed_parameters = neogen.utilities.nodes:matching_nodes_from(n, type_subtree)
-                                typed_parameters = neogen.utilities.extractors:extract_from_matched(typed_parameters)
+                                local typed_parameters = nodes_utils:matching_nodes_from(n, type_subtree)
+                                typed_parameters = extractors:extract_from_matched(typed_parameters)
                                 table.insert(results["typed_parameters"], typed_parameters)
                             end
                         end
-                        local res = neogen.utilities.extractors:extract_from_matched(nodes)
+                        local res = extractors:extract_from_matched(nodes)
 
                         if nodes["anonymous_return"] then
-                            local _res = neogen.utilities.extractors:extract_from_matched(nodes, { type = true })
+                            local _res = extractors:extract_from_matched(nodes, { type = true })
                             results.anonymous_return = _res.anonymous_return
                         end
 
@@ -133,7 +135,7 @@ return {
                             },
                         }
 
-                        local nodes = neogen.utilities.nodes:matching_nodes_from(node, tree)
+                        local nodes = nodes_utils:matching_nodes_from(node, tree)
 
                         if vim.tbl_isempty(nodes) then
                             return {}

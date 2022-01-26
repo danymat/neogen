@@ -1,3 +1,6 @@
+local extractors = require("neogen.utilities.extractors")
+local nodes_utils = require("neogen.utilities.nodes")
+
 return {
     parent = {
         func = { "function_item", "function_signature_item" },
@@ -29,8 +32,8 @@ return {
                                 },
                             },
                         }
-                        local nodes = neogen.utilities.nodes:matching_nodes_from(node, tree)
-                        local res = neogen.utilities.extractors:extract_from_matched(nodes)
+                        local nodes = nodes_utils:matching_nodes_from(node, tree)
+                        local res = extractors:extract_from_matched(nodes)
                         return res
                     end,
                 },
@@ -64,8 +67,8 @@ return {
                                 },
                             },
                         }
-                        local nodes = neogen.utilities.nodes:matching_nodes_from(node, tree)
-                        local res = neogen.utilities.extractors:extract_from_matched(nodes)
+                        local nodes = nodes_utils:matching_nodes_from(node, tree)
+                        local res = extractors:extract_from_matched(nodes)
                         return res
                     end,
                 },

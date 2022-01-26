@@ -7,7 +7,7 @@
 --- @param node_info node_info a node informations
 --- @param nodes_to_match table a list of parent nodes to match
 --- @return userdata node one of the nodes to match directly above the given node
-neogen.default_locator = function(node_info, nodes_to_match)
+return function(node_info, nodes_to_match)
     if not node_info.current then
         if vim.tbl_contains(nodes_to_match, node_info.root:type()) then
             return node_info.root

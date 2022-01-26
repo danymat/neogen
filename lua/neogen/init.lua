@@ -1,22 +1,143 @@
 local ok, ts_utils = pcall(require, "nvim-treesitter.ts_utils")
 assert(ok, "neogen requires nvim-treesitter to operate :(")
 
-neogen = {}
+--- What is Neogen ?
+---
+--- # Abstract~
+---
+--- Neogen is an extensible and extremely configurable annotation generator for your favorite languages
+---
+--- Want to know what the supported languages are ?
+--- Check out the up-to-date readme section: https://github.com/danymat/neogen#supported-languages
+---
+--- # Concept~
+---
+--- - Create annotations with one keybind, and jump your cursor in the inserted annotation
+--- - Defaults for multiple languages and annotation conventions
+--- - Extremely customizable and extensible
+--- - Written in lua (and uses Tree-sitter)
+---@tag neogen
 
--- Require utilities
-neogen.utilities = {}
-require("neogen.utilities.extractors")
-require("neogen.utilities.nodes")
-require("neogen.utilities.cursor")
-require("neogen.utilities.helpers")
+-- Requires ===================================================================
 
--- Require defaults
-require("neogen.locators.default")
-require("neogen.granulators.default")
-require("neogen.generators.default")
+local neogen = {}
 
-local notify = neogen.utilities.helpers.notify
+local helpers = require("neogen.utilities.helpers")
+local notify = helpers.notify
 
+local cursor = require("neogen.utilities.cursor")
+
+local default_locator = require("neogen.locators.default")
+local default_granulator = require("neogen.granulators.default")
+local default_generator = require("neogen.generators.default")
+
+-- Module definition ==========================================================
+
+--- Module setup
+---
+---@param opts table Config table (see |neogen.configuration|)
+---
+---@usage `require('neogen').setup({})` (replace `{}` with your `config` table)
+neogen.setup = function(opts)
+    neogen.configuration = vim.tbl_deep_extend("keep", opts or {}, neogen.configuration)
+
+    if neogen.configuration.enabled == true then
+        neogen.generate_command()
+    end
+
+    -- Export module
+    _G.neogen = neogen
+end
+
+--- Neogen Usage
+---
+--- Neogen will use Treesitter parsing to properly generate annotations.
+---
+--- The basic idea is that Neogen will generate annotation to the type you're in.
+--- For example, if you have a csharp function like (note the cursor position):
+---
+--- >
+---  public class HelloWorld
+---  {
+---      public static void Main(string[] args)
+---      {
+---          # CURSOR HERE
+---          Console.WriteLine("Hello world!");
+---          return true;
+---      }
+---
+---      public int someMethod(string str, ref int nm, void* ptr) { return 1; }
+---
+---  }
+--- <
+---
+--- and you call `:Neogen class`, it will generate the annotation for the upper class:
+---
+--- >
+---  /// <summary>
+---  /// ...
+---  /// </summary>
+---  public class HelloWorld
+---  {
+--- <
+---
+--- Currently supported types are `func`, `class`, `type`, `file`.
+--- Check out the up-to-date readme section: https://github.com/danymat/neogen#supported-languages
+--- To know the supported types for a certain language
+---
+--- NOTE: calling `:Neogen` without any type is the same as `:Neogen func`
+---@tag neogen.usage
+
+--- # Basic configurations~
+---
+--- Neogen provides those defaults, and you can change them to suit your needs
+---@eval return MiniDoc.afterlines_to_code(MiniDoc.current.eval_section)
+---@test # Notes~
+---
+--- - To disable a language, you can do: `languages["java"] = nil`
+--- - `jump_text` is widely used and will certainly break most language templates.
+---   I'm thinking of removing it from defaults so that it can't be modified
+neogen.configuration = {
+    -- Enables Neogen capabilities
+    enabled = true,
+
+    -- Go to annotation after insertion, and change to insert mode
+    input_after_comment = true,
+
+    -- Symbol to find for jumping cursor in template
+    jump_text = "$1",
+
+    -- Configuration for default languages
+    languages = {
+        --minidoc_replace_start lua = { -- overwrite the defaults here }
+        lua = require("neogen.configurations.lua"),
+        --minidoc_replace_end
+        python = require("neogen.configurations.python"),
+        javascript = require("neogen.configurations.javascript"),
+        typescript = require("neogen.configurations.typescript"),
+        c = require("neogen.configurations.c").c_config,
+        cpp = require("neogen.configurations.c").cpp_config,
+        go = require("neogen.configurations.go"),
+        java = require("neogen.configurations.java"),
+        rust = require("neogen.configurations.rust"),
+        cs = require("neogen.configurations.csharp"),
+        php = require("neogen.configurations.php"),
+    },
+}
+--minidoc_afterlines_end
+
+-- Basic API ===================================================================
+
+--- The only function required to use Neogen.
+---
+--- It'll try to find the first parent that matches a certain type.
+--- For example, if you are inside a function, and called `generate({ type = "func" })`,
+--- Neogen will go until the start of the function and start annotating for you.
+---
+---@param opts table Options to change default behaviour of generation.
+---  - {opts.type} `(string?, default: "func")` Which type we are trying to use for generating annotations.
+---    Currently supported: `func`, `class`, `type`, `file`
+---@tag test.generator
 neogen.generate = function(opts)
     opts = opts or {}
     opts.type = (opts.type == nil or opts.type == "") and "func" or opts.type -- Default type
@@ -42,9 +163,9 @@ neogen.generate = function(opts)
         return
     end
 
-    language.locator = language.locator or neogen.default_locator
-    language.granulator = language.granulator or neogen.default_granulator
-    language.generator = language.generator or neogen.default_generator
+    language.locator = language.locator or default_locator
+    language.granulator = language.granulator or default_granulator
+    language.generator = language.generator or default_generator
 
     if not language.parent[opts.type] or not language.data[opts.type] then
         notify("Type `" .. opts.type .. "` not supported", vim.log.levels.WARN)
@@ -74,7 +195,7 @@ neogen.generate = function(opts)
         )
 
         if #content ~= 0 then
-            neogen.utilities.cursor.del_extmarks() -- Delete previous extmarks before setting any new ones
+            cursor.del_extmarks() -- Delete previous extmarks before setting any new ones
 
             local jump_text = language.jump_text or neogen.configuration.jump_text
 
@@ -107,7 +228,7 @@ neogen.generate = function(opts)
             -- First and last extmarks are needed to know the range of inserted content
             if neogen.configuration.input_after_comment == true then
                 -- Creates extmark for the beggining of the content
-                neogen.utilities.cursor.create(to_place + 1, start_column)
+                cursor.create(to_place + 1, start_column)
                 -- Creates extmarks for the content
                 for i, value in pairs(content_with_marks) do
                     local start = 0
@@ -117,7 +238,7 @@ neogen.generate = function(opts)
                         if not start then
                             break
                         end
-                        neogen.utilities.cursor.create(to_place + i, start - count * #jump_text)
+                        cursor.create(to_place + i, start - count * #jump_text)
                         count = count + 1
                     end
                 end
@@ -131,72 +252,65 @@ neogen.generate = function(opts)
                     col = pos[2] + 1
                 end
 
-                neogen.utilities.cursor.create(pos[1], col)
+                cursor.create(pos[1], col)
 
                 -- Creates extmark for the end of the content
-                neogen.utilities.cursor.create(to_place + #content + 1, 0)
+                cursor.create(to_place + #content + 1, 0)
 
-                neogen.utilities.cursor.jump({ first_time = true })
+                cursor.jump({ first_time = true })
             end
         end
     end
 end
 
+-- Expose more API  ============================================================
+
+-- Expose match_commands for `:Neogen` completion
+neogen.match_commands = helpers.match_commands
+
+-- Required for use with completion engine =====================================
+
+--- Jumps to the next cursor template position
+---@private
 function neogen.jump_next()
-    neogen.utilities.cursor.jump()
+    cursor.jump()
 end
 
+--- Jumps to the next cursor template position
+---@private
 function neogen.jump_prev()
-    neogen.utilities.cursor.jump_prev()
+    cursor.jump_prev()
 end
 
+--- Checks if the cursor can jump backwards or forwards
+--- @param reverse number? if `-1`, will try to see if can be jumped backwards
+---@private
 function neogen.jumpable(reverse)
-    return neogen.utilities.cursor.jumpable(reverse)
+    return cursor.jumpable(reverse)
 end
 
-function neogen.match_commands()
-    if vim.bo.filetype == "" then
-        return {}
-    end
+-- Command generation ==========================================================
 
-    local language = neogen.configuration.languages[vim.bo.filetype]
-
-    if not language or not language.parent then
-        return {}
-    end
-
-    return vim.tbl_keys(language.parent)
-end
-
+--- Generates the `:Neogen` command, which calls `neogen.generate()`
+---@private
 function neogen.generate_command()
     vim.api.nvim_command(
         'command! -nargs=? -complete=customlist,v:lua.neogen.match_commands -range -bar Neogen lua require("neogen").generate({ type = <q-args>})'
     )
 end
 
-neogen.setup = function(opts)
-    neogen.configuration = vim.tbl_deep_extend("keep", opts or {}, {
-        input_after_comment = true, -- bool, If you want to jump with the cursor after annotation
-        jump_text = "$1", -- symbol to find for jumping cursor in template
-        -- DEFAULT CONFIGURATION
-        languages = {
-            lua = require("neogen.configurations.lua"),
-            python = require("neogen.configurations.python"),
-            javascript = require("neogen.configurations.javascript"),
-            typescript = require("neogen.configurations.typescript"),
-            c = require("neogen.configurations.c").c_config,
-            cpp = require("neogen.configurations.c").cpp_config,
-            go = require("neogen.configurations.go"),
-            java = require("neogen.configurations.java"),
-            rust = require("neogen.configurations.rust"),
-            cs = require("neogen.configurations.csharp"),
-            php = require("neogen.configurations.php"),
-        },
-    })
-
-    if neogen.configuration.enabled == true then
-        neogen.generate_command()
-    end
-end
+--- Contribute to Neogen
+---
+--- *   Want to add a new language?
+---     1.  Using the defaults to generate a new language support:
+---         https://github.com/danymat/neogen/blob/main/docs/adding-languages.md
+---     2.  (advanced) Only if the defaults aren't enough, please see here:
+---         https://github.com/danymat/neogen/blob/main/docs/advanced-integration.md
+--- *   Want to contribute to an existing language?
+---     I guess you can still read the previous links, as they have some valuable knowledge inside.
+---     You can go and directly open/edit the configuration file relative to the language you want to contribute to.
+---
+---Feel free to submit a PR, I will be happy to help you !
+---@tag neogen.develop
 
 return neogen

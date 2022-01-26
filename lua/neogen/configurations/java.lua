@@ -1,3 +1,6 @@
+local extractors = require("neogen.utilities.extractors")
+local nodes_utils = require("neogen.utilities.nodes")
+
 local function_tree = {
     {
         retrieve = "first",
@@ -58,8 +61,8 @@ return {
                         local results = {}
                         local tree = function_tree
 
-                        local nodes = neogen.utilities.nodes:matching_nodes_from(node, tree)
-                        local res = neogen.utilities.extractors:extract_from_matched(nodes)
+                        local nodes = nodes_utils:matching_nodes_from(node, tree)
+                        local res = extractors:extract_from_matched(nodes)
 
                         if res.throws then
                             results.throw_statement = res.throws
@@ -77,8 +80,8 @@ return {
                         local results = {}
                         local tree = function_tree
 
-                        local nodes = neogen.utilities.nodes:matching_nodes_from(node, tree)
-                        local res = neogen.utilities.extractors:extract_from_matched(nodes)
+                        local nodes = nodes_utils:matching_nodes_from(node, tree)
+                        local res = extractors:extract_from_matched(nodes)
 
                         results.parameters = res.identifier
                         if res.throws then
@@ -98,8 +101,8 @@ return {
                     extract = function(node)
                         local results = {}
                         local tree = { { retrieve = "all", node_type = "identifier", extract = true } }
-                        local nodes = neogen.utilities.nodes:matching_nodes_from(node, tree)
-                        local res = neogen.utilities.extractors:extract_from_matched(nodes)
+                        local nodes = nodes_utils:matching_nodes_from(node, tree)
+                        local res = extractors:extract_from_matched(nodes)
 
                         results.class_name = res.identifier
                         return results

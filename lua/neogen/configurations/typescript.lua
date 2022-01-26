@@ -1,3 +1,6 @@
+local extractors = require("neogen.utilities.extractors")
+local nodes_utils = require("neogen.utilities.nodes")
+
 local construct_type_annotation = function(parameters)
     local results = parameters and {} or nil
     if parameters then
@@ -6,8 +9,8 @@ local construct_type_annotation = function(parameters)
                 { retrieve = "all", node_type = "identifier", extract = true },
                 { retrieve = "all", node_type = "type_identifier", recursive = true, extract = true },
             }
-            local typed_parameters = neogen.utilities.nodes:matching_nodes_from(param, subtree)
-            typed_parameters = neogen.utilities.extractors:extract_from_matched(typed_parameters)
+            local typed_parameters = nodes_utils:matching_nodes_from(param, subtree)
+            typed_parameters = extractors:extract_from_matched(typed_parameters)
             table.insert(results, typed_parameters)
         end
     end
@@ -56,8 +59,8 @@ return {
                     extract = function(node)
                         local results = {}
                         local tree = function_tree
-                        local nodes = neogen.utilities.nodes:matching_nodes_from(node, tree)
-                        local res = neogen.utilities.extractors:extract_from_matched(nodes)
+                        local nodes = nodes_utils:matching_nodes_from(node, tree)
+                        local res = extractors:extract_from_matched(nodes)
 
                         results.type = construct_type_annotation(nodes.required_parameter)
                         results.opt_type = construct_type_annotation(nodes.optional_parameter)
@@ -72,8 +75,8 @@ return {
                     extract = function(node)
                         local results = {}
                         local tree = { { retrieve = "all", node_type = "function", subtree = function_tree } }
-                        local nodes = neogen.utilities.nodes:matching_nodes_from(node, tree)
-                        local res = neogen.utilities.extractors:extract_from_matched(nodes)
+                        local nodes = nodes_utils:matching_nodes_from(node, tree)
+                        local res = extractors:extract_from_matched(nodes)
 
                         results.type = construct_type_annotation(nodes.type_annotation)
                         results.opt_type = construct_type_annotation(nodes.optional_parameter)
@@ -88,8 +91,8 @@ return {
                     extract = function(node)
                         local results = {}
                         local tree = { { retrieve = "all", node_type = "arrow_function", subtree = function_tree } }
-                        local nodes = neogen.utilities.nodes:matching_nodes_from(node, tree)
-                        local res = neogen.utilities.extractors:extract_from_matched(nodes)
+                        local nodes = nodes_utils:matching_nodes_from(node, tree)
+                        local res = extractors:extract_from_matched(nodes)
 
                         results.type = construct_type_annotation(nodes.type_annotation)
                         results.opt_type = construct_type_annotation(nodes.optional_parameter)
@@ -124,8 +127,8 @@ return {
                                 extract = true,
                             },
                         }
-                        local nodes = neogen.utilities.nodes:matching_nodes_from(node, tree)
-                        local results = neogen.utilities.extractors:extract_from_matched(nodes)
+                        local nodes = nodes_utils:matching_nodes_from(node, tree)
+                        local results = extractors:extract_from_matched(nodes)
 
                         res.type = results.identifier
                         return res

@@ -1,4 +1,4 @@
-neogen.utilities.nodes = {
+return {
     --- Get a list of child nodes that match the provided node name
     --- @param _ any
     --- @param parent userdata the parent's node
