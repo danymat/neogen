@@ -150,18 +150,18 @@ return {
         -- Which annotation convention to use
         annotation_convention = "emmylua",
         emmylua = {
-            { nil, "- $1", { type = { "class", "func" } } }, -- add this string only on requested types
-            { nil, "- $1", { no_results = true, type = { "class", "func" } } }, -- Shows only when there's no results from the granulator
-            { nil, "- @module $1", { no_results = true, type = { "file" } } },
-            { nil, "- @author $1", { no_results = true, type = { "file" } } },
-            { nil, "- @license $1", { no_results = true, type = { "file" } } },
+            { nil, "-$1", { type = { "class", "func" } } }, -- add this string only on requested types
+            { nil, "-$1", { no_results = true, type = { "class", "func" } } }, -- Shows only when there's no results from the granulator
+            { nil, "-@module $1", { no_results = true, type = { "file" } } },
+            { nil, "-@author $1", { no_results = true, type = { "file" } } },
+            { nil, "-@license $1", { no_results = true, type = { "file" } } },
             { nil, "", { no_results = true, type = { "file" } } },
 
-            { "parameters", "- @param %s $1|any" },
-            { "vararg", "- @vararg $1|any" },
-            { "return_statement", "- @return $1|any" },
-            { "class_name", "- @class $1|any" },
-            { "type", "- @type $1" },
+            { "parameters", "-@param %s $1|any" },
+            { "vararg", "-@vararg $1|any" },
+            { "return_statement", "-@return $1|any" },
+            { "class_name", "-@class $1|any" },
+            { "type", "-@type $1" },
         },
         ldoc = {
             { nil, "- $1", { no_results = true, type = { "func", "class" } } },
