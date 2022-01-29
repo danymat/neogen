@@ -96,7 +96,7 @@ return {
                             results.anonymous_return = _res.anonymous_return
                         end
 
-                        results.has_identifier = res.type or res.identifier and { true } or nil
+                        results.has_identifier = (res.typed_parameter or res.identifier) and { true } or nil
                         results.type = res.type
                         results.parameters = res.identifier
                         results.return_statement = res.return_statement
