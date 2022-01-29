@@ -103,6 +103,16 @@ return {
                             res["anonymous_return"] = nil
                         end
 
+                        -- Remove reference to "self" if any
+                        if res.identifier then
+                            res.identifier = vim.tbl_filter(function(v)
+                                return v ~= "self"
+                            end, res.identifier)
+                            if vim.tbl_isempty(res.identifier) then
+                                res.identifier = nil
+                            end
+                        end
+
                         results.has_identifier = (res.typed_parameter or res.identifier) and { true } or nil
                         results.type = res.type
                         results.parameters = res.identifier
