@@ -133,7 +133,10 @@ return function(parent, data, template, required_type)
                                 local inserted = conditional_prefix_inserter(prefix, formatted_string:format(value))
                                 table.insert(result, inserted)
                                 if opts.after_each then
-                                    table.insert(result, conditional_prefix_inserter(prefix, opts.after_each))
+                                    table.insert(
+                                        result,
+                                        conditional_prefix_inserter(prefix, opts.after_each):format(value)
+                                    )
                                 end
                             end
                         elseif type(inserted_type) == "table" and data[opts.required] then
@@ -161,7 +164,29 @@ return function(parent, data, template, required_type)
                                     )
                                     table.insert(result, inserted)
                                     if opts.after_each then
-                                        table.insert(result, conditional_prefix_inserter(prefix, opts.after_each))
+                                        if type(opts.after_each) == "table" then
+                                            local _v = {}
+                                            local index_types = opts.after_each["index_types"]
+                                            for _, i in ipairs(index_types) do
+                                                table.insert(_v, _values[i])
+                                            end
+                                            _values = _v
+                                            table.insert(
+                                                result,
+                                                conditional_prefix_inserter(
+                                                    prefix,
+                                                    opts.after_each[1]:format(unpack(_values))
+                                                )
+                                            )
+                                        else
+                                            table.insert(
+                                                result,
+                                                conditional_prefix_inserter(
+                                                    prefix,
+                                                    opts.after_each:format(unpack(_values))
+                                                )
+                                            )
+                                        end
                                     end
                                 end
                             end
