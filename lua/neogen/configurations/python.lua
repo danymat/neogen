@@ -108,25 +108,33 @@ return {
         },
         class = {
             ["class_definition"] = {
-                ["2"] = {
-                    match = "block",
-
+                ["0"] = {
                     extract = function(node)
                         local results = {}
                         local tree = {
                             {
                                 retrieve = "first",
-                                node_type = "function_definition",
+                                node_type = "block",
                                 subtree = {
                                     {
                                         retrieve = "first",
-                                        node_type = "block",
+                                        node_type = "function_definition",
                                         subtree = {
                                             {
-                                                retrieve = "all",
-                                                node_type = "expression_statement",
+                                                retrieve = "first",
+                                                node_type = "block",
                                                 subtree = {
-                                                    { retrieve = "first", node_type = "assignment", extract = true },
+                                                    {
+                                                        retrieve = "all",
+                                                        node_type = "expression_statement",
+                                                        subtree = {
+                                                            {
+                                                                retrieve = "first",
+                                                                node_type = "assignment",
+                                                                extract = true,
+                                                            },
+                                                        },
+                                                    },
                                                 },
                                             },
                                         },
@@ -145,7 +153,10 @@ return {
                         for _, assignment in pairs(nodes["assignment"]) do
                             local left_side = assignment:field("left")[1]
                             local left_attribute = left_side:field("attribute")[1]
-                            table.insert(results.attributes, ts_utils.get_node_text(left_attribute)[1])
+                            left_attribute = ts_utils.get_node_text(left_attribute)[1]
+                            if not vim.startswith(left_attribute, "_") then
+                                table.insert(results.attributes, left_attribute)
+                            end
                         end
 
                         return results
