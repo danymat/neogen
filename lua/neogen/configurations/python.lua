@@ -294,7 +294,7 @@ return {
                 { "identifier", "type" },
                 ":param %s: $1",
                 {
-                    after_each = { ":type %s: $1", index_types = { 2 } },
+                    after_each = ":type %s: %s $1",
                     required = "typed_parameters",
                     type = { "func" },
                 },
