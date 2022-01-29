@@ -178,7 +178,7 @@ return {
 
     template = {
         annotation_convention = "google_docstrings", -- required: Which annotation convention to use (default_generator)
-        append = { position = "after", child_name = "block" }, -- optional: where to append the text (default_generator)
+        append = { position = "after", child_name = "comment", fallback = "block" }, -- optional: where to append the text (default_generator)
         use_default_comment = false, -- If you want to prefix the template with the default comment for the language, e.g for python: # (default_generator)
         position = function(node, type)
             if type == "file" then
