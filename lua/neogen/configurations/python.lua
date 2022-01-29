@@ -101,6 +101,9 @@ return {
                         if res["return_type"] then
                             res["return_statement"] = nil
                             res["anonymous_return"] = nil
+                            if res["return_type"][1] == "None" then
+                                res["return_type"] = nil
+                            end
                         end
 
                         -- Remove reference to "self" if any
