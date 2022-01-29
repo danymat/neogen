@@ -157,9 +157,12 @@ return {
                             local left_side = assignment:field("left")[1]
                             local left_attribute = left_side:field("attribute")[1]
                             left_attribute = ts_utils.get_node_text(left_attribute)[1]
-                            if not vim.startswith(left_attribute, "_") then
+                            if left_attribute and not vim.startswith(left_attribute, "_") then
                                 table.insert(results.attributes, left_attribute)
                             end
+                        end
+                        if vim.tbl_isempty(results.attributes) then
+                            results.attributes = nil
                         end
 
                         return results
