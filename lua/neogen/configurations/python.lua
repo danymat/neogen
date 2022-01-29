@@ -55,16 +55,14 @@ return {
                                         subtree = {
                                             {
                                                 retrieve = "all",
-                                                node_type = "true|false|integer|binary_operator|expression_list",
+                                                node_type = "true|false|integer|binary_operator|expression_list|call",
                                                 as = "anonymous_return",
-                                                recursive = true,
                                                 extract = true,
                                             },
                                             {
                                                 retrieve = "all",
                                                 node_type = "identifier",
                                                 as = "return_statement",
-                                                recursive = true,
                                                 extract = true,
                                             },
                                         },
@@ -96,14 +94,24 @@ return {
 
                         if nodes["anonymous_return"] then
                             local _res = extractors:extract_from_matched(nodes, { type = true })
-                            results.anonymous_return = _res.anonymous_return
+                            res.anonymous_return = _res.anonymous_return
+                        end
+
+                        -- Return type hints takes precedence over all other types for generating template
+                        if res["return_type"] then
+                            res["return_statement"] = nil
+                            res["anonymous_return"] = nil
                         end
 
                         results.has_identifier = (res.typed_parameter or res.identifier) and { true } or nil
                         results.type = res.type
                         results.parameters = res.identifier
+                        results.anonymous_return = res.anonymous_return
                         results.return_statement = res.return_statement
-                        results.has_return = (res.return_statement or res.anonymous_return) and { true } or nil
+                        results.return_type = res.return_type
+                        results.has_return = (res.return_statement or res.anonymous_return or res.return_type)
+                                and { true }
+                            or nil
                         return results
                     end,
                 },
@@ -264,6 +272,11 @@ return {
             { "has_return", "", { type = { "func" } } },
             { "has_return", "Returns", { type = { "func" } } },
             { "has_return", "-------", { type = { "func" } } },
+            {
+                "return_type",
+                "%s",
+                { after_each = "\t$1" },
+            },
             {
                 "return_statement",
                 "%s : $1",
