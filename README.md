@@ -200,6 +200,7 @@ There is a list of supported languages and fields, with their annotation style
 | python     | [Google docstrings](https://google.github.io/styleguide/pyguide.html) (`"google_docstrings"`) <br> [Numpydoc](https://numpydoc.readthedocs.io/en/latest/format.html) (`"numpydoc"`)                       | `func`, `class`, `type`, `file` |
 | rust       | [RustDoc](https://doc.rust-lang.org/rustdoc/what-is-rustdoc.html) (`"rustdoc"`) <br> [Alternative](https://stackoverflow.com/questions/30009650/how-do-you-document-function-arguments) (`"alternative"`) | `func`, `file`, `class`         |
 | typescript | [JSDoc](https://jsdoc.app) (`"jsdoc"`)                                                                                                                                                                    | `func`, `class`, `type`, `file` |
+| vue        | [JSDoc](https://jsdoc.app) (`"jsdoc"`)                                                                                                                                                                    | `func`, `class`, `type`, `file` |
 
 ## Adding Languages
 
@@ -219,8 +220,9 @@ There is a list of supported languages and fields, with their annotation style
 - Binx, for making that gorgeous logo for free!
   - [Github](https://github.com/Binx-Codes/)
   - [Reddit](https://www.reddit.com/u/binxatmachine)
-	
+
 ## Support
-	
+
 You like my plugin and want to express your gratitude 👼 ? You can suppport me by donating the equivalent of my morning coffee (no minimum required). I would really appreciate your support as it can motivate me to continue this journey 💝
+
 - [Donate here](https://github.com/sponsors/danymat)
