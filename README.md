@@ -97,14 +97,6 @@ vim.api.nvim_set_keymap("n", "<Leader>nc", ":lua require('neogen').generate({ ty
 
 I added support passing cursor positionings in templates. That means you can now cycle your cursor between different parts of the annotation.
 
-To configure it to the keybind of your choice, you can do something like this:
-
-```lua
-local opts = { noremap = true, silent = true }
-vim.api.nvim_set_keymap("n", "<C-n>", ":lua require('neogen').jump_next()<CR>", opts)
-vim.api.nvim_set_keymap("n", "<C-p>", ":lua require('neogen').jump_prev()<CR>", opts)
-```
-
 If you want to use a key that's already used for completion purposes, take a look at the code snippet here:
 
 <details>
