@@ -4,11 +4,11 @@ local nodes_utils = require("neogen.utilities.nodes")
 
 local cpp_config = {
     parent = {
-        class = { "class_specifier" },
+        class = { "class_specifier", "struct_specifier" },
     },
     data = {
         class = {
-            ["class_specifier"] = {
+            ["class_specifier|struct_specifier"] = {
                 ["0"] = {
                     extract = function(node)
                         local tree = {
