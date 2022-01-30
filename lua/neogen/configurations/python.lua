@@ -76,7 +76,6 @@ return {
                                 retrieve = "all",
                                 node_type = "type",
                                 as = "return_type",
-                                recursive = true,
                                 extract = true,
                             },
                         }
