@@ -1,5 +1,15 @@
 ==============================================================================
 ------------------------------------------------------------------------------
+Table of contents:
+  Neogen's purpose....................................................|neogen|
+  The setup function..........................................|neogen.setup()|
+  Usage.........................................................|neogen-usage|
+  Configure the setup...................................|neogen-configuration|
+  Generate annotations.....................................|neogen.generate()|
+  Contributing................................................|neogen-develop|
+
+
+------------------------------------------------------------------------------
                                                                         *neogen*
 What is Neogen ?
 
@@ -29,7 +39,7 @@ Usage~
 `require('neogen').setup({})` (replace `{}` with your `config` table)
 
 ------------------------------------------------------------------------------
-                                                                  *neogen.usage*
+                                                                  *neogen-usage*
 Neogen Usage
 
 Neogen will use Treesitter parsing to properly generate annotations.
@@ -69,7 +79,7 @@ To know the supported types for a certain language
 NOTE: calling `:Neogen` without any type is the same as `:Neogen func`
 
 ------------------------------------------------------------------------------
-                                                          *neogen.configuration*
+                                                          *neogen-configuration*
                              `neogen.configuration`
 # Basic configurations~
 
@@ -103,7 +113,7 @@ Neogen provides those defaults, and you can change them to suit your needs
   I'm thinking of removing it from defaults so that it can't be modified
 
 ------------------------------------------------------------------------------
-                                                                *test.generator*
+                                                             *neogen.generate()*
                            `neogen.generate`({opts})
 The only function required to use Neogen.
 
@@ -117,7 +127,7 @@ Parameters~
    Currently supported: `func`, `class`, `type`, `file`
 
 ------------------------------------------------------------------------------
-                                                                *neogen.develop*
+                                                                *neogen-develop*
 Contribute to Neogen
 
 *   Want to add a new language?
