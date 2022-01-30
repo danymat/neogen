@@ -1,10 +1,10 @@
---- @class node_info
+--- @class Neogen.node_info
 --- @field current userdata the current node from cursor
---- @field root userdata the root node
+--- @field root? userdata the root node
 
 --- The default locator tries to find one of the nodes to match in the current node
 --- If it does not find one, will fetch the parents until he finds one
---- @param node_info node_info a node informations
+--- @param node_info Neogen.node_info a node informations
 --- @param nodes_to_match table a list of parent nodes to match
 --- @return userdata node one of the nodes to match directly above the given node
 return function(node_info, nodes_to_match)
