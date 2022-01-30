@@ -285,15 +285,15 @@ return {
             { "has_identifier", "----------", { type = { "func" } } },
             {
                 "parameters",
-                "%s: $1",
+                "%s : $1",
                 { after_each = "    $1", type = { "func" } },
             },
             {
                 { "identifier", "type" },
-                "%s: %s",
+                "%s : %s",
                 { after_each = "    $1", required = "typed_parameters", type = { "func" } },
             },
-            { "attributes", "%s: $1", { before_first_item = { "", "Attributes", "----------" } } },
+            { "attributes", "%s : $1", { before_first_item = { "", "Attributes", "----------" } } },
             { "has_return", "", { type = { "func" } } },
             { "has_return", "Returns", { type = { "func" } } },
             { "has_return", "-------", { type = { "func" } } },
