@@ -1,15 +1,18 @@
 local ts_utils = require("nvim-treesitter.ts_utils")
 local nodes_utils = require("neogen.utilities.nodes")
 local extractors = require("neogen.utilities.extractors")
+local locator = require("neogen.locators.default")
+
+local parent = {
+    func = { "function_definition" },
+    class = { "class_definition" },
+    file = { "module" },
+    type = { "expression_statement" },
+}
 
 return {
     -- Search for these nodes
-    parent = {
-        func = { "function_definition" },
-        class = { "class_definition" },
-        file = { "module" },
-        type = { "expression_statement" },
-    },
+    parent = parent,
 
     -- Traverse down these nodes and extract the information as necessary
     data = {
@@ -106,11 +109,10 @@ return {
                             end
                         end
 
-                        -- Remove reference to "self" if any
-                        if res.identifier then
-                            res.identifier = vim.tbl_filter(function(v)
-                                return v ~= "self"
-                            end, res.identifier)
+                        -- Check if the function is inside a class
+                        -- If so, remove reference to the first parameter (that can be `self`, `cls`, or a custom name)
+                        if res.identifier and locator({ current = node }, parent.class) then
+                            table.remove(res.identifier, 1)
                             if vim.tbl_isempty(res.identifier) then
                                 res.identifier = nil
                             end
