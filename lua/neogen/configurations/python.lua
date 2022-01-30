@@ -111,9 +111,20 @@ return {
                         -- Check if the function is inside a class
                         -- If so, remove reference to the first parameter (that can be `self`, `cls`, or a custom name)
                         if res.identifier and locator({ current = node }, parent.class) then
-                            table.remove(res.identifier, 1)
-                            if vim.tbl_isempty(res.identifier) then
-                                res.identifier = nil
+                            local remove_identifier = true
+                            -- Check if function is a static method. If so, will not remove the first parameter
+                            if node:parent():type() == "decorated_definition" then
+                                local decorator = nodes_utils:matching_child_nodes(node:parent(), "decorator")
+                                decorator = ts_utils.get_node_text(decorator[1])[1]
+                                if decorator == "@staticmethod" then
+                                    remove_identifier = false
+                                end
+                            end
+                            if remove_identifier then
+                                table.remove(res.identifier, 1)
+                                if vim.tbl_isempty(res.identifier) then
+                                    res.identifier = nil
+                                end
                             end
                         end
 
