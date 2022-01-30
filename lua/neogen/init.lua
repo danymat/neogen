@@ -283,13 +283,17 @@ neogen.match_commands = helpers.match_commands
 --- Jumps to the next cursor template position
 ---@private
 function neogen.jump_next()
-    cursor.jump()
+    if neogen.jumpable() then
+        cursor.jump()
+    end
 end
 
 --- Jumps to the next cursor template position
 ---@private
 function neogen.jump_prev()
-    cursor.jump_prev()
+    if cursor.jumpable(-1) then
+        cursor.jump_prev()
+    end
 end
 
 --- Checks if the cursor can jump backwards or forwards
