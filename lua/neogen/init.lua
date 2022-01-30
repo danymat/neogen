@@ -1,6 +1,10 @@
 local ok, ts_utils = pcall(require, "nvim-treesitter.ts_utils")
 assert(ok, "neogen requires nvim-treesitter to operate :(")
 
+--- Table of contents:
+---@toc
+---@text
+
 --- What is Neogen ?
 ---
 --- # Abstract~
@@ -17,6 +21,7 @@ assert(ok, "neogen requires nvim-treesitter to operate :(")
 --- - Extremely customizable and extensible
 --- - Written in lua (and uses Tree-sitter)
 ---@tag neogen
+---@toc_entry Neogen's purpose
 
 -- Requires ===================================================================
 
@@ -40,6 +45,7 @@ local autocmd = require("neogen.utilities.autocmd")
 ---@param opts table Config table (see |neogen.configuration|)
 ---
 ---@usage `require('neogen').setup({})` (replace `{}` with your `config` table)
+---@toc_entry The setup function
 neogen.setup = function(opts)
     -- Stores the user configuration globally so that we keep his configs when switching languages
     neogen.user_configuration = opts or {}
@@ -91,7 +97,8 @@ end
 --- To know the supported types for a certain language
 ---
 --- NOTE: calling `:Neogen` without any type is the same as `:Neogen func`
----@tag neogen.usage
+---@tag neogen-usage
+---@toc_entry Usage
 
 --- # Basic configurations~
 ---
@@ -109,6 +116,8 @@ end
 ---
 --- - `jump_text` is widely used and will certainly break most language templates.
 ---   I'm thinking of removing it from defaults so that it can't be modified
+---@toc_entry Configure the setup
+---@tag neogen-configuration
 neogen.configuration = {
     -- Enables Neogen capabilities
     enabled = true,
@@ -135,7 +144,7 @@ neogen.configuration = {
 ---@param opts table Options to change default behaviour of generation.
 ---  - {opts.type} `(string?, default: "func")` Which type we are trying to use for generating annotations.
 ---    Currently supported: `func`, `class`, `type`, `file`
----@tag test.generator
+---@toc_entry Generate annotations
 neogen.generate = function(opts)
     opts = opts or {}
     opts.type = (opts.type == nil or opts.type == "") and "func" or opts.type -- Default type
@@ -320,6 +329,7 @@ vim.cmd([[
 ---     You can go and directly open/edit the configuration file relative to the language you want to contribute to.
 ---
 --- Feel free to submit a PR, I will be happy to help you !
----@tag neogen.develop
+---@tag neogen-develop
+---@toc_entry Contributing
 
 return neogen
