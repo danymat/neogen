@@ -59,6 +59,7 @@ neogen.setup = function(opts)
     -- Export module
     _G.neogen = neogen
 
+    -- Force configuring current language again when doing `setup` call.
     helpers.switch_language()
 end
 
