@@ -15,7 +15,13 @@ local function_extractor = function(node, type)
                 { retrieve = "all", node_type = "spread", extract = true },
             },
         },
-        { retrieve = "first", node_type = "return_statement", extract = true },
+        {
+            retrieve = "first",
+            node_type = "block",
+            subtree = {
+                { retrieve = "first", node_type = "return_statement", extract = true },
+            },
+        }
     }
 
     if type == "local" then
