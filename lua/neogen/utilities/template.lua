@@ -29,6 +29,7 @@ local template_configuration = {
 ---@field child_name string Which child node to use for appending the annotation
 ---@field fallback string Node to fallback if `child_name` is not found
 ---@field position "'after'"|"'before'" Place the annotation relative to position with `child_name` or `fallback`
+---@field disabled table|nil Disable custom placement for provided types
 ---
 --- For example, to customize the placement for a python annotation, we can use `append`, like so:
 ---

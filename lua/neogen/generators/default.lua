@@ -73,7 +73,7 @@ return function(parent, data, template, required_type)
 
     local append = template.append or {}
 
-    if append.position == "after" then
+    if append.position == "after" and not vim.tbl_contains(append.disabled or {}, required_type) then
         local child_node = nodes:matching_child_nodes(parent, append.child_name)[1]
         if not child_node and append.fallback then
             local fallback = nodes:matching_child_nodes(parent, append.fallback)[1]
