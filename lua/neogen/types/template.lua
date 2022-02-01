@@ -1,13 +1,3 @@
----@class neogen.TemplateConfig
----@field annotation_convention string
----@field use_default_comment boolean
----@field append? neogen.TemplateConfig.Append
-
----@class neogen.TemplateConfig.Append
----@field position "'after'"|"'before'"
----@field child_name string
----@field fallback string
-
 local template = {}
 
 template.item = {
