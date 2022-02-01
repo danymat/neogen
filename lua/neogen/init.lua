@@ -107,7 +107,7 @@ end
 ---
 --- Neogen provides those defaults, and you can change them to suit your needs
 ---@eval return MiniDoc.afterlines_to_code(MiniDoc.current.eval_section)
----@test # Notes~
+---@text # Notes~
 ---
 --- - to configure a language, just add your configurations in the `languages` table
 ---   For example, for the `lua` lang:
@@ -277,6 +277,21 @@ end
 
 -- Expose match_commands for `:Neogen` completion
 neogen.match_commands = helpers.match_commands
+
+--- Get a template for a particular filetype
+---@param filetype string
+---@return neogen.TemplateConfig|nil
+neogen.get_template = function(filetype)
+    if not neogen.configuration.languages[filetype] then
+        return
+    end
+
+    if not neogen.configuration.languages[filetype].template then
+        return
+    end
+
+    return neogen.configuration.languages[filetype].template
+end
 
 -- Required for use with completion engine =====================================
 
