@@ -1,6 +1,8 @@
 local extractors = require("neogen.utilities.extractors")
 local nodes_utils = require("neogen.utilities.nodes")
 local default_locator = require("neogen.locators.default")
+local template = require("neogen.utilities.template")
+local i = require("neogen.types.template").item
 
 local c_params = {
     retrieve = "first",
@@ -104,10 +106,9 @@ local c_function_extractor = function(node)
     end
 
     return {
-        parameters = res.identifier,
-        type_identifier = res.type_identifier,
-        tparam = res.tparam,
-        return_statement = has_return_statement(),
+        [i.Parameter] = res.identifier,
+        [i.Tparam] = res.tparam,
+        [i.Return] = has_return_statement(),
     }
 end
 
@@ -168,27 +169,7 @@ local c_config = {
     granulator = nil,
     generator = nil,
 
-    template = {
-        annotation_convention = "doxygen",
-        use_default_comment = false,
-
-        doxygen = {
-            { nil, "/**", { no_results = true, type = { "func", "file" } } },
-            { nil, " * @file", { no_results = true, type = { "file" } } },
-            { nil, " * @brief $1", { no_results = true, type = { "func", "file" } } },
-            { nil, " */", { no_results = true, type = { "func", "file" } } },
-            { nil, "", { no_results = true, type = { "file" } } },
-
-            { nil, "/**", { type = { "func" } } },
-            { nil, " * @brief $1", { type = { "func" } } },
-            { nil, " *", { type = { "func" } } },
-            { "tparam", " * @tparam %s $1" },
-            { "parameters", " * @param %s $1" },
-            { "return_statement", " * @return $1" },
-            { nil, " */" },
-        },
-    },
+    template = template:add_default_template("doxygen"),
 }
-
 
 return c_config

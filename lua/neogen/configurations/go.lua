@@ -1,3 +1,5 @@
+local template = require("neogen.utilities.template")
+
 return {
     parent = {
         func = { "function_declaration" },
@@ -25,10 +27,5 @@ return {
         },
     },
 
-    template = {
-        annotation_convention = "godoc",
-        godoc = {
-            { nil, " $1", { no_results = true } },
-        },
-    },
+    template = template:config({ use_default_comment = true }):add_default_template("godoc"),
 }

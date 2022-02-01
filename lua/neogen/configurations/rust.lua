@@ -1,5 +1,7 @@
 local extractors = require("neogen.utilities.extractors")
+local i = require("neogen.types.template").item
 local nodes_utils = require("neogen.utilities.nodes")
+local template = require("neogen.utilities.template")
 
 return {
     parent = {
@@ -21,13 +23,19 @@ return {
                                         retrieve = "all",
                                         node_type = "parameter",
                                         subtree = {
-                                            { retrieve = "first", node_type = "identifier", extract = true },
+                                            {
+                                                retrieve = "first",
+                                                node_type = "identifier",
+                                                extract = true,
+                                                i.Parameter,
+                                            },
                                         },
                                     },
                                     {
                                         retrieve = "all",
                                         node_type = "type_identifier",
                                         extract = true,
+                                        as = i.Tparam,
                                     },
                                 },
                             },
@@ -61,7 +69,12 @@ return {
                                         retrieve = "all",
                                         node_type = "field_declaration",
                                         subtree = {
-                                            { retrieve = "all", node_type = "field_identifier", extract = true },
+                                            {
+                                                retrieve = "all",
+                                                node_type = "field_identifier",
+                                                extract = true,
+                                                as = i.Parameter,
+                                            },
                                         },
                                     },
                                 },
@@ -76,27 +89,8 @@ return {
         },
     },
 
-    template = {
-        annotation_convention = "alternative",
-        rustdoc = {
-            { nil, "! $1", { no_results = true, type = { "file" } } },
-            { nil, "", { no_results = true, type = { "file" } } },
-
-            { nil, "/ $1", { no_results = true, type = { "func", "class" } } },
-            { nil, "/ $1", { type = { "func", "class" } } },
-        },
-
-        alternative = {
-            { nil, "! $1", { no_results = true, type = { "file" } } },
-            { nil, "", { no_results = true, type = { "file" } } },
-
-            { nil, "/ $1", { no_results = true, type = { "func", "class" } } },
-
-            { nil, "/ $1", { type = { "func", "class" } } },
-            { nil, "/", { type = { "class", "func" } } },
-            { "field_identifier", "/ * `%s`: $1", { type = { "class" } } },
-            { "type_identifier", "/ * `%s`: $1", { type = { "func" } } },
-            { "identifier", "/ * `%s`: $1", { type = { "func" } } },
-        },
-    },
+    template = template
+        :config({ use_default_comment = true })
+        :add_template("rustdoc")
+        :add_default_template("rust_alternative"),
 }

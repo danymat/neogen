@@ -1,13 +1,15 @@
 local extractors = require("neogen.utilities.extractors")
 local nodes_utils = require("neogen.utilities.nodes")
+local i = require("neogen.types.template").item
+local template = require("neogen.utilities.template")
 
 local construct_type_annotation = function(parameters)
     local results = parameters and {} or nil
     if parameters then
         for _, param in pairs(parameters) do
             local subtree = {
-                { retrieve = "all", node_type = "identifier", extract = true },
-                { retrieve = "all", node_type = "type_identifier", recursive = true, extract = true },
+                { retrieve = "all", node_type = "identifier", extract = true, as = i.Parameter },
+                { retrieve = "all", node_type = "type_identifier", recursive = true, extract = true, as = i.Type },
             }
             local typed_parameters = nodes_utils:matching_nodes_from(param, subtree)
             typed_parameters = extractors:extract_from_matched(typed_parameters)
@@ -26,11 +28,13 @@ local function_tree = {
                 retrieve = "all",
                 node_type = "required_parameter",
                 extract = true,
+                as = i.Tparam,
             },
             {
                 retrieve = "all",
                 node_type = "optional_parameter",
                 extract = true,
+                as = i.Tparam,
             },
         },
     },
@@ -38,7 +42,7 @@ local function_tree = {
         retrieve = "first",
         node_type = "statement_block",
         subtree = {
-            { retrieve = "first", node_type = "return_statement", extract = true },
+            { retrieve = "first", node_type = "return_statement", extract = true, as = i.Return },
         },
     },
 }
@@ -57,48 +61,33 @@ return {
                 ["0"] = {
 
                     extract = function(node)
-                        local results = {}
                         local tree = function_tree
                         local nodes = nodes_utils:matching_nodes_from(node, tree)
                         local res = extractors:extract_from_matched(nodes)
-
-                        results.type = construct_type_annotation(nodes.required_parameter)
-                        results.opt_type = construct_type_annotation(nodes.optional_parameter)
-                        results.parameters = res.identifier
-                        results.return_statement = res.return_statement
-                        return results
+                        res[i.Tparam] = construct_type_annotation(nodes[i.Tparam])
+                        return res
                     end,
                 },
             },
             ["expression_statement|variable_declaration"] = {
                 ["0"] = {
                     extract = function(node)
-                        local results = {}
                         local tree = { { retrieve = "all", node_type = "function", subtree = function_tree } }
                         local nodes = nodes_utils:matching_nodes_from(node, tree)
                         local res = extractors:extract_from_matched(nodes)
-
-                        results.type = construct_type_annotation(nodes.type_annotation)
-                        results.opt_type = construct_type_annotation(nodes.optional_parameter)
-                        results.parameters = res.identifier
-                        results.return_statement = res.return_statement
-                        return results
+                        res[i.Tparam] = construct_type_annotation(nodes[i.Tparam])
+                        return res
                     end,
                 },
             },
             ["lexical_declaration"] = {
                 ["1"] = {
                     extract = function(node)
-                        local results = {}
                         local tree = { { retrieve = "all", node_type = "arrow_function", subtree = function_tree } }
                         local nodes = nodes_utils:matching_nodes_from(node, tree)
                         local res = extractors:extract_from_matched(nodes)
-
-                        results.type = construct_type_annotation(nodes.type_annotation)
-                        results.opt_type = construct_type_annotation(nodes.optional_parameter)
-                        results.parameters = res.identifier
-                        results.return_statement = res.return_statement
-                        return results
+                        res[i.Tparam] = construct_type_annotation(nodes[i.Tparam])
+                        return res
                     end,
                 },
             },
@@ -109,7 +98,7 @@ return {
 
                     extract = function(_)
                         local results = {}
-                        results.class_tag = { "" }
+                        results[i.ClassName] = { "" }
                         return results
                     end,
                 },
@@ -119,18 +108,16 @@ return {
             ["variable_declaration|lexical_declaration"] = {
                 ["1"] = {
                     extract = function(node)
-                        local res = {}
                         local tree = {
                             {
                                 retrieve = "first",
                                 node_type = "identifier",
                                 extract = true,
+                                as = i.Type,
                             },
                         }
                         local nodes = nodes_utils:matching_nodes_from(node, tree)
-                        local results = extractors:extract_from_matched(nodes)
-
-                        res.type = results.identifier
+                        local res = extractors:extract_from_matched(nodes)
                         return res
                     end,
                 },
@@ -147,32 +134,5 @@ return {
         },
     },
 
-    template = {
-        annotation_convention = "jsdoc",
-        use_default_comment = false,
-        jsdoc = {
-            { nil, "/* $1 */", { no_results = true, type = { "class", "func" } } },
-
-            { nil, "/**", { no_results = true, type = { "file" } } },
-            { nil, " * @module $1", { no_results = true, type = { "file" } } },
-            { nil, " */", { no_results = true, type = { "file" } } },
-
-            { nil, "/**", { type = { "class", "func" } } },
-            { "class_tag", " * @classdesc $1", { before_first_item = { " * ", " * @class" }, type = { "class" } } },
-            {
-                { "type_identifier", "identifier" },
-                " * @param {%s} %s $1",
-                { required = "opt_type", type = { "func" } },
-            },
-            {
-                { "type_identifier", "identifier" },
-                " * @param {%s} %s $1",
-                { required = "type", type = { "func" } },
-            },
-            { "return_statement", " * @returns {$1} $1", { type = { "func" } } },
-            { nil, " */", { type = { "class", "func" } } },
-
-            { "type", "/* @type {$1|any} */", { type = { "type" } } },
-        },
-    },
+    template = template:add_default_template("jsdoc"),
 }

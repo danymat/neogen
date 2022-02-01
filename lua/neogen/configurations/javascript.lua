@@ -1,5 +1,7 @@
+local i = require("neogen.types.template").item
 local extractors = require("neogen.utilities.extractors")
 local nodes_utils = require("neogen.utilities.nodes")
+local template = require("neogen.utilities.template")
 
 local function_tree = {
     {
@@ -84,7 +86,7 @@ return {
 
                     extract = function(_)
                         local results = {}
-                        results.class_tag = { "" }
+                        results[i.ClassName] = { "" }
                         return results
                     end,
                 },
@@ -110,23 +112,5 @@ return {
         },
     },
 
-    template = {
-        annotation_convention = "jsdoc",
-        use_default_comment = false,
-
-        jsdoc = {
-            { nil, "/* $1 */", { no_results = true, type = { "func", "class" } } },
-            { nil, "/* @type $1 */", { no_results = true, type = { "type" } } },
-
-            { nil, "/**", { no_results = true, type = { "file" } } },
-            { nil, " * @module $1", { no_results = true, type = { "file" } } },
-            { nil, " */", { no_results = true, type = { "file" } } },
-
-            { nil, "/**", { type = { "class", "func" } } },
-            { "class_tag", " * @classdesc $1", { before_first_item = { " * ", " * @class" }, type = { "class" } } },
-            { "parameters", " * @param {any} %s $1", { type = { "func" } } },
-            { "return_statement", " * @returns {$1|any}", { type = { "func" } } },
-            { nil, " */", { type = { "class", "func" } } },
-        },
-    },
+    template = template:add_default_template("jsdoc"),
 }

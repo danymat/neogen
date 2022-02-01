@@ -1,5 +1,6 @@
 local extractors = require("neogen.utilities.extractors")
 local nodes_utils = require("neogen.utilities.nodes")
+local template = require("neogen.utilities.template")
 
 local function_tree = {
     {
@@ -112,22 +113,5 @@ return {
         },
     },
 
-    template = {
-        annotation_convention = "javadoc",
-        use_default_comment = false,
-
-        javadoc = {
-            { nil, "/**", { no_results = true, type = { "class", "func" } } },
-            { nil, " * $1", { no_results = true, type = { "class", "func" } } },
-            { nil, " */", { no_results = true, type = { "class", "func" } } },
-
-            { nil, "/**" },
-            { nil, " * $1" },
-            { nil, " *" },
-            { "parameters", " * @param %s $1" },
-            { "return_statement", " * @return $1" },
-            { "throw_statement", " * @throws $1" },
-            { nil, " */" },
-        },
-    },
+    template = template:add_default_template("javadoc"),
 }

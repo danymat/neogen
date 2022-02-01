@@ -1,5 +1,7 @@
 local extractors = require("neogen.utilities.extractors")
 local nodes_utils = require("neogen.utilities.nodes")
+local template = require("neogen.utilities.template")
+local i = require("neogen.types.template").item
 
 return {
     parent = {
@@ -82,7 +84,12 @@ return {
                                         retrieve = "all",
                                         node_type = "parameter",
                                         subtree = {
-                                            { retrieve = "first", node_type = "identifier", extract = true },
+                                            {
+                                                retrieve = "first",
+                                                node_type = "identifier",
+                                                extract = true,
+                                                as = i.Parameter,
+                                            },
                                         },
                                     },
                                 },
@@ -94,6 +101,7 @@ return {
                                     {
                                         retrieve = "all",
                                         node_type = "return_statement",
+                                        as = i.Return,
                                         recursive = true,
                                         extract = true,
                                     },
@@ -108,33 +116,5 @@ return {
             },
         },
     },
-    template = {
-        use_default_comment = false,
-        annotation_convention = "xmldoc",
-
-        xmldoc = {
-            { nil, "/// <summary>", { no_results = true } },
-            { nil, "/// $1", { no_results = true } },
-            { nil, "/// </summary>", { no_results = true } },
-
-            { nil, "/// <summary>", {} },
-            { nil, "/// $1", {} },
-            { "identifier", '/// <param name="%s">$1</param>', { type = { "func", "type" } } },
-            { "return_statement", "/// <returns>$1</returns>", { type = { "func", "type" } } },
-            { nil, "/// </summary>", {} },
-        },
-
-        doxygen = {
-            { nil, "/**", { no_results = true, type = { "func", "class" } } },
-            { nil, " * @brief $1", { no_results = true, type = { "func", "class" } } },
-            { nil, " */", { no_results = true, type = { "func", "class" } } },
-
-            { nil, "/**" },
-            { nil, " * @brief $1" },
-            { nil, " *" },
-            { "identifier", " * @param %s $1" },
-            { "return_statement", " * @return $1" },
-            { nil, " */" },
-        },
-    },
+    template = template:add_default_template("doxygen"):add_template("xmldoc"),
 }

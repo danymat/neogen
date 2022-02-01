@@ -1,5 +1,7 @@
 local extractors = require("neogen.utilities.extractors")
+local i = require("neogen.types.template").item
 local nodes_utils = require("neogen.utilities.nodes")
+local template = require("neogen.utilities.template")
 
 local function_extractor = function(node, type)
     if not vim.tbl_contains({ "local", "function" }, type) then
@@ -11,17 +13,17 @@ local function_extractor = function(node, type)
             retrieve = "first",
             node_type = "parameters",
             subtree = {
-                { retrieve = "all", node_type = "identifier", extract = true },
-                { retrieve = "all", node_type = "spread", extract = true },
+                { retrieve = "all", node_type = "identifier", extract = true, as = i.Parameter },
+                { retrieve = "all", node_type = "vararg_expression", extract = true, as = i.Vararg },
             },
         },
         {
             retrieve = "first",
             node_type = "block",
             subtree = {
-                { retrieve = "first", node_type = "return_statement", extract = true },
+                { retrieve = "first", node_type = "return_statement", extract = true, as = i.Return },
             },
-        }
+        },
     }
 
     if type == "local" then
@@ -37,12 +39,7 @@ local function_extractor = function(node, type)
 
     local nodes = nodes_utils:matching_nodes_from(node, tree)
     local res = extractors:extract_from_matched(nodes)
-
-    return {
-        parameters = res.identifier,
-        vararg = res.spread,
-        return_statement = res.return_statement,
-    }
+    return res
 end
 
 local extract_from_var = function(node)
@@ -104,7 +101,7 @@ return {
                         local nodes = extract_from_var(node)
                         local res = extractors:extract_from_matched(nodes)
                         return {
-                            class_name = res.identifier,
+                            [i.ClassName] = res.identifier,
                         }
                     end,
                 },
@@ -115,7 +112,7 @@ return {
                 ["0"] = {
                     extract = function(node)
                         local result = {}
-                        result.type = {}
+                        result[i.Type] = {}
 
                         local nodes = extract_from_var(node)
                         local res = extractors:extract_from_matched(nodes, { type = true })
@@ -123,10 +120,10 @@ return {
                         -- We asked the extract_from_var function to find the type node at right assignment.
                         -- We check if it found it, or else will put `any` in the type
                         if res["_"] then
-                            vim.list_extend(result.type, res["_"])
+                            vim.list_extend(result[i.Type], res["_"])
                         else
                             if res.identifier or res.field_expression then
-                                vim.list_extend(result.type, { "any" })
+                                vim.list_extend(result[i.Type], { "any" })
                             end
                         end
                         return result
@@ -152,29 +149,5 @@ return {
     granulator = nil,
     generator = nil,
 
-    template = {
-        -- Which annotation convention to use
-        annotation_convention = "emmylua",
-        emmylua = {
-            { nil, "-$1", { type = { "class", "func" } } }, -- add this string only on requested types
-            { nil, "-$1", { no_results = true, type = { "class", "func" } } }, -- Shows only when there's no results from the granulator
-            { nil, "-@module $1", { no_results = true, type = { "file" } } },
-            { nil, "-@author $1", { no_results = true, type = { "file" } } },
-            { nil, "-@license $1", { no_results = true, type = { "file" } } },
-            { nil, "", { no_results = true, type = { "file" } } },
-
-            { "parameters", "-@param %s $1|any" },
-            { "vararg", "-@vararg $1|any" },
-            { "return_statement", "-@return $1|any" },
-            { "class_name", "-@class $1|any" },
-            { "type", "-@type $1" },
-        },
-        ldoc = {
-            { nil, "- $1", { no_results = true, type = { "func", "class" } } },
-            { nil, "- $1", { type = { "func", "class" } } },
-
-            { "parameters", " @tparam $1|any %s " },
-            { "return_statement", " @treturn $1|any" },
-        },
-    },
+    template = template:config({ use_default_comment = true }):add_default_template("emmylua"):add_template("ldoc"),
 }
