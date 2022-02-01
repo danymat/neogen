@@ -9,6 +9,5 @@ return {
     { nil, "/ $1", { type = { "func", "class" } } },
     { nil, "/", { type = { "class", "func" } } },
     { i.Parameter, "/ * `%s`: $1", { type = { "class" } } },
-    { i.Tparam, "/ * `%s`: $1", { type = { "func" } } },
     { i.Parameter, "/ * `%s`: $1", { type = { "func" } } },
 }
