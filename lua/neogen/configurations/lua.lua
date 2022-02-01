@@ -149,5 +149,5 @@ return {
     granulator = nil,
     generator = nil,
 
-    template = template:config({ use_default_comment = true }):add_default_template("emmylua"):add_template("ldoc"),
+    template = template:config({ use_default_comment = true }):add_default_annotation("emmylua"):add_annotation("ldoc"),
 }

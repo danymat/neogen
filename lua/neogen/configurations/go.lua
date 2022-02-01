@@ -27,5 +27,5 @@ return {
         },
     },
 
-    template = template:config({ use_default_comment = true }):add_default_template("godoc"),
+    template = template:config({ use_default_comment = true }):add_default_annotation("godoc"),
 }

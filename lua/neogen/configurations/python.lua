@@ -250,7 +250,7 @@ return {
                 end
             end,
         })
-        :add_default_template("google_docstrings")
-        :add_template("numpydoc")
-        :add_template("reST"),
+        :add_default_annotation("google_docstrings")
+        :add_annotation("numpydoc")
+        :add_annotation("reST"),
 }

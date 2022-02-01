@@ -78,5 +78,5 @@ return {
             },
         },
     },
-    template = template:add_default_template("phpdoc"),
+    template = template:add_default_annotation("phpdoc"),
 }

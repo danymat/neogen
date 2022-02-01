@@ -112,5 +112,5 @@ return {
         },
     },
 
-    template = template:add_default_template("jsdoc"),
+    template = template:add_default_annotation("jsdoc"),
 }

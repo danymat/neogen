@@ -113,5 +113,5 @@ return {
         },
     },
 
-    template = template:add_default_template("javadoc"),
+    template = template:add_default_annotation("javadoc"),
 }

@@ -169,7 +169,7 @@ local c_config = {
     granulator = nil,
     generator = nil,
 
-    template = template:add_default_template("doxygen"),
+    template = template:add_default_annotation("doxygen"),
 }
 
 return c_config

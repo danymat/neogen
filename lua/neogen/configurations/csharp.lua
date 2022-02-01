@@ -116,5 +116,5 @@ return {
             },
         },
     },
-    template = template:add_default_template("doxygen"):add_template("xmldoc"),
+    template = template:add_default_annotation("doxygen"):add_annotation("xmldoc"),
 }
