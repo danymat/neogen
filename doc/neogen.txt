@@ -7,6 +7,7 @@ Table of contents:
   Configure the setup...................................|neogen-configuration|
   Generate annotations.....................................|neogen.generate()|
   Contributing................................................|neogen-develop|
+  Customize templates for a language...........|neogen.template_configuration|
 
 
 ------------------------------------------------------------------------------
@@ -140,6 +141,86 @@ Contribute to Neogen
     You can go and directly open/edit the configuration file relative to the language you want to contribute to.
 
 Feel free to submit a PR, I will be happy to help you !
+
+
+==============================================================================
+------------------------------------------------------------------------------
+                                                 *neogen.template_configuration*
+                            `template_configuration`
+
+Each filetype has a template configuration.
+A template configuration is responsible for explicitely adding templates
+corresponding to annotation conventions,
+as well as providing custom configurations in order to be precise about
+how to customize the annotations.
+
+Type~
+neogen.TemplateConfig
+
+Default values:
+>
+  local template_configuration = {
+      annotation_convention = nil,
+      use_default_comment = false,
+  }
+
+<
+
+------------------------------------------------------------------------------
+# neogen.TemplateConfig~
+
+Class~
+{neogen.TemplateConfig} see |template_config|
+Fields~
+{annotation_convention} `(string)` select which annotation convention to use
+{use_default_comment} `(boolean)` Prepend default filetype comment before a annotation
+{append} `(neogen.TemplateConfig.Append|nil)` custom placement of the annotation
+{position} `(fun(node: userdata, type: string): number,number)` Provide an absolute position for the annotation
+  If values are `nil`, use default positioning
+
+Class~
+{neogen.TemplateConfig.Append}
+{child_name} `(string)` Which child node to use for appending the annotation
+{fallback} `(string)` Node to fallback if `child_name` is not found
+{position} "'after'"|"'before'" Place the annotation relative to position with `child_name` or `fallback`
+
+For example, to customize the placement for a python annotation, we can use `append`, like so:
+
+>
+ python = {
+     template = {
+         append = {
+             child_name = "comment", fallback = "block", position = "after"
+         }
+     }
+ }
+<
+
+Here, we instruct the generator to place the annotation "after" the "comment" (if not found: "block") node
+
+Results in:
+
+>
+ def test():
+     """ """
+     pass
+<
+
+Or:
+
+>
+ def test():
+     # This is a comment
+     """ """
+     pass
+<
+
+------------------------------------------------------------------------------
+                                               *template_configuration.config()*
+                 `template_configuration.config`({self}, {tbl})
+template configuration
+Parameters~
+{tbl} neogen.TemplateConfig
 
 
  vim:tw=78:ts=8:noet:ft=help:norl:
