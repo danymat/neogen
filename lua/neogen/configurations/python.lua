@@ -231,7 +231,7 @@ return {
 
     template = template
         :config({
-            append = { position = "after", child_name = "comment", fallback = "block" }, -- optional: where to append the text (default_generator)
+            append = { position = "after", child_name = "comment", fallback = "block", disabled = { "file" } },
             position = function(node, type)
                 if type == "file" then
                     -- Checks if the file starts with #!, that means it's a shebang line
