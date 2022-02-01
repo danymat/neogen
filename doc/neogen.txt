@@ -7,7 +7,8 @@ Table of contents:
   Configure the setup...................................|neogen-configuration|
   Generate annotations.....................................|neogen.generate()|
   Contributing................................................|neogen-develop|
-  Customize templates for a language...........|neogen.template_configuration|
+  Configurations for the template table........|neogen-template-configuration|
+  API to customize templates.............................|neogen-template-api|
 
 
 ------------------------------------------------------------------------------
@@ -128,6 +129,15 @@ Parameters~
    Currently supported: `func`, `class`, `type`, `file`
 
 ------------------------------------------------------------------------------
+                                                         *neogen.get_template()*
+                       `neogen.get_template`({filetype})
+Get a template for a particular filetype
+Parameters~
+{filetype} `(string)`
+Return~
+`(neogen.TemplateConfig|nil)`
+
+------------------------------------------------------------------------------
                                                                 *neogen-develop*
 Contribute to Neogen
 
@@ -145,8 +155,7 @@ Feel free to submit a PR, I will be happy to help you !
 
 ==============================================================================
 ------------------------------------------------------------------------------
-                                                 *neogen.template_configuration*
-                            `template_configuration`
+                                                 *neogen-template-configuration*
 
 Each filetype has a template configuration.
 A template configuration is responsible for explicitely adding templates
@@ -154,16 +163,19 @@ corresponding to annotation conventions,
 as well as providing custom configurations in order to be precise about
 how to customize the annotations.
 
+We exposed some API to help you customize a template, and add your own custom annotations
+For this, please go to |neogen.template_api|
+
 Type~
 neogen.TemplateConfig
 
 Default values:
+
 >
-  local template_configuration = {
+  local neogen_template = {
       annotation_convention = nil,
       use_default_comment = false,
   }
-
 <
 
 ------------------------------------------------------------------------------
@@ -217,11 +229,43 @@ Or:
 <
 
 ------------------------------------------------------------------------------
-                                               *template_configuration.config()*
-                 `template_configuration.config`({self}, {tbl})
-template configuration
+                                                           *neogen-template-api*
+# Templates API~
+
+Welcome to the neogen API section for templates.
+
+A template is an entity relative to a filetype that holds configurations for how to place
+annotations.
+With it, you can add an annotation convention to a filetype, change defaults,
+and even provide your own annotation convention !
+I exposed some API's, available after you get a template.
+Please see |neogen.get_template()| for how to get a template.
+
+Example:
+>
+ neogen.get_template("python"):config({ annotation_convention = ... })
+<
+
+------------------------------------------------------------------------------
+                                                  *neogen-template-api.config()*
+Updates a template configuration
+                         `<template_obj>:config`({tbl})
 Parameters~
-{tbl} neogen.TemplateConfig
+{tbl} neogen.TemplateConfig Override the template with provided config
+
+------------------------------------------------------------------------------
+                                          *neogen-template-api.add_annotation()*
+Add an annotation convention to the template
+                    `<template_obj>:add_annotation`({name})
+Parameters~
+{name} `(string)` The name of the annotation convention
+
+------------------------------------------------------------------------------
+                                  *neogen-template-api.add_default_annotation()*
+Add an annotation convention to the template and make it the default
+                `<template_obj>:add_default_annotation`({name})
+Parameters~
+{name} `(string)` The name of the annotation convention
 
 
  vim:tw=78:ts=8:noet:ft=help:norl:
