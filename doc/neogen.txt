@@ -99,7 +99,7 @@ Neogen provides those defaults, and you can change them to suit your needs
       jump_text = "$1",
 
       -- Configuration for default languages
-      languages = {},
+      languages = {}
   }
 <
 # Notes~

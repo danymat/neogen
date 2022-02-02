@@ -16,7 +16,7 @@ return {
             local get_text = function(node)
                 return ts_utils.get_node_text(node)[1]
             end
-            if opts.type == true then
+            if opts.type then
                 result[k] = vim.tbl_map(get_type, v)
             else
                 result[k] = vim.tbl_map(get_text, v)

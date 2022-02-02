@@ -1,4 +1,4 @@
-local template = require("neogen.utilities.template")
+local template = require("neogen.template")
 
 return {
     parent = {

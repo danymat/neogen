@@ -1,6 +1,7 @@
+local config = require("neogen.config")
 return {
     notify = function(msg, log_level)
-        vim.notify(msg, log_level, { title = "Neogen" })
+        vim.notify(msg, log_level, {title = "Neogen"})
     end,
 
     --- Generates a list of possible types in the current language
@@ -10,7 +11,7 @@ return {
             return {}
         end
 
-        local language = neogen.configuration.languages[vim.bo.filetype]
+        local language = config.get().languages[vim.bo.filetype]
 
         if not language or not language.parent then
             return {}
@@ -18,19 +19,8 @@ return {
 
         return vim.tbl_keys(language.parent)
     end,
-
-    switch_language = function()
-        local filetype = vim.bo.filetype
-        local ok, ft_configuration = pcall(require, "neogen.configurations." .. filetype)
-
-        if not ok then
-            return
-        end
-
-        neogen.configuration.languages[filetype] = vim.tbl_deep_extend(
-            "keep",
-            neogen.user_configuration.languages and neogen.user_configuration.languages[filetype] or {},
-            ft_configuration
-        )
-    end,
+    split = function(s, sep, plain)
+        return vim.fn.has("nvim-0.6") == 1 and vim.split(s, sep, {plain = plain}) or
+                   vim.split(s, sep, plain)
+    end
 }

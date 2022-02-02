@@ -1,7 +1,7 @@
 local extractors = require("neogen.utilities.extractors")
 local i = require("neogen.types.template").item
 local nodes_utils = require("neogen.utilities.nodes")
-local template = require("neogen.utilities.template")
+local template = require("neogen.template")
 
 return {
     parent = {

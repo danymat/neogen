@@ -118,26 +118,26 @@ cmp.setup {
 
     -- You must set mapping if you want.
     mapping = {
-		["<tab>"] = cmp.mapping(function(fallback)
-			if neogen.jumpable() then
-				vim.fn.feedkeys(t("<cmd>lua require('neogen').jump_next()<CR>"), "")
-			else
-				fallback()
-			end
-		end, {
-			"i",
-			"s",
-		}),
-		["<S-tab>"] = cmp.mapping(function(fallback)
-			if neogen.jumpable(-1) then
-				vim.fn.feedkeys(t("<cmd>lua require('neogen').jump_prev()<CR>"), "")
-			else
-				fallback()
-			end
-		end, {
-			"i",
-			"s",
-		}),
+        ["<tab>"] = cmp.mapping(function(fallback)
+            if neogen.jumpable() then
+                vim.fn.feedkeys(t("<cmd>lua require('neogen').jump_next()<CR>"), "")
+            else
+                fallback()
+            end
+        end, {
+            "i",
+            "s",
+        }),
+        ["<S-tab>"] = cmp.mapping(function(fallback)
+            if neogen.jumpable(-1) then
+                vim.fn.feedkeys(t("<cmd>lua require('neogen').jump_prev()<CR>"), "")
+            else
+                fallback()
+            end
+        end, {
+            "i",
+            "s",
+        }),
     },
     ...
 }
@@ -161,14 +161,14 @@ If you're not satisfied with the default configuration for a language, you can c
 ```lua
 require('neogen').setup {
     enabled = true,
-	languages = {
-	    lua = {
-	        template = {
-                    annotation_convention = "emmylua" -- for a full list of annotation_conventions, see supported-languages below,
-		    ... -- for more template configurations, see the language's configuration file in configurations/{lang}.lua
-		}
-	    },
-	    ...
+    languages = {
+        lua = {
+            template = {
+                annotation_convention = "emmylua" -- for a full list of annotation_conventions, see supported-languages below,
+                ... -- for more template configurations, see the language's configuration file in configurations/{lang}.lua
+                }
+        },
+        ...
     }
 }
 ```

@@ -1,6 +1,6 @@
 local extractors = require("neogen.utilities.extractors")
 local nodes_utils = require("neogen.utilities.nodes")
-local template = require("neogen.utilities.template")
+local template = require("neogen.template")
 
 local function_tree = {
     {
