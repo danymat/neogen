@@ -69,7 +69,7 @@ end
 return {
     -- Search for these nodes
     parent = {
-        func = { "function_declaration", "assignment_statement", "variable_declaration" },
+        func = { "function_declaration", "assignment_statement", "variable_declaration", "field"},
         class = { "local_variable_declaration", "variable_declaration" },
         type = { "local_variable_declaration", "variable_declaration" },
         file = { "chunk" },
@@ -78,7 +78,7 @@ return {
     data = {
         func = {
             -- When the function is inside one of those
-            ["variable_declaration|assignment_statement"] = {
+            ["variable_declaration|assignment_statement|field"] = {
                 ["0"] = {
                     extract = function(node)
                         return function_extractor(node, "local")
