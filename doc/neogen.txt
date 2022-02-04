@@ -9,6 +9,7 @@ Table of contents:
   Contributing................................................|neogen-develop|
   Configurations for the template table........|neogen-template-configuration|
   API to customize templates.............................|neogen-template-api|
+  How to create/customize an annotation....................|neogen-annotation|
 
 
 ------------------------------------------------------------------------------
@@ -266,6 +267,103 @@ Add an annotation convention to the template and make it the default
                 `<template_obj>:add_default_annotation`({name})
 Parameters~
 {name} `(string)` The name of the annotation convention
+
+------------------------------------------------------------------------------
+                                   *neogen-template-api.add_custom_annotation()*
+`neogen_template.add_custom_annotation`({self}, {name}, {annotation}, {default})
+Add a custom annotation convention to the template
+Parameters~
+{name} `(string)` The name of the annotation convention
+{annotation} `(table)` The annotation template (see |neogen-annotation|)
+{default} `(boolean|nil)` Marks the annotation as default one
+
+------------------------------------------------------------------------------
+                                                             *neogen-annotation*
+
+In this section, you'll learn how to create your own annotation convention
+First of all, you need to know an annotation template behaves, with an example:
+>
+ local i = require("neogen.types.template").item
+
+ annotation = {
+     { nil, "- $1", { type = { "class", "func" } } },
+     { nil, "- $1", { no_results = true, type = { "class", "func" } } },
+     { nil, "-@module $1", { no_results = true, type = { "file" } } },
+     { nil, "-@author $1", { no_results = true, type = { "file" } } },
+     { nil, "-@license $1", { no_results = true, type = { "file" } } },
+     { nil, "", { no_results = true, type = { "file" } } },
+     { i.Parameter, "-@param %s $1|any" },
+     { i.Vararg, "-@vararg $1|any" },
+     { i.Return, "-@return $1|any" },
+     { i.ClassName, "-@class $1|any" },
+     { i.Type, "-@type $1" },
+ }
+<
+- `local i = require("neogen.types.template").item`
+    Stores every supported node name that you can use for a language.
+    A node name is found with Treesitter during the configuration of a language
+
+- `{ nil, "- $1", { type = { "class", "func" } } }`
+    Here is an item of a annotation convention.
+    It consists of 2 required fields (first and second), and an optional third field
+
+    - The first field is a `string`, or `table`: this item will be used each time there is this node name.
+        If it is `nil`, then it'll not required a node name.
+        If you need a node name, we recommend using the items from `local i`, like so:
+         `{ i.Type, "-@type $1" },`
+        If it's a `table`, it'll be used for more advanced generation:
+        `{ { i.Parameter, i.Type }, "    %s (%s): $1", { required = "typed_parameters", type = { "func" } } },`
+        Means: if there are `Parameters` and `Types` inside a node called `typed_parameters`,
+          these two nodes will be used in the generated line
+
+    - The second item is a `string`, and is the string that'll be written in output.
+        It'll be formatted with some important fields:
+        - `%s` will use the content from the node name
+        - `$1` will be replaced with a cursor position (so that the user can jump to)
+        Example: `{ i.Parameter, "-@param %s $1|any" },` will result in:
+        `-@param hello ` (will a parameter named `hello`)
+
+    - The third item is a `table` (optional), and are the local options for the line.
+        See below (`neogen.AnnotationLine.Opts`) for more information
+
+Now that you know every field, let's see how we could generate a basic annotation for a python function:
+>
+ # Desired output:
+ def test(param1, param2, param3):
+ """
+ Parameters
+ ----------
+ param1:
+ param2:
+ param3:
+ """
+ pass
+<
+Will be very simply created with an convention like so:
+ local i = require("neogen.types.template").item
+
+>
+ annotation = {
+     { i.Parameter, "%s: $1", { before_first_item = { "Parameters", "----------" } } },
+ }
+<
+We recommend you look into the the content of `neogen/templates` for a list of the default annotation conventions.
+Last step, if you want to use your own annotation convention for a language, you can use the API :
+ `neogen.get_template("python"):add_custom_annotation("my_annotation", annotation, true)`
+ (see |neogen-template-api| for more details)
+
+------------------------------------------------------------------------------
+# neogen.AnnotationLine~
+
+Class~
+{neogen.AnnotationLine.Opts}
+Fields~
+{no_results} `(boolean)` If true, will only generate the line if there are no values returned by the configuration
+{type} `(string[])` If specified, will only generate the line for the required types.
+If not specified, will use this line for all types.
+{before_first_item} `(string[])` If specified, will append these lines before the first found item of the configuration
+{after_each} `(string)` If specified, append the line after each found item of the configuration
+{required} `(string)` If specified, is used in if the first field of the table is a `table` (example above)
 
 
  vim:tw=78:ts=8:noet:ft=help:norl:
