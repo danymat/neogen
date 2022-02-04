@@ -119,5 +119,18 @@ neogen_template.add_default_annotation = function(self, name)
 end
 
 -- TODO: add API to create your own annotation convention
+--- Add a custom annotation convention to the template
+---@param name string The name of the annotation convention
+---@param annotation table The annotation template (see |neogen-annotation|)
+---@param default boolean|nil Marks the annotation as default one
+---@tag neogen-template-api.add_custom_annotation()
+neogen_template.add_custom_annotation = function(self, name, annotation, default)
+    if default == true then
+        self.annotation_convention = name
+    end
+
+    self[name] = annotation
+    return self
+end
 
 return neogen_template
