@@ -1,8 +1,8 @@
 local i = require("neogen.types.template").item
 
 return {
-    { nil, "-$1", { type = { "class", "func" } } }, -- add this string only on requested types
-    { nil, "-$1", { no_results = true, type = { "class", "func" } } }, -- Shows only when there's no results from the granulator
+    { nil, "- $1", { type = { "class", "func" } } }, -- add this string only on requested types
+    { nil, "- $1", { no_results = true, type = { "class", "func" } } }, -- Shows only when there's no results from the granulator
     { nil, "-@module $1", { no_results = true, type = { "file" } } },
     { nil, "-@author $1", { no_results = true, type = { "file" } } },
     { nil, "-@license $1", { no_results = true, type = { "file" } } },
