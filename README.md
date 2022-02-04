@@ -42,9 +42,7 @@ Use your favorite package manager to install Neogen, e.g:
 use {
     "danymat/neogen",
     config = function()
-        require('neogen').setup {
-            enabled = true
-        }
+        require('neogen').setup {}
     end,
     requires = "nvim-treesitter/nvim-treesitter"
 }
