@@ -97,7 +97,6 @@ end
 ---    }
 ---   <
 ---
---- - `jump_text` is widely used and will certainly break most language templates.
 ---   I'm thinking of removing it from defaults so that it can't be modified
 ---@toc_entry Configure the setup
 ---@tag neogen-configuration
@@ -107,9 +106,6 @@ neogen.configuration = {
 
     -- Go to annotation after insertion, and change to insert mode
     input_after_comment = true,
-
-    -- Symbol to find for jumping cursor in template
-    jump_text = "$1",
 
     -- Configuration for default languages
     languages = {}

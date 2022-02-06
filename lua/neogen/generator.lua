@@ -13,6 +13,7 @@ local granulator = require("neogen.granulator")
 local mark = require("neogen.mark")
 local nodes = require("neogen.utilities.nodes")
 local default_locator = require("neogen.locators.default")
+local JUMP_TEXT = "$1"
 
 local function get_parent_node(filetype, typ, language)
     local parser = vim.treesitter.get_parser(0, filetype)
@@ -80,10 +81,9 @@ end
 ---@param parent userdata the node used to generate the annotations
 ---@param data table the data from the granulator, which is a set of [type] = results
 ---@param template table a template from the configuration
----@param jump_text string jump_text from the default or language configuration
 ---@param required_type string
 ---@return table { line, content }, with line being the line to append the content
-local function generate_content(parent, data, template, required_type, jump_text)
+local function generate_content(parent, data, template, required_type)
     local row, col = get_place_pos(parent, template.position, template.append, required_type)
 
     local commentstring = vim.trim(vim.bo.commentstring:format(""))
@@ -132,14 +132,14 @@ local function generate_content(parent, data, template, required_type, jump_text
                 -- will replace every %s with the provided data from those types
 
                 -- If one item is missing, it'll use the required option to iterate
-                -- and will replace the missing item with default jump_text
+                -- and will replace the missing item with JUMP_TEXT
                 for _, extracted in pairs(data[opts.required]) do
                     local fmt_args = {}
                     for _, typ in ipairs(inserted_type) do
                         if extracted[typ] then
                             table.insert(fmt_args, extracted[typ][1])
                         else
-                            table.insert(fmt_args, jump_text)
+                            table.insert(fmt_args, JUMP_TEXT)
                         end
                     end
                     append_str(formatted_str:format(unpack(fmt_args)))
@@ -179,17 +179,15 @@ return setmetatable({}, {
 
         local data = granulator(parent_node, language.data[typ])
 
-        local jump_text = language.jump_text or conf.jump_text
-
         -- Will try to generate the documentation from a template and the data found from the granulator
-        local row, template_content = generate_content(parent_node, data, template, typ, jump_text)
+        local row, template_content = generate_content(parent_node, data, template, typ)
 
         local content = {}
         local marks_pos = {}
 
         local input_after_comment = conf.input_after_comment
 
-        local pattern = jump_text .. (input_after_comment and "[|%w]*" or "|?")
+        local pattern = JUMP_TEXT .. (input_after_comment and "[|%w]*" or "|?")
         for r, line in ipairs(template_content) do
             local last_col = 0
             local len = 1
