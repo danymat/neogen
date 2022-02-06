@@ -104,23 +104,14 @@ If you want to use a key that's already used for completion purposes, take a loo
 local cmp = require('cmp')
 local neogen = require('neogen')
 
-local t = function(str)
-    return vim.api.nvim_replace_termcodes(str, true, true, true)
-end
-
-local check_back_space = function()
-    local col = vim.fn.col '.' - 1
-    return col == 0 or vim.fn.getline('.'):sub(col, col):match '%s' ~= nil
-end
-
 cmp.setup {
     ...
 
     -- You must set mapping if you want.
     mapping = {
         ["<tab>"] = cmp.mapping(function(fallback)
-            if neogen.jumpable() then
-                vim.fn.feedkeys(t("<cmd>lua require('neogen').jump_next()<CR>"), "")
+            if require('neogen').jumpable() then
+                require('neogen').jump_next()
             else
                 fallback()
             end
@@ -129,8 +120,8 @@ cmp.setup {
             "s",
         }),
         ["<S-tab>"] = cmp.mapping(function(fallback)
-            if neogen.jumpable(-1) then
-                vim.fn.feedkeys(t("<cmd>lua require('neogen').jump_prev()<CR>"), "")
+            if require('neogen').jumpable(true) then
+                require('neogen').jump_prev()
             else
                 fallback()
             end

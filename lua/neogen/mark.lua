@@ -34,11 +34,14 @@ mark.mark_len = function(self)
 end
 
 mark.jumpable = function(self, reverse)
+    if not self.started then
+        return false
+    end
     local ret = true
     if reverse then
-        ret = self.index ~= 1
+        ret = self.index > 0
     else
-        ret = #self.ids ~= self.index
+        ret = #self.ids >= self.index
     end
     if ret then
         ret = self.bufnr == api.nvim_get_current_buf() and self.winid == api.nvim_get_current_win()
@@ -47,10 +50,14 @@ mark.jumpable = function(self, reverse)
 end
 
 mark.jump = function(self, reverse)
-    if self.index == 0 or mark:jumpable(reverse) then
+    if mark:jumpable(reverse) then
         self.index = reverse and self.index - 1 or self.index + 1
-        local line, row = unpack(self:get_mark(self.index))
-        api.nvim_win_set_cursor(self.winid, {line + 1, row})
+        if self.index > 0 and self.index <= #self.ids then
+            local line, row = unpack(self:get_mark(self.index))
+            api.nvim_win_set_cursor(self.winid, {line + 1, row})
+        else
+            self:stop(true)
+        end
     else
         self:stop(true)
     end
