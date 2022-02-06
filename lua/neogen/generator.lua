@@ -1,10 +1,14 @@
+local helpers = require("neogen.utilities.helpers")
+local notify = helpers.notify
+
 local ok, ts_utils = pcall(require, "nvim-treesitter.ts_utils")
-assert(ok, "neogen requires nvim-treesitter to operate :(")
+if not ok then
+    notify("neogen requires nvim-treesitter to operate :(", vim.log.levels.ERROR)
+    return function() end
+end
 
 local conf = require("neogen.config").get()
 local granulator = require("neogen.granulator")
-local helpers = require("neogen.utilities.helpers")
-local notify = helpers.notify
 
 local mark = require("neogen.mark")
 local nodes = require("neogen.utilities.nodes")
