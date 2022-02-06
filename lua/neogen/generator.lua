@@ -20,9 +20,9 @@ local function get_parent_node(filetype, typ, language)
     return language.locator({root = tree, current = ts_utils.get_node_at_cursor(0)}, language.parent[typ])
 end
 
----Generates the prefix according to `template` options.
----Prefix is generated with an offset (currently spaces) repetition of `n` times.
----If `template.use_default_comment` is not set to false, the `commentstring` is added
+--- Generates the prefix according to `template` options.
+--- Prefix is generated with an offset (currently spaces) repetition of `n` times.
+--- If `template.use_default_comment` is not set to false, the `commentstring` is added
 ---@param template table
 ---@param commentstring string
 ---@param n integer
@@ -72,7 +72,7 @@ local function get_place_pos(parent, position, append, typ)
     return row, col
 end
 
----Uses the provided template to format the annotations with data found by the granulator
+--- Uses the provided template to format the annotations with data found by the granulator
 ---@param parent userdata the node used to generate the annotations
 ---@param data table the data from the granulator, which is a set of [type] = results
 ---@param template table a template from the configuration

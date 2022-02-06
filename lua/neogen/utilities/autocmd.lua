@@ -23,7 +23,7 @@ local autocmd = {}
 
 autocmd.events = {}
 
----Subscribe autocmd
+--- Subscribe autocmd
 ---@param event string
 ---@param callback function
 ---@return function
@@ -40,7 +40,7 @@ autocmd.subscribe = function(event, callback)
     end
 end
 
----Emit autocmd
+--- Emit autocmd
 ---@param event string
 autocmd.emit = function(event)
     autocmd.events[event] = autocmd.events[event] or {}
