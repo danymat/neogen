@@ -80,17 +80,10 @@ end
 ---@param required_type string
 ---@return table { line, content }, with line being the line to append the content
 local function generate_content(parent, data, template, required_type, jump_text)
-    assert(template, "Need a template table")
     local row, col = get_place_pos(parent, template.position, template.append, required_type)
 
     local commentstring = vim.trim(vim.bo.commentstring:format(""))
-    local generated_template
-    if not template.annotation_convention then
-        -- Default template
-        generated_template = {{nil, ""}, {"name", " @Summary "}, {"parameters", " @Param "}, {"return", " @Return "}}
-    else
-        generated_template = template[template.annotation_convention]
-    end
+    local generated_template = template[template.annotation_convention]
 
     local result = {}
     local prefix = prefix_generator(template, commentstring, col)
@@ -169,7 +162,8 @@ return setmetatable({}, {
             return
         end
         typ = (type(typ) ~= "string" or typ == "") and "func" or typ -- Default type
-        if not language.parent[typ] or not language.data[typ] then
+        local template = language.template
+        if not language.parent[typ] or not language.data[typ] or not template or not template.annotation_convention then
             notify("Type `" .. typ .. "` not supported", vim.log.levels.WARN)
             return
         end
@@ -184,7 +178,7 @@ return setmetatable({}, {
         local jump_text = language.jump_text or conf.jump_text
 
         -- Will try to generate the documentation from a template and the data found from the granulator
-        local row, template_content = generate_content(parent_node, data, language.template, typ, jump_text)
+        local row, template_content = generate_content(parent_node, data, template, typ, jump_text)
 
         local content = {}
         local marks_pos = {}
