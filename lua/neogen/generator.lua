@@ -4,7 +4,7 @@ local notify = helpers.notify
 local ok, ts_utils = pcall(require, "nvim-treesitter.ts_utils")
 if not ok then
     notify("neogen requires nvim-treesitter to operate :(", vim.log.levels.ERROR)
-    return function() end
+    return function(_, _) end
 end
 
 local conf = require("neogen.config").get()
