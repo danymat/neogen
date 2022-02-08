@@ -1,4 +1,4 @@
-local config = {_data = {}}
+local config = { _data = {} }
 
 config.get = function()
     return config._data
@@ -14,7 +14,7 @@ config.setup = function(default, user)
             end
             rawset(langs, ft, ft_config)
             return ft_config
-        end
+        end,
     })
     config._data = data
     return data

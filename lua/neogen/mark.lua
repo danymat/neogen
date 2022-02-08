@@ -63,15 +63,14 @@ mark.mark_len = function(self)
 end
 
 mark.get_range_mark = function(self)
-    local d = api.nvim_buf_get_extmark_by_id(self.bufnr, ns, self.range_id, {details = true})
+    local d = api.nvim_buf_get_extmark_by_id(self.bufnr, ns, self.range_id, { details = true })
     local row, col, end_row, end_col = d[1], d[2], d[3].end_row, d[3].end_col
     return row, col, end_row, end_col
 end
 
 mark.add_range_mark = function(self, range)
     local row, col, end_row, end_col = unpack(range)
-    self.range_id = api.nvim_buf_set_extmark(self.bufnr, ns, row, col,
-        {end_row = end_row, end_col = end_col})
+    self.range_id = api.nvim_buf_set_extmark(self.bufnr, ns, row, col, { end_row = end_row, end_col = end_col })
 end
 
 mark.cursor_in_range = function(self, validated)
@@ -80,7 +79,7 @@ mark.cursor_in_range = function(self, validated)
         local pos = api.nvim_win_get_cursor(self.winid)
         pos[1] = pos[1] - 1
         local row, col, end_row, end_col = self:get_range_mark()
-        ret = compare_pos({row, col}, pos) <= 0 and compare_pos({end_row, end_col}, pos) >= 0
+        ret = compare_pos({ row, col }, pos) <= 0 and compare_pos({ end_row, end_col }, pos) >= 0
     end
     return ret
 end
@@ -124,7 +123,7 @@ mark.jump = function(self, reverse)
     end
     if mark:jumpable(reverse) then
         local line, row = unpack(self:get_mark(self.index))
-        api.nvim_win_set_cursor(self.winid, {line + 1, row})
+        api.nvim_win_set_cursor(self.winid, { line + 1, row })
     end
 end
 
@@ -133,7 +132,7 @@ mark.jump_last_cursor = function(self, validated)
         local winid = self.winid
         local pos = api.nvim_buf_get_extmark_by_id(self.bufnr, ns, self.last_cursor_id, {})
         local line, col = unpack(pos)
-        api.nvim_win_set_cursor(winid, {line + 1, col})
+        api.nvim_win_set_cursor(winid, { line + 1, col })
     end
 end
 

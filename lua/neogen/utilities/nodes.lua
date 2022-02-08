@@ -46,7 +46,7 @@ return {
                 break
             end
 
-            self:recursive_find(child, node_name, {results = results})
+            self:recursive_find(child, node_name, { results = results })
         end
 
         return results
@@ -63,22 +63,23 @@ return {
         result = result or {}
 
         for _, subtree in pairs(tree) do
-            assert(not subtree.retrieve or vim.tbl_contains({"all", "first"}, subtree.retrieve),
-                "Supported nodes matching: all|first")
+            assert(
+                not subtree.retrieve or vim.tbl_contains({ "all", "first" }, subtree.retrieve),
+                "Supported nodes matching: all|first"
+            )
 
             -- Match all child nodes of the parent node
             local matched = self:matching_child_nodes(parent, subtree.node_type)
 
             -- Only keep the node with custom position
             if not subtree.retrieve then
-                assert(type(subtree.position) == "number",
-                    "please require position if retrieve is nil")
-                matched = {matched[subtree.position]}
+                assert(type(subtree.position) == "number", "please require position if retrieve is nil")
+                matched = { matched[subtree.position] }
             end
 
             if subtree.recursive then
                 local first = subtree.retrieve == "first"
-                matched = self:recursive_find(parent, subtree.node_type, {first = first})
+                matched = self:recursive_find(parent, subtree.node_type, { first = first })
             end
 
             for _, child in pairs(matched) do
@@ -94,5 +95,5 @@ return {
             end
         end
         return result
-    end
+    end,
 }

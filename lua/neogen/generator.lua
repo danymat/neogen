@@ -22,7 +22,7 @@ local function get_parent_node(filetype, typ, language)
 
     language.locator = language.locator or default_locator
     -- Use the language locator to locate one of the required parent nodes above the cursor
-    return language.locator({root = tree, current = ts_utils.get_node_at_cursor(0)}, language.parent[typ])
+    return language.locator({ root = tree, current = ts_utils.get_node_at_cursor(0) }, language.parent[typ])
 end
 
 --- Generates the prefix according to `template` options.
@@ -201,7 +201,7 @@ return setmetatable({}, {
                 table.insert(sects, line:sub(last_col + 1, s - 1))
                 if input_after_comment then
                     len = len + s - last_col - 1
-                    table.insert(marks_pos, {row + r - 1, len - 1})
+                    table.insert(marks_pos, { row + r - 1, len - 1 })
                 end
                 last_col = e
             end
@@ -220,8 +220,7 @@ return setmetatable({}, {
             vim.cmd("startinsert")
             mark:jump()
             -- Add range mark after first jump
-            mark:add_range_mark({row, 0, row + #template_content, 1})
+            mark:add_range_mark({ row, 0, row + #template_content, 1 })
         end
-    end
+    end,
 })
-

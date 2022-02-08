@@ -69,7 +69,7 @@ end
 return {
     -- Search for these nodes
     parent = {
-        func = { "function_declaration", "assignment_statement", "variable_declaration", "field"},
+        func = { "function_declaration", "assignment_statement", "variable_declaration", "field" },
         class = { "local_variable_declaration", "variable_declaration" },
         type = { "local_variable_declaration", "variable_declaration" },
         file = { "chunk" },
