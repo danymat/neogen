@@ -21,6 +21,7 @@
 ---@toc_entry Neogen's purpose
 -- Requires ===================================================================
 local neogen = {}
+neogen.version = "1.0.0"
 
 local conf
 local config = require("neogen.config")
