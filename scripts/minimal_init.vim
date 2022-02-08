@@ -16,5 +16,8 @@ P = function(...)
     print(vim.inspect(...))
 end
 
-require("mini.doc").setup({})
+local ok, doc = pcall(require, 'mini.doc')
+if ok then 
+    doc.setup({})
+end
 EOF
