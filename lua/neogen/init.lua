@@ -107,7 +107,7 @@ neogen.configuration = {
     input_after_comment = true,
 
     -- Configuration for default languages
-    languages = {}
+    languages = {},
 }
 --minidoc_afterlines_end
 
@@ -138,11 +138,11 @@ end
 neogen.match_commands = helpers.match_commands
 
 --- Get a template for a particular filetype
----@param filetype string
+---@param filetype? string
 ---@return neogen.TemplateConfig|nil
 neogen.get_template = function(filetype)
     local template
-    local ft_conf = conf.languages[filetype]
+    local ft_conf = filetype and conf.languages[filetype] or conf.languages[vim.bo.filetype]
     if ft_conf and ft_conf.template then
         template = ft_conf.template
     end
