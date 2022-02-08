@@ -96,7 +96,7 @@ Neogen provides those defaults, and you can change them to suit your needs
       input_after_comment = true,
 
       -- Configuration for default languages
-      languages = {}
+      languages = {},
   }
 <
 # Notes~
@@ -108,6 +108,7 @@ Neogen provides those defaults, and you can change them to suit your needs
      lua = { -- Configuration here }
    }
   <
+
 
 ------------------------------------------------------------------------------
                                                              *neogen.generate()*
@@ -128,7 +129,7 @@ Parameters~
                        `neogen.get_template`({filetype})
 Get a template for a particular filetype
 Parameters~
-{filetype} `(string)`
+{filetype?} `(string)`
 Return~
 `(neogen.TemplateConfig|nil)`
 
