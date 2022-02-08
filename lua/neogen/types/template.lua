@@ -1,3 +1,8 @@
+---@class neogen.Configuration
+---@field template neogen.TemplateConfig
+---@field parent table
+---@field data table
+
 local template = {}
 
 template.item = {
