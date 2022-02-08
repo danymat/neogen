@@ -97,7 +97,6 @@ end
 ---    }
 ---   <
 ---
----   I'm thinking of removing it from defaults so that it can't be modified
 ---@toc_entry Configure the setup
 ---@tag neogen-configuration
 neogen.configuration = {
