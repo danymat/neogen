@@ -1,22 +1,23 @@
+local helpers = require("neogen.utilities.helpers")
 return {
     --- Get a list of child nodes that match the provided node name
     --- @param _ any
     --- @param parent userdata the parent's node
-    --- @param node_name string|nil the node type to search for (if multiple childrens, separate each one with "|")
+    --- @param node_type string|nil the node type to search for (if multiple childrens, separate each one with "|")
     --- @return table a table of nodes that matched the name
-    matching_child_nodes = function(_, parent, node_name)
+    matching_child_nodes = function(_, parent, node_type)
         local results = {}
         -- Return all nodes if there is no node name
-        if node_name == nil then
+        if not node_type then
             for child in parent:iter_children() do
                 if child:named() then
                     table.insert(results, child)
                 end
             end
         else
-            local split = vim.split(node_name, "|", true)
+            local types = helpers.split(node_type, "|", true)
             for child in parent:iter_children() do
-                if vim.tbl_contains(split, child:type()) then
+                if vim.tbl_contains(types, child:type()) then
                     table.insert(results, child)
                 end
             end
@@ -45,8 +46,7 @@ return {
                 break
             end
 
-            local found = self:recursive_find(child, node_name, { results = results })
-            vim.tbl_deep_extend("keep", results, found)
+            self:recursive_find(child, node_name, {results = results})
         end
 
         return results
@@ -63,41 +63,36 @@ return {
         result = result or {}
 
         for _, subtree in pairs(tree) do
-            if subtree.retrieve and not vim.tbl_contains({ "all", "first" }, subtree.retrieve) then
-                assert(false, "Supported nodes matching: all|first")
-                return
-            end
+            assert(not subtree.retrieve or vim.tbl_contains({"all", "first"}, subtree.retrieve),
+                "Supported nodes matching: all|first")
 
             -- Match all child nodes of the parent node
             local matched = self:matching_child_nodes(parent, subtree.node_type)
 
             -- Only keep the node with custom position
-            if subtree.retrieve == nil then
-                if type(subtree.position) == "number" then
-                    matched = { matched[subtree.position] }
-                else
-                    assert(false, "please require position if retrieve is nil")
-                end
+            if not subtree.retrieve then
+                assert(type(subtree.position) == "number",
+                    "please require position if retrieve is nil")
+                matched = {matched[subtree.position]}
             end
 
             if subtree.recursive then
                 local first = subtree.retrieve == "first"
-                matched = self:recursive_find(parent, subtree.node_type, { first = first })
+                matched = self:recursive_find(parent, subtree.node_type, {first = first})
             end
 
             for _, child in pairs(matched) do
-                if subtree.extract == true then
+                if subtree.extract then
                     local name = subtree.as and subtree.as or (subtree.node_type or "_")
-                    if result[name] == nil then
+                    if not result[name] then
                         result[name] = {}
                     end
                     table.insert(result[name], child)
                 else
-                    local nodes = self:matching_nodes_from(child, subtree.subtree, result)
-                    result = vim.tbl_deep_extend("keep", result, nodes)
+                    self:matching_nodes_from(child, subtree.subtree, result)
                 end
             end
         end
         return result
-    end,
+    end
 }

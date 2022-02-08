@@ -4,4 +4,4 @@ if _G.MiniDoc == nil then
     minidoc.setup()
 end
 
-minidoc.generate({ "lua/neogen/init.lua", "lua/neogen/utilities/template.lua" }, nil, nil)
+minidoc.generate({ "lua/neogen/init.lua", "lua/neogen/template.lua" }, nil, nil)

@@ -1,7 +1,7 @@
 local extractors = require("neogen.utilities.extractors")
 local i = require("neogen.types.template").item
 local nodes_utils = require("neogen.utilities.nodes")
-local template = require("neogen.utilities.template")
+local template = require("neogen.template")
 
 local function_extractor = function(node, type)
     if not vim.tbl_contains({ "local", "function" }, type) then
@@ -144,10 +144,6 @@ return {
 
     -- Custom lua locator that escapes from comments
     locator = require("neogen.locators.lua"),
-
-    -- Use default granulator and generator
-    granulator = nil,
-    generator = nil,
 
     template = template:config({ use_default_comment = true }):add_default_annotation("emmylua"):add_annotation("ldoc"),
 }

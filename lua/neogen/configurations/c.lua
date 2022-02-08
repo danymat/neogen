@@ -1,7 +1,7 @@
 local extractors = require("neogen.utilities.extractors")
 local nodes_utils = require("neogen.utilities.nodes")
 local default_locator = require("neogen.locators.default")
-local template = require("neogen.utilities.template")
+local template = require("neogen.template")
 local i = require("neogen.types.template").item
 
 local c_params = {
@@ -149,14 +149,14 @@ local c_config = {
             return nil
         end
 
-        if node_info.current == nil then
+        if not node_info.current then
             return result
         end
 
         -- if the function happens to be a function template we want to place
         -- the annotation before the template statement and extract the
         -- template parameters names as well
-        if node_info.current:parent() == nil then
+        if not node_info.current:parent() then
             return result
         end
         if node_info.current:parent():type() == "template_declaration" then
@@ -164,10 +164,6 @@ local c_config = {
         end
         return result
     end,
-
-    -- Use default granulator and generator
-    granulator = nil,
-    generator = nil,
 
     template = template:add_default_annotation("doxygen"),
 }

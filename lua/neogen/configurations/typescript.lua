@@ -1,7 +1,7 @@
 local extractors = require("neogen.utilities.extractors")
 local nodes_utils = require("neogen.utilities.nodes")
 local i = require("neogen.types.template").item
-local template = require("neogen.utilities.template")
+local template = require("neogen.template")
 
 local construct_type_annotation = function(parameters)
     local results = parameters and {} or nil
