@@ -131,7 +131,7 @@ Get a template for a particular filetype
 Parameters~
 {filetype} `(optional)` `(string)`
 Return~
-`(neogen.TemplateConfig|nil)`
+neogen.TemplateConfig `(optional)`
 
 ------------------------------------------------------------------------------
                                                                 *neogen-develop*
@@ -182,7 +182,7 @@ Class~
 Fields~
 {annotation_convention} `(string)` select which annotation convention to use
 {use_default_comment} `(boolean)` Prepend default filetype comment before a annotation
-{append} `(neogen.TemplateConfig.Append|nil)` custom placement of the annotation
+{append?} neogen.TemplateConfig.Append custom placement of the annotation
 {position} `(fun(node: userdata, type: string): number,number)` Provide an absolute position for the annotation
   If values are `nil`, use default positioning
 
@@ -191,7 +191,7 @@ Class~
 {child_name} `(string)` Which child node to use for appending the annotation
 {fallback} `(string)` Node to fallback if `child_name` is not found
 {position} "'after'"|"'before'" Place the annotation relative to position with `child_name` or `fallback`
-{disabled} `(table|nil)` Disable custom placement for provided types
+{disabled?} `(table)` Disable custom placement for provided types
 
 For example, to customize the placement for a python annotation, we can use `append`, like so:
 
@@ -270,7 +270,7 @@ Add a custom annotation convention to the template
 Parameters~
 {name} `(string)` The name of the annotation convention
 {annotation} `(table)` The annotation template (see |neogen-annotation|)
-{default} `(boolean|nil)` Marks the annotation as default one
+{default} `(optional)` `(boolean)` Marks the annotation as default one
 
 ------------------------------------------------------------------------------
                                                              *neogen-annotation*
