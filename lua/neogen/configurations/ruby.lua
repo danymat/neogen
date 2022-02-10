@@ -1,4 +1,4 @@
-local _template = require("neogen.utilities.template")
+local _template = require("neogen.template")
 local i = require("neogen.types.template").item
 local nodes_utils = require("neogen.utilities.nodes")
 local extractors = require("neogen.utilities.extractors")
