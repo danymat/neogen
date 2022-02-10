@@ -7,6 +7,7 @@ Table of contents:
   Configure the setup...................................|neogen-configuration|
   Generate annotations.....................................|neogen.generate()|
   Contributing................................................|neogen-develop|
+  Changes in neogen plugin..................................|neogen-changelog|
   Configurations for the template table........|neogen-template-configuration|
   API to customize templates.............................|neogen-template-api|
   How to create/customize an annotation....................|neogen-annotation|
@@ -147,6 +148,19 @@ Contribute to Neogen
     You can go and directly open/edit the configuration file relative to the language you want to contribute to.
 
 Feel free to submit a PR, I will be happy to help you !
+
+------------------------------------------------------------------------------
+                                                              *neogen-changelog*
+                                `neogen.version`
+Here is the current Neogen version:
+>
+  neogen.version = "1.0.0"
+<
+# Changelog~
+
+## 1.0.0~
+  - Neogen is officially out ! We support 16 languages as of right now,
+    with multiple annotation conventions.
 
 
 ==============================================================================
