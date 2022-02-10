@@ -140,7 +140,7 @@ neogen.match_commands = helpers.match_commands
 
 --- Get a template for a particular filetype
 ---@param filetype? string
----@return neogen.TemplateConfig|nil
+---@return neogen.TemplateConfig?
 neogen.get_template = function(filetype)
     local template
     local ft_conf = filetype and conf.languages[filetype] or conf.languages[vim.bo.filetype]

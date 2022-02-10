@@ -3,7 +3,7 @@ return {
     --- Get a list of child nodes that match the provided node name
     --- @param _ any
     --- @param parent userdata the parent's node
-    --- @param node_type string|nil the node type to search for (if multiple childrens, separate each one with "|")
+    --- @param node_type? string the node type to search for (if multiple childrens, separate each one with "|")
     --- @return table a table of nodes that matched the name
     matching_child_nodes = function(_, parent, node_type)
         local results = {}

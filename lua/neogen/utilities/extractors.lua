@@ -4,7 +4,7 @@ return {
     --- Extract the content from each node from data
     --- @param _ any self
     --- @param data table a list of k,v values where k is the node_type and v a table of nodes
-    --- @param opts table|nil optional configurations (supported: type = true will get node's type instead of node's text)
+    --- @param opts? table configurations (supported: type = true will get node's type instead of node's text)
     --- @return any result the same table as data but with node texts instead
     extract_from_matched = function(_, data, opts)
         opts = opts or {}
