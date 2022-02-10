@@ -21,7 +21,6 @@
 ---@toc_entry Neogen's purpose
 -- Requires ===================================================================
 local neogen = {}
-neogen.version = "1.0.0"
 
 local conf
 local config = require("neogen.config")
@@ -195,5 +194,18 @@ end
 --- Feel free to submit a PR, I will be happy to help you !
 ---@tag neogen-develop
 ---@toc_entry Contributing
+
+
+--- Here is the current Neogen version:
+---@eval return MiniDoc.afterlines_to_code(MiniDoc.current.eval_section)
+---@text # Changelog~
+---
+--- ## 1.0.0~
+---   - Neogen is officially out ! We support 16 languages as of right now,
+---     with multiple annotation conventions.
+---@tag neogen-changelog
+---@toc_entry Changes in neogen plugin
+neogen.version = "1.0.0"
+--minidoc_afterlines_end
 
 return neogen
