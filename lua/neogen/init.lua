@@ -125,7 +125,7 @@ neogen.configuration = {
 ---    Currently supported: `func`, `class`, `type`, `file`
 ---@toc_entry Generate annotations
 neogen.generate = function(opts)
-    if not conf.enabled then
+    if not conf or not conf.enabled then
         notify("Neogen not enabled. Please enable it.", vim.log.levels.WARN)
         return
     end
