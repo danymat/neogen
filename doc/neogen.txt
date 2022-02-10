@@ -129,7 +129,7 @@ Parameters~
                        `neogen.get_template`({filetype})
 Get a template for a particular filetype
 Parameters~
-{filetype?} `(string)`
+{filetype} `(optional)` `(string)`
 Return~
 `(neogen.TemplateConfig|nil)`
 
