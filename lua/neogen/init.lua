@@ -202,6 +202,10 @@ end
 ---@eval return MiniDoc.afterlines_to_code(MiniDoc.current.eval_section)
 ---@text # Changelog~
 ---
+--- Note: We will only document major and minor versions.
+---
+--- ## 2.1.0~
+---   - Add basic support for `kotlin` (`kdoc`).
 --- ## 2.0.0~
 ---   - We made the template API private, only for initial template configuration.
 ---     If you want to make a change to a template, please see:
@@ -211,7 +215,7 @@ end
 ---     with multiple annotation conventions.
 ---@tag neogen-changelog
 ---@toc_entry Changes in neogen plugin
-neogen.version = "2.0.0"
+neogen.version = "2.1.0"
 --minidoc_afterlines_end
 
 return neogen
