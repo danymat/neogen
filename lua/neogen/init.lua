@@ -89,13 +89,14 @@ end
 ---@eval return MiniDoc.afterlines_to_code(MiniDoc.current.eval_section)
 ---@text # Notes~
 ---
---- - to configure a language, just add your configurations in the `languages` table
+--- - to configure a language, just add your configurations in the `languages` table.
 ---   For example, for the `lua` lang:
 ---   >
 ---    languages = {
 ---      lua = { -- Configuration here }
 ---    }
 ---   <
+---   Default configurations for a languages can be found in `lua/neogen/configurations/<you_language>.lua`
 ---
 ---@toc_entry Configure the setup
 ---@tag neogen-configuration
@@ -140,6 +141,7 @@ neogen.match_commands = helpers.match_commands
 --- Get a template for a particular filetype
 ---@param filetype? string
 ---@return neogen.TemplateConfig?
+---@private
 neogen.get_template = function(filetype)
     local template
     local ft_conf = filetype and conf.languages[filetype] or conf.languages[vim.bo.filetype]
@@ -195,17 +197,21 @@ end
 ---@tag neogen-develop
 ---@toc_entry Contributing
 
-
+--- We use semantic versioning ! (https://semver.org)
 --- Here is the current Neogen version:
 ---@eval return MiniDoc.afterlines_to_code(MiniDoc.current.eval_section)
 ---@text # Changelog~
 ---
+--- ## 2.0.0~
+---   - We made the template API private, only for initial template configuration.
+---     If you want to make a change to a template, please see:
+---     |neogen-template-configuration| and |neogen-annotation|
 --- ## 1.0.0~
 ---   - Neogen is officially out ! We support 16 languages as of right now,
 ---     with multiple annotation conventions.
 ---@tag neogen-changelog
 ---@toc_entry Changes in neogen plugin
-neogen.version = "1.0.0"
+neogen.version = "2.0.0"
 --minidoc_afterlines_end
 
 return neogen

@@ -5,9 +5,6 @@
 --- as well as providing custom configurations in order to be precise about
 --- how to customize the annotations.
 ---
---- We exposed some API to help you customize a template, and add your own custom annotations
---- For this, please go to |neogen.template_api|
----
 ---@type neogen.TemplateConfig
 ---
 --- Default values:
@@ -66,28 +63,11 @@ local neogen_template = {
 --- <
 -- TODO: Add section to tell about annotation convention
 
---- # Templates API~
----
---- Welcome to the neogen API section for templates.
----
---- A template is an entity relative to a filetype that holds configurations for how to place
---- annotations.
---- With it, you can add an annotation convention to a filetype, change defaults,
---- and even provide your own annotation convention !
---- I exposed some API's, available after you get a template.
---- Please see |neogen.get_template()| for how to get a template.
----
---- Example:
---- >
----  neogen.get_template("python"):config({ annotation_convention = ... })
---- <
----@tag neogen-template-api
----@toc_entry API to customize templates
-
 --- Updates a template configuration
 ---@signature <template_obj>:config(tbl)
 ---@param tbl neogen.TemplateConfig Override the template with provided config
 ---@tag neogen-template-api.config()
+---@private
 neogen_template.config = function(self, tbl)
     self = vim.tbl_extend("force", self, tbl)
     return self
@@ -97,6 +77,7 @@ end
 ---@signature <template_obj>:add_annotation(name)
 ---@param name string The name of the annotation convention
 ---@tag neogen-template-api.add_annotation()
+---@private
 neogen_template.add_annotation = function(self, name)
     local ok, _t = pcall(require, "neogen.templates." .. name)
 
@@ -112,6 +93,7 @@ end
 ---@signature <template_obj>:add_default_annotation(name)
 ---@param name string The name of the annotation convention
 ---@tag neogen-template-api.add_default_annotation()
+---@private
 neogen_template.add_default_annotation = function(self, name)
     self.annotation_convention = name
     self = self:add_annotation(name)
@@ -123,6 +105,7 @@ end
 ---@param annotation table The annotation template (see |neogen-annotation|)
 ---@param default? boolean Marks the annotation as default one
 ---@tag neogen-template-api.add_custom_annotation()
+---@private
 neogen_template.add_custom_annotation = function(self, name, annotation, default)
     if default == true then
         self.annotation_convention = name
@@ -177,7 +160,7 @@ end
 ---         `-@param hello ` (will a parameter named `hello`)
 ---
 ---     - The third item is a `table` (optional), and are the local options for the line.
----         See below (`neogen.AnnotationLine.Opts`) for more information
+---         See below (`neogen.AnnotationLine.Opts`) for more information on what is required
 ---
 --- Now that you know every field, let's see how we could generate a basic annotation for a python function:
 --- >
@@ -201,9 +184,19 @@ end
 ---  }
 --- <
 --- We recommend you look into the the content of `neogen/templates` for a list of the default annotation conventions.
---- Last step, if you want to use your own annotation convention for a language, you can use the API :
----  `neogen.get_template("python"):add_custom_annotation("my_annotation", annotation, true)`
----  (see |neogen-template-api| for more details)
+---
+--- Last step, if you want to use your own annotation convention for a language:
+---   >
+---    require('neogen').setup {
+---      languages = {
+---        python = {
+---          template = {
+---            annotation_convention = "my_annotation",
+---            my_annotation = annotation
+---          }
+---      }
+---    }
+---   <
 ---@tag neogen-annotation
 ---@toc_entry How to create/customize an annotation
 
