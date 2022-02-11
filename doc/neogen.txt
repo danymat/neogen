@@ -9,7 +9,6 @@ Table of contents:
   Contributing................................................|neogen-develop|
   Changes in neogen plugin..................................|neogen-changelog|
   Configurations for the template table........|neogen-template-configuration|
-  API to customize templates.............................|neogen-template-api|
   How to create/customize an annotation....................|neogen-annotation|
 
 
@@ -102,13 +101,14 @@ Neogen provides those defaults, and you can change them to suit your needs
 <
 # Notes~
 
-- to configure a language, just add your configurations in the `languages` table
+- to configure a language, just add your configurations in the `languages` table.
   For example, for the `lua` lang:
   >
    languages = {
      lua = { -- Configuration here }
    }
   <
+  Default configurations for a languages can be found in `lua/neogen/configurations/<you_language>.lua`
 
 
 ------------------------------------------------------------------------------
@@ -124,15 +124,6 @@ Parameters~
 {opts} `(table)` Options to change default behaviour of generation.
  - {opts.type} `(string?, default: "func")` Which type we are trying to use for generating annotations.
    Currently supported: `func`, `class`, `type`, `file`
-
-------------------------------------------------------------------------------
-                                                         *neogen.get_template()*
-                       `neogen.get_template`({filetype})
-Get a template for a particular filetype
-Parameters~
-{filetype} `(optional)` `(string)`
-Return~
-neogen.TemplateConfig `(optional)`
 
 ------------------------------------------------------------------------------
                                                                 *neogen-develop*
@@ -152,12 +143,17 @@ Feel free to submit a PR, I will be happy to help you !
 ------------------------------------------------------------------------------
                                                               *neogen-changelog*
                                 `neogen.version`
+We use semantic versioning ! (https://semver.org)
 Here is the current Neogen version:
 >
-  neogen.version = "1.0.0"
+  neogen.version = "2.0.0"
 <
 # Changelog~
 
+## 2.0.0~
+  - We made the template API private, only for initial template configuration.
+    If you want to make a change to a template, please see:
+    |neogen-template-configuration| and |neogen-annotation|
 ## 1.0.0~
   - Neogen is officially out ! We support 16 languages as of right now,
     with multiple annotation conventions.
@@ -172,9 +168,6 @@ A template configuration is responsible for explicitely adding templates
 corresponding to annotation conventions,
 as well as providing custom configurations in order to be precise about
 how to customize the annotations.
-
-We exposed some API to help you customize a template, and add your own custom annotations
-For this, please go to |neogen.template_api|
 
 Type~
 neogen.TemplateConfig
@@ -239,54 +232,6 @@ Or:
 <
 
 ------------------------------------------------------------------------------
-                                                           *neogen-template-api*
-# Templates API~
-
-Welcome to the neogen API section for templates.
-
-A template is an entity relative to a filetype that holds configurations for how to place
-annotations.
-With it, you can add an annotation convention to a filetype, change defaults,
-and even provide your own annotation convention !
-I exposed some API's, available after you get a template.
-Please see |neogen.get_template()| for how to get a template.
-
-Example:
->
- neogen.get_template("python"):config({ annotation_convention = ... })
-<
-
-------------------------------------------------------------------------------
-                                                  *neogen-template-api.config()*
-Updates a template configuration
-                         `<template_obj>:config`({tbl})
-Parameters~
-{tbl} neogen.TemplateConfig Override the template with provided config
-
-------------------------------------------------------------------------------
-                                          *neogen-template-api.add_annotation()*
-Add an annotation convention to the template
-                    `<template_obj>:add_annotation`({name})
-Parameters~
-{name} `(string)` The name of the annotation convention
-
-------------------------------------------------------------------------------
-                                  *neogen-template-api.add_default_annotation()*
-Add an annotation convention to the template and make it the default
-                `<template_obj>:add_default_annotation`({name})
-Parameters~
-{name} `(string)` The name of the annotation convention
-
-------------------------------------------------------------------------------
-                                   *neogen-template-api.add_custom_annotation()*
-`neogen_template.add_custom_annotation`({self}, {name}, {annotation}, {default})
-Add a custom annotation convention to the template
-Parameters~
-{name} `(string)` The name of the annotation convention
-{annotation} `(table)` The annotation template (see |neogen-annotation|)
-{default} `(optional)` `(boolean)` Marks the annotation as default one
-
-------------------------------------------------------------------------------
                                                              *neogen-annotation*
 
 In this section, you'll learn how to create your own annotation convention
@@ -333,7 +278,7 @@ First of all, you need to know an annotation template behaves, with an example:
         `-@param hello ` (will a parameter named `hello`)
 
     - The third item is a `table` (optional), and are the local options for the line.
-        See below (`neogen.AnnotationLine.Opts`) for more information
+        See below (`neogen.AnnotationLine.Opts`) for more information on what is required
 
 Now that you know every field, let's see how we could generate a basic annotation for a python function:
 >
@@ -357,9 +302,19 @@ Will be very simply created with an convention like so:
  }
 <
 We recommend you look into the the content of `neogen/templates` for a list of the default annotation conventions.
-Last step, if you want to use your own annotation convention for a language, you can use the API :
- `neogen.get_template("python"):add_custom_annotation("my_annotation", annotation, true)`
- (see |neogen-template-api| for more details)
+
+Last step, if you want to use your own annotation convention for a language:
+  >
+   require('neogen').setup {
+     languages = {
+       python = {
+         template = {
+           annotation_convention = "my_annotation",
+           my_annotation = annotation
+         }
+     }
+   }
+  <
 
 ------------------------------------------------------------------------------
 # neogen.AnnotationLine~
