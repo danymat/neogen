@@ -146,10 +146,14 @@ Feel free to submit a PR, I will be happy to help you !
 We use semantic versioning ! (https://semver.org)
 Here is the current Neogen version:
 >
-  neogen.version = "2.0.0"
+  neogen.version = "2.1.0"
 <
 # Changelog~
 
+Note: We will only document major and minor versions.
+
+## 2.1.0~
+  - Add basic support for `kotlin` (`kdoc`).
 ## 2.0.0~
   - We made the template API private, only for initial template configuration.
     If you want to make a change to a template, please see:
