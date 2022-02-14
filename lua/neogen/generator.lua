@@ -191,21 +191,23 @@ return setmetatable({}, {
         for r, line in ipairs(template_content) do
             local last_col = 0
             local len = 1
-            local sects = {}
+
+            -- Replace each JUMP_TEXT with an pending text
+            local insert = string.gsub(line, pattern, "")
+            table.insert(content, insert)
+
+            -- Find each JUMP_TEXT and create a mark for it
             while true do
-                local s, e = line:find(pattern, last_col + 1)
+                local s, e = string.find(line, pattern, last_col + 1)
                 if not s then
-                    table.insert(sects, line:sub(last_col + 1, -1))
                     break
                 end
-                table.insert(sects, line:sub(last_col + 1, s - 1))
                 if input_after_comment then
                     len = len + s - last_col - 1
                     table.insert(marks_pos, { row + r - 1, len - 1 })
                 end
                 last_col = e
             end
-            table.insert(content, table.concat(sects, ""))
         end
 
         -- Append content to row
