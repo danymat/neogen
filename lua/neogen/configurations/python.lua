@@ -58,20 +58,7 @@ return {
                                         retrieve = "all",
                                         node_type = "return_statement",
                                         recursive = true,
-                                        subtree = {
-                                            {
-                                                retrieve = "all",
-                                                node_type = "true|false|integer|binary_operator|expression_list|call",
-                                                as = "anonymous_return",
-                                                extract = true,
-                                            },
-                                            {
-                                                retrieve = "all",
-                                                node_type = "identifier",
-                                                as = "return_statement",
-                                                extract = true,
-                                            },
-                                        },
+                                        extract = true,
                                     },
                                 },
                             },
@@ -97,15 +84,9 @@ return {
                         end
                         local res = extractors:extract_from_matched(nodes)
 
-                        if nodes["anonymous_return"] then
-                            local _res = extractors:extract_from_matched(nodes, { type = true })
-                            res.anonymous_return = _res.anonymous_return
-                        end
-
                         -- Return type hints takes precedence over all other types for generating template
                         if res[i.ReturnTypeHint] then
                             res["return_statement"] = nil
-                            res["anonymous_return"] = nil
                             if res[i.ReturnTypeHint][1] == "None" then
                                 res[i.ReturnTypeHint] = nil
                             end
@@ -134,7 +115,6 @@ return {
                         results[i.HasParameter] = (res.typed_parameter or res.identifier) and { true } or nil
                         results[i.Type] = res.type
                         results[i.Parameter] = res.identifier
-                        results[i.ReturnAnonym] = res.anonymous_return
                         results[i.Return] = res.return_statement
                         results[i.ReturnTypeHint] = res[i.ReturnTypeHint]
                         results[i.HasReturn] = (res.return_statement or res.anonymous_return or res[i.ReturnTypeHint])
@@ -250,7 +230,7 @@ return {
                 end
             end,
         })
-        :add_default_annotation("google_docstrings")
-        :add_annotation("numpydoc")
+        -- :add_default_annotation("google_docstrings")
+        :add_default_annotation("numpydoc")
         :add_annotation("reST"),
 }

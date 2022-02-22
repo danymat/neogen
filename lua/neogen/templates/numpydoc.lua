@@ -35,12 +35,7 @@ return {
     },
     {
         i.Return,
-        "%s : $1",
-        { after_each = "    $1" },
-    },
-    {
-        i.ReturnAnonym,
-        "%s",
+        "$1",
         { after_each = "    $1" },
     },
     { nil, '"""' },
