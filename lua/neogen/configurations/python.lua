@@ -30,7 +30,6 @@ return {
                                 node_type = "parameters",
                                 subtree = {
                                     { retrieve = "all", node_type = "identifier", extract = true },
-
                                     {
                                         retrieve = "all",
                                         node_type = "default_parameter",
@@ -47,6 +46,18 @@ return {
                                         as = "typed_parameter",
                                         extract = true,
                                         subtree = { { retrieve = "all", node_type = "identifier", extract = true } },
+                                    },
+                                    {
+                                        retrieve = "first",
+                                        node_type = "list_splat_pattern",
+                                        extract = true,
+                                        as = i.ArbitraryArgs,
+                                    },
+                                    {
+                                        retrieve = "first",
+                                        node_type = "dictionary_splat_pattern",
+                                        extract = true,
+                                        as = i.ArbitraryArgs,
                                     },
                                 },
                             },
@@ -120,6 +131,8 @@ return {
                         results[i.HasReturn] = (res.return_statement or res.anonymous_return or res[i.ReturnTypeHint])
                                 and { true }
                             or nil
+                        results[i.ArbitraryArgs] = res[i.ArbitraryArgs]
+                        results[i.Kwargs] = res[i.Kwargs]
                         return results
                     end,
                 },

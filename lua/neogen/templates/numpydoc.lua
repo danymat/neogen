@@ -24,6 +24,16 @@ return {
         "%s : %s",
         { after_each = "    $1", required = "typed_parameters", type = { "func" } },
     },
+    {
+        i.ArbitraryArgs,
+        "%s",
+        { after_each = "    $1", type = { "func" } },
+    },
+    {
+        i.Kwargs,
+        "%s",
+        { after_each = "    $1", type = { "func" } },
+    },
     { i.ClassAttribute, "%s : $1", { before_first_item = { "", "Attributes", "----------" } } },
     { i.HasReturn, "", { type = { "func" } } },
     { i.HasReturn, "Returns", { type = { "func" } } },

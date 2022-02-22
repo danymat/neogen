@@ -1,1 +1,1 @@
-print(require('neogen').version)
+print(require("neogen").version)
