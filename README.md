@@ -92,6 +92,15 @@ For example, I can add an other keybind to generate class annotations:
 local opts = { noremap = true, silent = true }
 vim.api.nvim_set_keymap("n", "<Leader>nc", ":lua require('neogen').generate({ type = 'class' })<CR>", opts)
 ```
+If you use a snippet plugin that can expand anonymous snippets, you can
+generate the annotation like so:
+```lua
+local lines, row = require('neogen').generate({
+    snippet = true -- return the annotation as a snippet body
+})
+```
+And then pass the snippet to the plugin's snippet expansion function.
+
 
 ### Cycle between annotations
 
