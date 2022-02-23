@@ -213,7 +213,7 @@ return setmetatable({}, {
         if as_snippet then
           for i, m in ipairs(marks_pos) do
             local r, col = m[1] - row + 1, m[2]
-            local pre = content[r]:sub(1, col - 1)
+            local pre = content[r]:sub(1, col)
             content[r] = pre .. '$' .. i .. content[r]:sub(col + 1)
           end
           return content, row
