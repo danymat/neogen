@@ -120,11 +120,17 @@ neogen.configuration = {
 --- For example, if you are inside a function, and called `generate({ type = "func" })`,
 --- Neogen will go until the start of the function and start annotating for you.
 ---
----@param opts table Options to change default behaviour of generation.
----  - {opts.type} `(string?, default: "func")` Which type we are trying to use for generating annotations.
+---@param opts table Optional configs to change default behaviour of generation.
+---  - {opts.type} `(string, default: "func")` Which type we are trying to use for generating annotations.
 ---    Currently supported: `func`, `class`, `type`, `file`
----  - {opts.snippet} `string?` Will use the requested snippet engine to generate annotations.
+---  - {opts.snippet_engine} `string` Will use the requested snippet engine to generate annotations.
 ---    To know which snippet engines are supported, take a look at |snippet-integration|.
+---  - {opts.return_snippet} `boolean` if true, will return 3 values from the function call.
+---  This option is useful if you want to get the snippet to use with a unsupported snippet engine
+---  Below are the returned values:
+---  - 1: (type: `string[]`) the resulting lsp snippet
+---  - 2: (type: `number`) the `row` to insert the annotations
+---  - 3: (type: `number`) the `col` to insert the annotations
 ---@toc_entry Generate annotations
 neogen.generate = function(opts)
     if not conf or not conf.enabled then
@@ -132,8 +138,12 @@ neogen.generate = function(opts)
         return
     end
 
-    ---@diagnostic disable-next-line: redundant-parameter
-    return require("neogen.generator")(vim.bo.filetype, opts and opts.type, opts and opts.snippet)
+    return require("neogen.generator")(
+        vim.bo.filetype,
+        opts and opts.type,
+        opts and opts.snippet_engine,
+        opts and opts.return_snippet
+    )
 end
 
 -- Expose more API  ============================================================

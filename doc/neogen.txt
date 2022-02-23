@@ -122,11 +122,17 @@ For example, if you are inside a function, and called `generate({ type = "func" 
 Neogen will go until the start of the function and start annotating for you.
 
 Parameters~
-{opts} `(table)` Options to change default behaviour of generation.
- - {opts.type} `(string?, default: "func")` Which type we are trying to use for generating annotations.
+{opts} `(table)` Optional configs to change default behaviour of generation.
+ - {opts.type} `(string, default: "func")` Which type we are trying to use for generating annotations.
    Currently supported: `func`, `class`, `type`, `file`
- - {opts.snippet} `string?` Will use the requested snippet engine to generate annotations.
+ - {opts.snippet_engine} `string` Will use the requested snippet engine to generate annotations.
    To know which snippet engines are supported, take a look at |snippet-integration|.
+ - {opts.return_snippet} `boolean` if true, will return 3 values from the function call.
+ This option is useful if you want to get the snippet to use with a unsupported snippet engine
+ Below are the returned values:
+ - 1: (type: `string[]`) the resulting lsp snippet
+ - 2: (type: `number`) the `row` to insert the annotations
+ - 3: (type: `number`) the `col` to insert the annotations
 
 ------------------------------------------------------------------------------
                                                                 *neogen-develop*

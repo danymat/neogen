@@ -156,7 +156,7 @@ local function generate_content(parent, data, template, required_type)
 end
 
 return setmetatable({}, {
-    __call = function(_, filetype, typ, snippet_engine)
+    __call = function(_, filetype, typ, snippet_engine, return_snippet)
         if filetype == "" then
             notify("No filetype detected", vim.log.levels.WARN)
             return
@@ -224,6 +224,9 @@ return setmetatable({}, {
             -- Calls the snippet expand function for required snippet engine
             engines[snippet_engine](generated_snippet, { row, 0 })
             return
+        elseif return_snippet then
+            local generated_snippet = snippet.to_snippet(content, marks_pos, { row, 0 })
+            return generated_snippet, row, 0
         end
 
         -- Append content to row
