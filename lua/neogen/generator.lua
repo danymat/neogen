@@ -211,12 +211,10 @@ return setmetatable({}, {
         end
 
         if as_snippet then
-          local ph = 1
-          for i, line in ipairs(content) do
-            if line:match(' $') then
-              content[i] = line .. '$' .. ph
-              ph = ph + 1
-            end
+          for i, m in ipairs(marks_pos) do
+            local r, col = m[1] - row + 1, m[2]
+            local pre = content[r]:sub(1, col - 1)
+            content[r] = pre .. '$' .. i .. content[r]:sub(col + 1)
           end
           return content, row
         end
