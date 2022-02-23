@@ -3,7 +3,7 @@ local notify = require("neogen.utilities.helpers").notify
 ---
 --- To use a snippet engine, just use neogen api, like this:
 --- >
----  :lua require('neogen').generate({ snippet = "luasnip" })
+---  :lua require('neogen').generate({ snippet_engine = "luasnip" })
 --- <
 --- Some snippet engines come out of the box bundled with neogen:
 --- - `"luasnip"` (https://github.com/L3MON4D3/LuaSnip)
