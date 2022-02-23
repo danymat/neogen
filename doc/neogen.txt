@@ -8,6 +8,7 @@ Table of contents:
   Generate annotations.....................................|neogen.generate()|
   Contributing................................................|neogen-develop|
   Changes in neogen plugin..................................|neogen-changelog|
+  Use popular snippet engines............................|snippet-integration|
   Configurations for the template table........|neogen-template-configuration|
   How to create/customize an annotation....................|neogen-annotation|
 
@@ -124,7 +125,8 @@ Parameters~
 {opts} `(table)` Options to change default behaviour of generation.
  - {opts.type} `(string?, default: "func")` Which type we are trying to use for generating annotations.
    Currently supported: `func`, `class`, `type`, `file`
- - {opts.snippet} `boolean` Whether the annotation should be returned as a snippet body, rather than inserted.
+ - {opts.snippet} `string?` Will use the requested snippet engine to generate annotations.
+   To know which snippet engines are supported, take a look at |snippet-integration|.
 
 ------------------------------------------------------------------------------
                                                                 *neogen-develop*
@@ -162,6 +164,19 @@ Note: We will only document major and minor versions.
 ## 1.0.0~
   - Neogen is officially out ! We support 16 languages as of right now,
     with multiple annotation conventions.
+
+
+==============================================================================
+------------------------------------------------------------------------------
+                                                           *snippet-integration*
+                                   `snippet`
+
+To use a snippet engine, just use neogen api, like this:
+>
+ :lua require('neogen').generate({ snippet = "luasnip" })
+<
+Some snippet engines come out of the box bundled with neogen:
+- `"luasnip"` (https://github.com/L3MON4D3/LuaSnip)
 
 
 ==============================================================================

@@ -1,5 +1,14 @@
 local notify = require("neogen.utilities.helpers").notify
 
+---
+--- To use a snippet engine, just use neogen api, like this:
+--- >
+---  :lua require('neogen').generate({ snippet = "luasnip" })
+--- <
+--- Some snippet engines come out of the box bundled with neogen:
+--- - `"luasnip"` (https://github.com/L3MON4D3/LuaSnip)
+---@tag snippet-integration
+---@toc_entry Use popular snippet engines
 local snippet = {}
 snippet.engines = {}
 
@@ -8,6 +17,7 @@ snippet.engines = {}
 ---@param marks table generated marks for the annotations
 ---@param pos table a tuple of row,col
 ---@return string resulting snippet
+---@private
 snippet.to_snippet = function(template, marks, pos)
     for i, m in ipairs(marks) do
         local r, col = m[1] - pos[1] + 1, m[2]
@@ -20,6 +30,7 @@ end
 --- Expand snippet for luasnip engine
 ---@param snip string the snippet to expand
 ---@param pos table a tuple of row, col
+---@private
 snippet.engines.luasnip = function(snip, pos)
     local ok, luasnip = pcall(require, "luasnip")
     if not ok then

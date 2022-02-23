@@ -123,7 +123,8 @@ neogen.configuration = {
 ---@param opts table Options to change default behaviour of generation.
 ---  - {opts.type} `(string?, default: "func")` Which type we are trying to use for generating annotations.
 ---    Currently supported: `func`, `class`, `type`, `file`
----  - {opts.snippet} `boolean` Whether the annotation should be returned as a snippet body, rather than inserted.
+---  - {opts.snippet} `string?` Will use the requested snippet engine to generate annotations.
+---    To know which snippet engines are supported, take a look at |snippet-integration|.
 ---@toc_entry Generate annotations
 neogen.generate = function(opts)
     if not conf or not conf.enabled then
