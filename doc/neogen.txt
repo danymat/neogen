@@ -124,7 +124,7 @@ Parameters~
 {opts} `(table)` Options to change default behaviour of generation.
  - {opts.type} `(string?, default: "func")` Which type we are trying to use for generating annotations.
    Currently supported: `func`, `class`, `type`, `file`
-{as_snippet} `(boolean)`
+ - {opts.snippet} `(boolean)`
    Returns the annotation as snippet body, instead of inserting in the buffer.
    Also returns the line of insertion as second return value.
 
