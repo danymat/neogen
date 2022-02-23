@@ -131,6 +131,7 @@ neogen.generate = function(opts)
         return
     end
 
+    ---@diagnostic disable-next-line: redundant-parameter
     return require("neogen.generator")(vim.bo.filetype, opts and opts.type, opts and opts.snippet)
 end
 

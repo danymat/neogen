@@ -13,6 +13,7 @@ local granulator = require("neogen.granulator")
 local mark = require("neogen.mark")
 local nodes = require("neogen.utilities.nodes")
 local default_locator = require("neogen.locators.default")
+local snippet = require("neogen.snippet")
 local JUMP_TEXT = "$1"
 
 local function get_parent_node(filetype, typ, language)
@@ -155,7 +156,7 @@ local function generate_content(parent, data, template, required_type)
 end
 
 return setmetatable({}, {
-    __call = function(_, filetype, typ, as_snippet)
+    __call = function(_, filetype, typ, snippet_engine)
         if filetype == "" then
             notify("No filetype detected", vim.log.levels.WARN)
             return
@@ -210,13 +211,19 @@ return setmetatable({}, {
             end
         end
 
-        if as_snippet then
-          for i, m in ipairs(marks_pos) do
-            local r, col = m[1] - row + 1, m[2]
-            local pre = content[r]:sub(1, col)
-            content[r] = pre .. '$' .. i .. content[r]:sub(col + 1)
-          end
-          return content, row
+        -- User want to use a snippet engine instead of native handling
+        if snippet_engine then
+            local engines = snippet.engines
+            if not vim.tbl_contains(vim.tbl_keys(engines), snippet_engine) then
+                notify(string.format("Snippet engine '%s' not supported", snippet_engine), vim.log.levels.ERROR)
+                return
+            end
+
+            -- Converts the content to a lsp compatible snippet
+            local generated_snippet = snippet.to_snippet(content, marks_pos, { row, 0 })
+            -- Calls the snippet expand function for required snippet engine
+            engines[snippet_engine](generated_snippet, { row, 0 })
+            return
         end
 
         -- Append content to row
