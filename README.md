@@ -95,7 +95,8 @@ vim.api.nvim_set_keymap("n", "<Leader>nc", ":lua require('neogen').generate({ ty
 
 ### Snippet support
 
-We added snippet suppport, and we provide defaults for some snippet engines.
+We added snippet support, and we provide defaults for some snippet engines.
+And this is done via some options in the `generate()` function.
 
 - `snippet_engine` option will use provided engine to place the annotations:
 
@@ -116,6 +117,8 @@ local snippet, row, col = require('neogen').generate({ snippet_engine = "luasnip
 And then pass the snippet to the plugin's snippet expansion function.
 
 ### Default cycling support
+
+_Note that this part is only useful if you don't use the snippets integration._
 
 If you don't want to use a snippet engine with Neogen, you can leverage Neogen's native jumps between placeholders.
 To map some keys to the cycling feature, you can do like so:
