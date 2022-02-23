@@ -123,14 +123,15 @@ neogen.configuration = {
 ---@param opts table Options to change default behaviour of generation.
 ---  - {opts.type} `(string?, default: "func")` Which type we are trying to use for generating annotations.
 ---    Currently supported: `func`, `class`, `type`, `file`
+---@param as_snippet boolean Whether the annotation should be returned as a snippet body, rather than inserted.
 ---@toc_entry Generate annotations
-neogen.generate = function(opts)
+neogen.generate = function(opts, as_snippet)
     if not conf or not conf.enabled then
         notify("Neogen not enabled. Please enable it.", vim.log.levels.WARN)
         return
     end
 
-    require("neogen.generator")(vim.bo.filetype, opts and opts.type)
+    return require("neogen.generator")(vim.bo.filetype, opts and opts.type, as_snippet)
 end
 
 -- Expose more API  ============================================================

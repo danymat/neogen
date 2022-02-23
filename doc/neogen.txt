@@ -113,7 +113,7 @@ Neogen provides those defaults, and you can change them to suit your needs
 
 ------------------------------------------------------------------------------
                                                              *neogen.generate()*
-                           `neogen.generate`({opts})
+                           `neogen.generate`({opts}, {as_snippet})
 The only function required to use Neogen.
 
 It'll try to find the first parent that matches a certain type.
@@ -124,6 +124,9 @@ Parameters~
 {opts} `(table)` Options to change default behaviour of generation.
  - {opts.type} `(string?, default: "func")` Which type we are trying to use for generating annotations.
    Currently supported: `func`, `class`, `type`, `file`
+{as_snippet} `(boolean)`
+   Returns the annotation as snippet body, instead of inserting in the buffer.
+   Also returns the line of insertion as second return value.
 
 ------------------------------------------------------------------------------
                                                                 *neogen-develop*

@@ -155,7 +155,7 @@ local function generate_content(parent, data, template, required_type)
 end
 
 return setmetatable({}, {
-    __call = function(_, filetype, typ)
+    __call = function(_, filetype, typ, as_snippet)
         if filetype == "" then
             notify("No filetype detected", vim.log.levels.WARN)
             return
@@ -208,6 +208,17 @@ return setmetatable({}, {
                 end
                 last_col = e
             end
+        end
+
+        if as_snippet then
+          local ph = 1
+          for i, line in ipairs(content) do
+            if line:match(' $') then
+              content[i] = line .. '$' .. ph
+              ph = ph + 1
+            end
+          end
+          return content, row
         end
 
         -- Append content to row
