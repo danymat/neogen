@@ -37,7 +37,8 @@ snippet.engines.luasnip = function(snip, pos)
         notify("Luasnip not found, aborting...", vim.log.levels.ERROR)
         return
     end
-    luasnip.lsp_expand("\n" .. table.concat(snip, "\n"), { pos = { pos[1] - 1, pos[2] } })
+    local expanded_snip = "\n" .. table.concat(snip, "\n")
+    luasnip.lsp_expand(expanded_snip, { pos = { pos[1] - 1, pos[2] } })
 end
 
 return snippet

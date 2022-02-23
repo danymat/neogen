@@ -211,8 +211,8 @@ return setmetatable({}, {
             end
         end
 
-        -- User want to use a snippet engine instead of native handling
         if snippet_engine then
+            -- User want to use a snippet engine instead of native handling
             local engines = snippet.engines
             if not vim.tbl_contains(vim.tbl_keys(engines), snippet_engine) then
                 notify(string.format("Snippet engine '%s' not supported", snippet_engine), vim.log.levels.ERROR)
@@ -225,23 +225,25 @@ return setmetatable({}, {
             engines[snippet_engine](generated_snippet, { row, 0 })
             return
         elseif return_snippet then
+            -- User just wants the snippet, so we give him the snippet plus placement informations
             local generated_snippet = snippet.to_snippet(content, marks_pos, { row, 0 })
             return generated_snippet, row, 0
-        end
+        else
+            -- We use default marks for jumping between annotations
+            -- Append content to row
+            vim.api.nvim_buf_set_lines(0, row, row, true, content)
 
-        -- Append content to row
-        vim.api.nvim_buf_set_lines(0, row, row, true, content)
-
-        if #marks_pos > 0 then
-            -- Start session of marks
-            mark:start()
-            for _, pos in ipairs(marks_pos) do
-                mark:add_mark(pos)
+            if #marks_pos > 0 then
+                -- Start session of marks
+                mark:start()
+                for _, pos in ipairs(marks_pos) do
+                    mark:add_mark(pos)
+                end
+                vim.cmd("startinsert")
+                mark:jump()
+                -- Add range mark after first jump
+                mark:add_range_mark({ row, 0, row + #template_content, 1 })
             end
-            vim.cmd("startinsert")
-            mark:jump()
-            -- Add range mark after first jump
-            mark:add_range_mark({ row, 0, row + #template_content, 1 })
         end
     end,
 })
