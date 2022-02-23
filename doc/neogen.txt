@@ -146,12 +146,16 @@ Feel free to submit a PR, I will be happy to help you !
 We use semantic versioning ! (https://semver.org)
 Here is the current Neogen version:
 >
-  neogen.version = "2.1.0"
+  neogen.version = "2.2.0"
 <
 # Changelog~
 
-Note: We will only document major and minor versions.
+Note: We will only document `major` and `minor` versions, not `patch` ones.
 
+## 2.2.0~
+  ### Python~
+    - Add support for `*args` and `**kwargs`
+    - Fix python return annotations being inconsistent in numpydoc template
 ## 2.1.0~
   - Add basic support for `kotlin` (`kdoc`).
 ## 2.0.0~
