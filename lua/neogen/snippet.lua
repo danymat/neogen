@@ -16,7 +16,7 @@ snippet.engines = {}
 ---@param template string[] the generated annotations to parse
 ---@param marks table generated marks for the annotations
 ---@param pos table a tuple of row,col
----@return table, number: resulting snippet lines, column of insertion
+---@return table resulting snippet lines
 ---@private
 snippet.to_snippet = function(template, marks, pos)
     local offset = {}
@@ -30,13 +30,7 @@ snippet.to_snippet = function(template, marks, pos)
         local pre = template[r]:sub(1, col + offset[r])
         template[r] = pre .. "$" .. i .. template[r]:sub(col + 1 + offset[r])
     end
-    local indent = template[1]:find('%S')
-    if indent > 1 then
-        for i, ln in ipairs(template) do
-            template[i] = ln:sub(indent)
-        end
-    end
-    return template, indent - 1
+    return template
 end
 
 --- Expand snippet for luasnip engine
@@ -49,7 +43,7 @@ snippet.engines.luasnip = function(snip, pos)
         notify("Luasnip not found, aborting...", vim.log.levels.ERROR)
         return
     end
-    vim.fn.append(pos[1], string.rep(vim.bo.expandtab and ' ' or '\t', pos[2]))
+    vim.fn.append(pos[1], '')
     luasnip.lsp_expand(table.concat(snip, "\n"), { pos = { pos[1], pos[2]} })
 end
 

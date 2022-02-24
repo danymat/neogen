@@ -220,14 +220,14 @@ return setmetatable({}, {
             end
 
             -- Converts the content to a lsp compatible snippet
-            local generated_snippet, col = snippet.to_snippet(content, marks_pos, { row, 0 })
+            local generated_snippet = snippet.to_snippet(content, marks_pos, { row, 0 })
             -- Calls the snippet expand function for required snippet engine
-            engines[snippet_engine](generated_snippet, { row, col })
+            engines[snippet_engine](generated_snippet, { row, 0 })
             return
         elseif return_snippet then
             -- User just wants the snippet, so we give him the snippet plus placement informations
-            local generated_snippet, col = snippet.to_snippet(content, marks_pos, { row, 0 })
-            return generated_snippet, row, col
+            local generated_snippet = snippet.to_snippet(content, marks_pos, { row, 0 })
+            return generated_snippet, row
         else
             -- We use default marks for jumping between annotations
             -- Append content to row
