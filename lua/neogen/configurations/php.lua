@@ -6,7 +6,7 @@ local i = require("neogen.types.template").item
 return {
     parent = {
         type = { "property_declaration", "const_declaration", "foreach_statement" },
-        func = { "function_definition" },
+        func = { "function_definition", "method_declaration" },
         class = { "class_declaration" },
     },
     data = {
@@ -25,7 +25,7 @@ return {
             },
         },
         func = {
-            ["function_definition"] = {
+            ["function_definition|method_declaration"] = {
                 ["0"] = {
                     extract = function(node)
                         local tree = {
