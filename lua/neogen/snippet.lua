@@ -24,6 +24,9 @@ snippet.to_snippet = function(template, marks, pos)
         local pre = template[r]:sub(1, col)
         template[r] = pre .. "$" .. i .. template[r]:sub(col + 1)
     end
+    for i, ln in ipairs(template) do
+      template[i] = ln:gsub('^%s*', '')
+    end
     return template
 end
 
