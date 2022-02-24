@@ -36,21 +36,21 @@ snippet.to_snippet = function(template, marks, pos)
             template[i] = ln:sub(indent)
         end
     end
-    return template
+    return template, indent - 1
 end
 
 --- Expand snippet for luasnip engine
 ---@param snip string the snippet to expand
 ---@param pos table a tuple of row, col
 ---@private
-snippet.engines.luasnip = function(snip, pos)
+snippet.engines.luasnip = function(snip, pos, indent)
     local ok, luasnip = pcall(require, "luasnip")
     if not ok then
         notify("Luasnip not found, aborting...", vim.log.levels.ERROR)
         return
     end
-    local expanded_snip = "\n" .. table.concat(snip, "\n")
-    luasnip.lsp_expand(expanded_snip, { pos = { pos[1] - 1, pos[2] } })
+    vim.fn.append(pos[1], string.rep(vim.bo.expandtab and ' ' or '\t', indent))
+    luasnip.lsp_expand(table.concat(snip, "\n"), { pos = { pos[1], pos[2] + indent } })
 end
 
 return snippet

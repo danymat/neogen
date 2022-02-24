@@ -34,7 +34,7 @@ end
 ---@param n integer
 ---@return string
 local function prefix_generator(template, commentstring, n)
-    local prefix = (" "):rep(n)
+    local prefix = (vim.bo.expandtab and ' ' or '\t'):rep(n)
 
     -- Do not append the comment string if not wanted
     if template.use_default_comment ~= false then
@@ -220,14 +220,14 @@ return setmetatable({}, {
             end
 
             -- Converts the content to a lsp compatible snippet
-            local generated_snippet = snippet.to_snippet(content, marks_pos, { row, 0 })
+            local generated_snippet, indent = snippet.to_snippet(content, marks_pos, { row, 0 })
             -- Calls the snippet expand function for required snippet engine
-            engines[snippet_engine](generated_snippet, { row, 0 })
+            engines[snippet_engine](generated_snippet, { row, 0 }, indent)
             return
         elseif return_snippet then
             -- User just wants the snippet, so we give him the snippet plus placement informations
-            local generated_snippet = snippet.to_snippet(content, marks_pos, { row, 0 })
-            return generated_snippet, row, 0
+            local generated_snippet, indent = snippet.to_snippet(content, marks_pos, { row, 0 })
+            return generated_snippet, row, indent
         else
             -- We use default marks for jumping between annotations
             -- Append content to row
