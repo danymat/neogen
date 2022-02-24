@@ -19,13 +19,22 @@ snippet.engines = {}
 ---@return string resulting snippet
 ---@private
 snippet.to_snippet = function(template, marks, pos)
+    local offset = {}
     for i, m in ipairs(marks) do
         local r, col = m[1] - pos[1] + 1, m[2]
-        local pre = template[r]:sub(1, col)
-        template[r] = pre .. "$" .. i .. template[r]:sub(col + 1)
+        if offset[r] then
+            offset[r] = offset[r] + tostring(i - 1):len() + 1
+        else
+            offset[r] = 0
+        end
+        local pre = template[r]:sub(1, col + offset[r])
+        template[r] = pre .. "$" .. i .. template[r]:sub(col + 1 + offset[r])
     end
-    for i, ln in ipairs(template) do
-      template[i] = ln:gsub('^%s*', '')
+    local indent = template[1]:find('%S')
+    if indent > 1 then
+        for i, ln in ipairs(template) do
+            template[i] = ln:sub(indent)
+        end
     end
     return template
 end
