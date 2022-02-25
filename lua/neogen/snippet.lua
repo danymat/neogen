@@ -22,16 +22,17 @@ snippet.engines = {}
 ---@return table resulting snippet lines
 ---@private
 snippet.to_snippet = function(template, marks, pos)
-    local offset = {}
+    local offset, ph = {}, {}
     for i, m in ipairs(marks) do
-        local r, col = m[1] - pos[1] + 1, m[2]
+        local r, col = m.row - pos[1] + 1, m.col
+        ph[i] = m.text and string.format('${%d:%s}', i, m.text) or '$' .. i
         if offset[r] then
-            offset[r] = offset[r] + tostring(i - 1):len() + 1
+            offset[r] = offset[r] + ph[i - 1]:len() + 1
         else
             offset[r] = 0
         end
         local pre = template[r]:sub(1, col + offset[r])
-        template[r] = pre .. "$" .. i .. template[r]:sub(col + 1 + offset[r])
+        template[r] = pre .. ph[i] .. template[r]:sub(col + 1 + offset[r])
     end
     return template
 end

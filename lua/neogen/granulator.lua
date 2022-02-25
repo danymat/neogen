@@ -41,5 +41,6 @@ return function(parent_node, node_data)
         end
     end
 
+    -- { parameters = { ... }, return_statement = { ... }, ... }
     return result
 end
