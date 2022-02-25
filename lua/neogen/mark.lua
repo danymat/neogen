@@ -49,8 +49,7 @@ end
 ---@return number the id of the inserted mark
 ---@private
 mark.add_mark = function(self, pos)
-    local line, col = unpack(pos)
-    local id = api.nvim_buf_set_extmark(self.bufnr, ns, line, col, {})
+    local id = api.nvim_buf_set_extmark(self.bufnr, ns, pos.row, pos.col, {})
     table.insert(mark.ids, id)
     return id
 end
