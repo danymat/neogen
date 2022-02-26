@@ -45,19 +45,39 @@ local function_tree = {
             { retrieve = "first", node_type = "return_statement", extract = true, as = i.Return },
         },
     },
+    {
+        retrieve = "first",
+        node_type = "type_annotation",
+        subtree = {
+            { retrieve = "all", node_type = "type_identifier", extract = true, as = i.Return },
+        },
+    },
 }
 
 return {
     parent = {
-        func = { "function_declaration", "expression_statement", "variable_declaration", "lexical_declaration" },
-        class = { "function_declaration", "expression_statement", "variable_declaration", "class_declaration" },
+        func = {
+            "function_declaration",
+            "function_signature",
+            "expression_statement",
+            "variable_declaration",
+            "lexical_declaration",
+            "method_definition",
+        },
+        class = {
+            "function_declaration",
+            "expression_statement",
+            "variable_declaration",
+            "class_declaration",
+            "export_statement",
+        },
         type = { "variable_declaration", "lexical_declaration" },
         file = { "program" },
     },
 
     data = {
         func = {
-            ["function_declaration"] = {
+            ["function_declaration|method_definition|function_signature"] = {
                 ["0"] = {
 
                     extract = function(node)
@@ -93,7 +113,7 @@ return {
             },
         },
         class = {
-            ["function_declaration|class_declaration|expression_statement|variable_declaration"] = {
+            ["function_declaration|class_declaration|expression_statement|variable_declaration|export_statement"] = {
                 ["0"] = {
 
                     extract = function(_)
@@ -134,5 +154,7 @@ return {
         },
     },
 
-    template = template:add_default_annotation("jsdoc"),
+    locator = require("neogen.locators.typescript"),
+
+    template = template:add_default_annotation("jsdoc"):add_annotation("tsdoc"),
 }
