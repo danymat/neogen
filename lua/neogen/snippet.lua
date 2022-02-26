@@ -1,9 +1,12 @@
 local notify = require("neogen.utilities.helpers").notify
 
 ---
---- To use a snippet engine, just use neogen api, like this:
+--- To use a snippet engine, pass the option into neogen setup:
 --- >
----  :lua require('neogen').generate({ snippet_engine = "luasnip" })
+---  require('neogen').setup({
+---    snippet_engine = "luasnip",
+---    ...
+---  })
 --- <
 --- Some snippet engines come out of the box bundled with neogen:
 --- - `"luasnip"` (https://github.com/L3MON4D3/LuaSnip)
@@ -43,8 +46,8 @@ snippet.engines.luasnip = function(snip, pos)
         notify("Luasnip not found, aborting...", vim.log.levels.ERROR)
         return
     end
-    vim.fn.append(pos[1], '')
-    luasnip.lsp_expand(table.concat(snip, "\n"), { pos = { pos[1], pos[2]} })
+    vim.fn.append(pos[1], "")
+    luasnip.lsp_expand(table.concat(snip, "\n"), { pos = { pos[1], pos[2] } })
 end
 
 return snippet

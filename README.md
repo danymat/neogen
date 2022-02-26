@@ -96,19 +96,22 @@ vim.api.nvim_set_keymap("n", "<Leader>nc", ":lua require('neogen').generate({ ty
 ### Snippet support
 
 We added snippet support, and we provide defaults for some snippet engines.
-And this is done via some options in the `generate()` function.
+And this is done via the `snippet_engine` option in neogen's setup:
 
 - `snippet_engine` option will use provided engine to place the annotations:
 
-```lua
-require('neogen').generate({ snippet_engine = "luasnip" })
-```
-
 Currently supported: `luasnip`.
 
-- `return_snippet` option will return the annotations as lsp snippets.
+```lua
+require('neogen').setup({ snippet_engine = "luasnip" })
+```
 
-This is useful if you want to integratte with a snippet engine not bundled by default in Neogen:
+That's all ! You can now use your favorite snippet engine to control the annotation, like jumping between placeholders.
+
+Or, if you want to return the snippet as a string (to integrate with other snippet engines, for example),
+you can do it by using the `return_snippet` option in the `generate` function:
+
+- `return_snippet` option will return the annotations as lsp snippets.
 
 ```lua
 local snippet, row, col = require('neogen').generate({ snippet_engine = "luasnip" })

@@ -98,18 +98,24 @@ Neogen provides those defaults, and you can change them to suit your needs
 
       -- Configuration for default languages
       languages = {},
+
+      -- Use a snippet engine to generate annotations.
+      snippet_engine = nil,
   }
 <
 # Notes~
 
 - to configure a language, just add your configurations in the `languages` table.
   For example, for the `lua` lang:
-  >
+>
    languages = {
      lua = { -- Configuration here }
    }
-  <
-  Default configurations for a languages can be found in `lua/neogen/configurations/<you_language>.lua`
+<
+  Default configurations for a languages can be found in `lua/neogen/configurations/<your_language>.lua`
+
+ - To know which snippet engines are supported, take a look at |snippet-integration|.
+   Example: `snippet_engine = "luasnip"`
 
 
 ------------------------------------------------------------------------------
@@ -125,13 +131,12 @@ Parameters~
 {opts} `(table)` Optional configs to change default behaviour of generation.
  - {opts.type} `(string, default: "func")` Which type we are trying to use for generating annotations.
    Currently supported: `func`, `class`, `type`, `file`
- - {opts.snippet_engine} `string` Will use the requested snippet engine to generate annotations.
-   To know which snippet engines are supported, take a look at |snippet-integration|.
- - {opts.return_snippet} `boolean` if true, will return 2 values from the function call.
+ - {opts.return_snippet} `boolean` if true, will return 3 values from the function call.
  This option is useful if you want to get the snippet to use with a unsupported snippet engine
  Below are the returned values:
- - 1: (type: `string[]`) the lines of the resulting snippet
+ - 1: (type: `string[]`) the resulting lsp snippet
  - 2: (type: `number`) the `row` to insert the annotations
+ - 3: (type: `number`) the `col` to insert the annotations
 
 ------------------------------------------------------------------------------
                                                                 *neogen-develop*
@@ -160,6 +165,10 @@ Here is the current Neogen version:
 
 Note: We will only document `major` and `minor` versions, not `patch` ones.
 
+## 2.3.0~
+  - Added bundled support with snippet engines !
+    Check out |snippet-integration| for basic setup
+    For more information of possible options, check out |neogen.generate()|
 ## 2.2.0~
   ### Python~
     - Add support for `*args` and `**kwargs`
@@ -180,9 +189,12 @@ Note: We will only document `major` and `minor` versions, not `patch` ones.
                                                            *snippet-integration*
                                    `snippet`
 
-To use a snippet engine, just use neogen api, like this:
+To use a snippet engine, pass the option into neogen setup:
 >
- :lua require('neogen').generate({ snippet_engine = "luasnip" })
+ require('neogen').setup({
+   snippet_engine = "luasnip",
+   ...
+ })
 <
 Some snippet engines come out of the box bundled with neogen:
 - `"luasnip"` (https://github.com/L3MON4D3/LuaSnip)

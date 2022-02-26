@@ -34,7 +34,7 @@ end
 ---@param n integer
 ---@return string
 local function prefix_generator(template, commentstring, n)
-    local prefix = (vim.bo.expandtab and ' ' or '\t'):rep(n)
+    local prefix = (vim.bo.expandtab and " " or "\t"):rep(n)
 
     -- Do not append the comment string if not wanted
     if template.use_default_comment ~= false then
@@ -156,7 +156,7 @@ local function generate_content(parent, data, template, required_type)
 end
 
 return setmetatable({}, {
-    __call = function(_, filetype, typ, snippet_engine, return_snippet)
+    __call = function(_, filetype, typ, return_snippet)
         if filetype == "" then
             notify("No filetype detected", vim.log.levels.WARN)
             return
@@ -211,6 +211,7 @@ return setmetatable({}, {
             end
         end
 
+        local snippet_engine = conf.snippet_engine
         if snippet_engine then
             -- User want to use a snippet engine instead of native handling
             local engines = snippet.engines

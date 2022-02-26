@@ -91,12 +91,15 @@ end
 ---
 --- - to configure a language, just add your configurations in the `languages` table.
 ---   For example, for the `lua` lang:
----   >
+--- >
 ---    languages = {
 ---      lua = { -- Configuration here }
 ---    }
----   <
----   Default configurations for a languages can be found in `lua/neogen/configurations/<you_language>.lua`
+--- <
+---   Default configurations for a languages can be found in `lua/neogen/configurations/<your_language>.lua`
+---
+---  - To know which snippet engines are supported, take a look at |snippet-integration|.
+---    Example: `snippet_engine = "luasnip"`
 ---
 ---@toc_entry Configure the setup
 ---@tag neogen-configuration
@@ -109,6 +112,9 @@ neogen.configuration = {
 
     -- Configuration for default languages
     languages = {},
+
+    -- Use a snippet engine to generate annotations.
+    snippet_engine = nil,
 }
 --minidoc_afterlines_end
 
@@ -123,8 +129,6 @@ neogen.configuration = {
 ---@param opts table Optional configs to change default behaviour of generation.
 ---  - {opts.type} `(string, default: "func")` Which type we are trying to use for generating annotations.
 ---    Currently supported: `func`, `class`, `type`, `file`
----  - {opts.snippet_engine} `string` Will use the requested snippet engine to generate annotations.
----    To know which snippet engines are supported, take a look at |snippet-integration|.
 ---  - {opts.return_snippet} `boolean` if true, will return 3 values from the function call.
 ---  This option is useful if you want to get the snippet to use with a unsupported snippet engine
 ---  Below are the returned values:
@@ -138,12 +142,7 @@ neogen.generate = function(opts)
         return
     end
 
-    return require("neogen.generator")(
-        vim.bo.filetype,
-        opts and opts.type,
-        opts and opts.snippet_engine,
-        opts and opts.return_snippet
-    )
+    return require("neogen.generator")(vim.bo.filetype, opts and opts.type, opts and opts.return_snippet)
 end
 
 -- Expose more API  ============================================================
