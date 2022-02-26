@@ -211,6 +211,12 @@ return setmetatable({}, {
             end
         end
 
+        if return_snippet then
+            -- User just wants the snippet, so we give him the snippet plus placement informations
+            local generated_snippet = snippet.to_snippet(content, marks_pos, { row, 0 })
+            return generated_snippet, row
+        end
+
         local snippet_engine = conf.snippet_engine
         if snippet_engine then
             -- User want to use a snippet engine instead of native handling
@@ -225,10 +231,6 @@ return setmetatable({}, {
             -- Calls the snippet expand function for required snippet engine
             engines[snippet_engine](generated_snippet, { row, 0 })
             return
-        elseif return_snippet then
-            -- User just wants the snippet, so we give him the snippet plus placement informations
-            local generated_snippet = snippet.to_snippet(content, marks_pos, { row, 0 })
-            return generated_snippet, row
         else
             -- We use default marks for jumping between annotations
             -- Append content to row
