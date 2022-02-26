@@ -219,7 +219,6 @@ end
 --- ## 2.3.0~
 ---   - Added bundled support with snippet engines !
 ---     Check out |snippet-integration| for basic setup
----     For more information of possible options, check out |neogen.generate()|
 --- ## 2.2.0~
 ---   ### Python~
 ---     - Add support for `*args` and `**kwargs`
