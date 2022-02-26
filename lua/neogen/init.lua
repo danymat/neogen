@@ -91,12 +91,15 @@ end
 ---
 --- - to configure a language, just add your configurations in the `languages` table.
 ---   For example, for the `lua` lang:
----   >
+--- >
 ---    languages = {
 ---      lua = { -- Configuration here }
 ---    }
----   <
----   Default configurations for a languages can be found in `lua/neogen/configurations/<you_language>.lua`
+--- <
+---   Default configurations for a languages can be found in `lua/neogen/configurations/<your_language>.lua`
+---
+---  - To know which snippet engines are supported, take a look at |snippet-integration|.
+---    Example: `snippet_engine = "luasnip"`
 ---
 ---@toc_entry Configure the setup
 ---@tag neogen-configuration
@@ -109,6 +112,9 @@ neogen.configuration = {
 
     -- Configuration for default languages
     languages = {},
+
+    -- Use a snippet engine to generate annotations.
+    snippet_engine = nil,
 }
 --minidoc_afterlines_end
 
@@ -120,9 +126,15 @@ neogen.configuration = {
 --- For example, if you are inside a function, and called `generate({ type = "func" })`,
 --- Neogen will go until the start of the function and start annotating for you.
 ---
----@param opts table Options to change default behaviour of generation.
----  - {opts.type} `(string?, default: "func")` Which type we are trying to use for generating annotations.
+---@param opts table Optional configs to change default behaviour of generation.
+---  - {opts.type} `(string, default: "func")` Which type we are trying to use for generating annotations.
 ---    Currently supported: `func`, `class`, `type`, `file`
+---  - {opts.return_snippet} `boolean` if true, will return 3 values from the function call.
+---  This option is useful if you want to get the snippet to use with a unsupported snippet engine
+---  Below are the returned values:
+---  - 1: (type: `string[]`) the resulting lsp snippet
+---  - 2: (type: `number`) the `row` to insert the annotations
+---  - 3: (type: `number`) the `col` to insert the annotations
 ---@toc_entry Generate annotations
 neogen.generate = function(opts)
     if not conf or not conf.enabled then
@@ -130,7 +142,7 @@ neogen.generate = function(opts)
         return
     end
 
-    require("neogen.generator")(vim.bo.filetype, opts and opts.type)
+    return require("neogen.generator")(vim.bo.filetype, opts and opts.type, opts and opts.return_snippet)
 end
 
 -- Expose more API  ============================================================
@@ -204,6 +216,10 @@ end
 ---
 --- Note: We will only document `major` and `minor` versions, not `patch` ones.
 ---
+--- ## 2.3.0~
+---   - Added bundled support with snippet engines !
+---     Check out |snippet-integration| for basic setup
+---     For more information of possible options, check out |neogen.generate()|
 --- ## 2.2.0~
 ---   ### Python~
 ---     - Add support for `*args` and `**kwargs`

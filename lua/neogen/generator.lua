@@ -13,6 +13,7 @@ local granulator = require("neogen.granulator")
 local mark = require("neogen.mark")
 local nodes = require("neogen.utilities.nodes")
 local default_locator = require("neogen.locators.default")
+local snippet = require("neogen.snippet")
 local JUMP_TEXT = "$1"
 
 local function get_parent_node(filetype, typ, language)
@@ -33,7 +34,7 @@ end
 ---@param n integer
 ---@return string
 local function prefix_generator(template, commentstring, n)
-    local prefix = (" "):rep(n)
+    local prefix = (vim.bo.expandtab and " " or "\t"):rep(n)
 
     -- Do not append the comment string if not wanted
     if template.use_default_comment ~= false then
@@ -155,7 +156,7 @@ local function generate_content(parent, data, template, required_type)
 end
 
 return setmetatable({}, {
-    __call = function(_, filetype, typ)
+    __call = function(_, filetype, typ, return_snippet)
         if filetype == "" then
             notify("No filetype detected", vim.log.levels.WARN)
             return
@@ -210,19 +211,42 @@ return setmetatable({}, {
             end
         end
 
-        -- Append content to row
-        vim.api.nvim_buf_set_lines(0, row, row, true, content)
+        if return_snippet then
+            -- User just wants the snippet, so we give him the snippet plus placement informations
+            local generated_snippet = snippet.to_snippet(content, marks_pos, { row, 0 })
+            return generated_snippet, row
+        end
 
-        if #marks_pos > 0 then
-            -- Start session of marks
-            mark:start()
-            for _, pos in ipairs(marks_pos) do
-                mark:add_mark(pos)
+        local snippet_engine = conf.snippet_engine
+        if snippet_engine then
+            -- User want to use a snippet engine instead of native handling
+            local engines = snippet.engines
+            if not vim.tbl_contains(vim.tbl_keys(engines), snippet_engine) then
+                notify(string.format("Snippet engine '%s' not supported", snippet_engine), vim.log.levels.ERROR)
+                return
             end
-            vim.cmd("startinsert")
-            mark:jump()
-            -- Add range mark after first jump
-            mark:add_range_mark({ row, 0, row + #template_content, 1 })
+
+            -- Converts the content to a lsp compatible snippet
+            local generated_snippet = snippet.to_snippet(content, marks_pos, { row, 0 })
+            -- Calls the snippet expand function for required snippet engine
+            engines[snippet_engine](generated_snippet, { row, 0 })
+            return
+        else
+            -- We use default marks for jumping between annotations
+            -- Append content to row
+            vim.api.nvim_buf_set_lines(0, row, row, true, content)
+
+            if #marks_pos > 0 then
+                -- Start session of marks
+                mark:start()
+                for _, pos in ipairs(marks_pos) do
+                    mark:add_mark(pos)
+                end
+                vim.cmd("startinsert")
+                mark:jump()
+                -- Add range mark after first jump
+                mark:add_range_mark({ row, 0, row + #template_content, 1 })
+            end
         end
     end,
 })

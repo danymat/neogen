@@ -46,7 +46,7 @@ use {
     end,
     requires = "nvim-treesitter/nvim-treesitter",
     -- Uncomment next line if you want to follow only stable versions
-    -- tag = "*" 
+    -- tag = "*"
 }
 ```
 
@@ -93,11 +93,38 @@ local opts = { noremap = true, silent = true }
 vim.api.nvim_set_keymap("n", "<Leader>nc", ":lua require('neogen').generate({ type = 'class' })<CR>", opts)
 ```
 
-### Cycle between annotations
+### Snippet support
 
-I added support passing cursor positionings in templates. That means you can now cycle your cursor between different parts of the annotation.
+We added snippet support, and we provide defaults for some snippet engines.
+And this is done via the `snippet_engine` option in neogen's setup:
 
-If you want to map some keys to the cycling feature, you can do like so:
+- `snippet_engine` option will use provided engine to place the annotations:
+
+Currently supported: `luasnip`.
+
+```lua
+require('neogen').setup({ snippet_engine = "luasnip" })
+```
+
+That's all ! You can now use your favorite snippet engine to control the annotation, like jumping between placeholders.
+
+Or, if you want to return the snippet as a string (to integrate with other snippet engines, for example),
+you can do it by using the `return_snippet` option in the `generate` function:
+
+- `return_snippet` option will return the annotations as lsp snippets.
+
+```lua
+local snippet, row, col = require('neogen').generate({ snippet_engine = "luasnip" })
+```
+
+And then pass the snippet to the plugin's snippet expansion function.
+
+### Default cycling support
+
+_Note that this part is only useful if you don't use the snippets integration._
+
+If you don't want to use a snippet engine with Neogen, you can leverage Neogen's native jumps between placeholders.
+To map some keys to the cycling feature, you can do like so:
 
 ```lua
 local opts = { noremap = true, silent = true }
