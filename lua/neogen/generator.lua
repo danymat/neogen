@@ -15,6 +15,7 @@ local nodes = require("neogen.utilities.nodes")
 local default_locator = require("neogen.locators.default")
 local snippet = require("neogen.snippet")
 local JUMP_TEXT = "$1"
+local MATCH_ALL_TYPE = "any"
 
 local function get_parent_node(filetype, typ, language)
     local parser = vim.treesitter.get_parser(0, filetype)
@@ -22,8 +23,26 @@ local function get_parent_node(filetype, typ, language)
     local tree = tstree:root()
 
     language.locator = language.locator or default_locator
+
     -- Use the language locator to locate one of the required parent nodes above the cursor
-    return language.locator({ root = tree, current = ts_utils.get_node_at_cursor(0) }, language.parent[typ])
+    if typ == MATCH_ALL_TYPE then
+        local all_types = {}
+        local reverse_type_map = {}
+        for lang_typ, set in pairs(language.parent) do
+            for _, v in ipairs(set) do
+                table.insert(all_types, v)
+                reverse_type_map[v] = lang_typ
+            end
+        end
+        local node = language.locator({ root = tree, current = ts_utils.get_node_at_cursor(0) }, all_types)
+        if not node then
+            return nil, nil
+        end
+        return node, reverse_type_map[node:type()]
+    else
+        local node = language.locator({ root = tree, current = ts_utils.get_node_at_cursor(0) }, language.parent[typ])
+        return node, typ
+    end
 end
 
 --- Generates the prefix according to `template` options.
@@ -167,13 +186,21 @@ return setmetatable({}, {
             return
         end
         typ = (type(typ) ~= "string" or typ == "") and "func" or typ -- Default type
+
         local template = language.template
-        if not language.parent[typ] or not language.data[typ] or not template or not template.annotation_convention then
+        if not template or not template.annotation_convention then
             notify("Type `" .. typ .. "` not supported", vim.log.levels.WARN)
             return
         end
 
-        local parent_node = get_parent_node(filetype, typ, language)
+        if typ ~= MATCH_ALL_TYPE then
+            if not language.parent[typ] or not language.data[typ] then
+                notify("Type `" .. typ .. "` not supported", vim.log.levels.WARN)
+                return
+            end
+        end
+
+        local parent_node, typ = get_parent_node(filetype, typ, language)
         if not parent_node then
             return
         end
