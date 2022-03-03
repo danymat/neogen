@@ -18,13 +18,12 @@ return {
                                 retrieve = "first",
                                 node_type = "identifier",
                                 extract = "true",
-                            }
+                                as = "func_name",
+                            },
                         }
                         local nodes = nodes_utils:matching_nodes_from(node, tree)
                         local res = extractors:extract_from_matched(nodes)
-                        return {
-                            func_name = res.identifier,
-                        }
+                        return res
                     end,
                 },
             },
@@ -36,13 +35,12 @@ return {
                                 retrieve = "first",
                                 node_type = "field_identifier",
                                 extract = "true",
-                            }
+                                as = "func_name",
+                            },
                         }
                         local nodes = nodes_utils:matching_nodes_from(node, tree)
                         local res = extractors:extract_from_matched(nodes)
-                        return {
-                            func_name = res.field_identifier,
-                        }
+                        return res
                     end,
                 },
             },
@@ -63,15 +61,18 @@ return {
                                 retrieve = "all",
                                 node_type = "type_spec",
                                 subtree = {
-                                    { retrieve = "first", node_type = "type_identifier", extract = true },
+                                    {
+                                        retrieve = "first",
+                                        node_type = "type_identifier",
+                                        extract = true,
+                                        as = "type_name",
+                                    },
                                 },
-                            }
+                            },
                         }
                         local nodes = nodes_utils:matching_nodes_from(node, tree)
                         local res = extractors:extract_from_matched(nodes)
-                        return {
-                            type_name = res.type_identifier,
-                        }
+                        return res
                     end,
                 },
             },
