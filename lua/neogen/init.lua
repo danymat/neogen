@@ -216,6 +216,8 @@ end
 ---
 --- Note: We will only document `major` and `minor` versions, not `patch` ones.
 ---
+--- ## 2.4.0~
+---   - Improve godoc template (#75)
 --- ## 2.3.0~
 ---   - Added bundled support with snippet engines !
 ---     Check out |snippet-integration| for basic setup
@@ -234,7 +236,7 @@ end
 ---     with multiple annotation conventions.
 ---@tag neogen-changelog
 ---@toc_entry Changes in neogen plugin
-neogen.version = "2.3.0"
+neogen.version = "2.4.0"
 --minidoc_afterlines_end
 
 return neogen
