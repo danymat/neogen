@@ -1,7 +1,5 @@
 local helpers = require("neogen.utilities.helpers")
 local notify = helpers.notify
-local i = require("neogen.types.template").item
-local todo_text = require("neogen.types.template").todo_text
 
 local ok, ts_utils = pcall(require, "nvim-treesitter.ts_utils")
 if not ok then
@@ -17,6 +15,27 @@ local nodes = require("neogen.utilities.nodes")
 local default_locator = require("neogen.locators.default")
 local snippet = require("neogen.snippet")
 local JUMP_TEXT = "$1"
+
+local function todo_text(type)
+    local i = require("neogen.types.template").item
+    local todo = conf.todo_text
+    return ({
+            [i.Tparam] =         todo["tparam"],
+            [i.Parameter] =      todo["parameter"],
+            [i.Return] =         todo["return"],
+            [i.ReturnTypeHint] = todo["return"],
+            [i.ReturnAnonym] =   todo["return"],
+            [i.ClassName] =      todo["class"],
+            [i.Throw] =          todo["throw"],
+            [i.Vararg] =         todo["varargs"],
+            [i.Type] =           todo["type"],
+            [i.ClassAttribute] = todo["attribute"],
+            [i.HasParameter] =   todo["parameter"],
+            [i.HasReturn] =      todo["return"],
+            [i.ArbitraryArgs] =  todo["args"],
+            [i.Kwargs] =         todo["kwargs"],
+        })[type] or todo["description"]
+end
 
 local function get_parent_node(filetype, typ, language)
     local parser = vim.treesitter.get_parser(0, filetype)
@@ -103,7 +122,7 @@ local function generate_content(parent, data, template, required_type)
         local x -- placeholders in the same line after the first are 'descriptions'
         for _ in string.gmatch(str, "%$1") do
           n = n + 1
-          default_text[n] = not x and todo_text[inserted_type] or "[TODO:description]"
+          default_text[n] = not x and todo_text(inserted_type) or todo_text()
           x = true
         end
     end
