@@ -18,7 +18,7 @@ local JUMP_TEXT = "$1"
 
 local function todo_text(type)
     local i = require("neogen.types.template").item
-    local todo = conf.todo_text
+    local todo = conf.placeholders_text
     return ({
         [i.Tparam] = todo["tparam"],
         [i.Parameter] = todo["parameter"],

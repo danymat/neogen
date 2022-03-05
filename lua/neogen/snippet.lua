@@ -1,4 +1,5 @@
 local notify = require("neogen.utilities.helpers").notify
+local conf = require("neogen.config").get()
 
 ---
 --- To use a snippet engine, pass the option into neogen setup:
@@ -10,6 +11,15 @@ local notify = require("neogen.utilities.helpers").notify
 --- <
 --- Some snippet engines come out of the box bundled with neogen:
 --- - `"luasnip"` (https://github.com/L3MON4D3/LuaSnip)
+---
+--- If you want to customize the placeholders, you can use `placeholders_text` option:
+--- >
+---  require('neogen').setup({
+---    placeholders_text = {
+---      ['description'] = "[description]",
+---    }
+---  })
+--- <
 ---@tag snippet-integration
 ---@toc_entry Use popular snippet engines
 local snippet = {}
@@ -25,7 +35,7 @@ snippet.to_snippet = function(template, marks, pos)
     local offset, ph = {}, {}
     for i, m in ipairs(marks) do
         local r, col = m.row - pos[1] + 1, m.col
-        ph[i] = m.text and string.format("${%d:%s}", i, m.text) or "$" .. i
+        ph[i] = (m.text and conf.enable_placeholders) and string.format("${%d:%s}", i, m.text) or "$" .. i
         if offset[r] then
             offset[r] = offset[r] + ph[i - 1]:len() + 1
         else

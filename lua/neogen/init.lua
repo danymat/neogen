@@ -116,8 +116,11 @@ neogen.configuration = {
     -- Use a snippet engine to generate annotations.
     snippet_engine = nil,
 
+    -- Enables placeholders when inserting annotation
+    enable_placeholders = true,
+
     -- Placeholders used during annotation expansion
-    todo_text = {
+    placeholders_text = {
         ["description"] = "[TODO:description]",
         ["tparam"] = "[TODO:tparam]",
         ["parameter"] = "[TODO:parameter]",
