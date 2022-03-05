@@ -159,12 +159,14 @@ Feel free to submit a PR, I will be happy to help you !
 We use semantic versioning ! (https://semver.org)
 Here is the current Neogen version:
 >
-  neogen.version = "2.4.0"
+  neogen.version = "2.5.0"
 <
 # Changelog~
 
 Note: We will only document `major` and `minor` versions, not `patch` ones.
 
+## 2.5.0~
+  - Ruby: Add support for `tomdoc` (http://tomdoc.org)
 ## 2.4.0~
   - Improve godoc template (#75)
 ## 2.3.0~
