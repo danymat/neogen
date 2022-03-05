@@ -263,22 +263,22 @@ return setmetatable({}, {
             -- Calls the snippet expand function for required snippet engine
             engines[snippet_engine](generated_snippet, { row, 0 })
             return
-        else
-            -- We use default marks for jumping between annotations
-            -- Append content to row
-            vim.api.nvim_buf_set_lines(0, row, row, true, content)
+        end
 
-            if #marks_pos > 0 then
-                -- Start session of marks
-                mark:start()
-                for _, pos in ipairs(marks_pos) do
-                    mark:add_mark(pos)
-                end
-                vim.cmd("startinsert")
-                mark:jump()
-                -- Add range mark after first jump
-                mark:add_range_mark({ row, 0, row + #template_content, 1 })
+        -- We use default marks for jumping between annotations
+        -- Append content to row
+        vim.api.nvim_buf_set_lines(0, row, row, true, content)
+
+        if #marks_pos > 0 then
+            -- Start session of marks
+            mark:start()
+            for _, pos in ipairs(marks_pos) do
+                mark:add_mark(pos)
             end
+            vim.cmd("startinsert")
+            mark:jump()
+            -- Add range mark after first jump
+            mark:add_range_mark({ row, 0, row + #template_content, 1 })
         end
     end,
 })
