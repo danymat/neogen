@@ -234,6 +234,17 @@ end
 ---
 --- Note: We will only document `major` and `minor` versions, not `patch` ones.
 ---
+--- ## 2.5.0~
+---   - Add support for placeholders in snippet insertion !
+---     - Add `enable_placeholders` option (see |neogen-configuration|)
+---     - Add `placeholders_text` option (see |neogen-configuration|)
+---
+---   Example placeholders:
+--- >
+---  --- [TODO:description]
+---  ---@param param1 [TODO:parameter] [TODO:description]
+---  function test(param1) end
+--- <
 --- ## 2.4.0~
 ---   - Improve godoc template (#75)
 --- ## 2.3.0~
@@ -254,7 +265,7 @@ end
 ---     with multiple annotation conventions.
 ---@tag neogen-changelog
 ---@toc_entry Changes in neogen plugin
-neogen.version = "2.4.0"
+neogen.version = "2.5.0"
 --minidoc_afterlines_end
 
 return neogen
