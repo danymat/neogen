@@ -25,7 +25,7 @@ snippet.to_snippet = function(template, marks, pos)
     local offset, ph = {}, {}
     for i, m in ipairs(marks) do
         local r, col = m.row - pos[1] + 1, m.col
-        ph[i] = m.text and string.format('${%d:%s}', i, m.text) or '$' .. i
+        ph[i] = m.text and string.format("${%d:%s}", i, m.text) or "$" .. i
         if offset[r] then
             offset[r] = offset[r] + ph[i - 1]:len() + 1
         else

@@ -118,18 +118,18 @@ neogen.configuration = {
 
     -- Placeholders used during annotation expansion
     todo_text = {
-        ['description'] = "[TODO:description]",
-        ['tparam'] =      "[TODO:tparam]",
-        ['parameter'] =   "[TODO:parameter]",
-        ['return'] =      "[TODO:return]",
-        ['class'] =       "[TODO:class]",
-        ['throw'] =       "[TODO:throw]",
-        ['varargs'] =     "[TODO:varargs]",
-        ['type'] =        "[TODO:type]",
-        ['attribute'] =   "[TODO:attribute]",
-        ['args'] =        "[TODO:args]",
-        ['kwargs'] =      "[TODO:kwargs]",
-    }
+        ["description"] = "[TODO:description]",
+        ["tparam"] = "[TODO:tparam]",
+        ["parameter"] = "[TODO:parameter]",
+        ["return"] = "[TODO:return]",
+        ["class"] = "[TODO:class]",
+        ["throw"] = "[TODO:throw]",
+        ["varargs"] = "[TODO:varargs]",
+        ["type"] = "[TODO:type]",
+        ["attribute"] = "[TODO:attribute]",
+        ["args"] = "[TODO:args]",
+        ["kwargs"] = "[TODO:kwargs]",
+    },
 }
 --minidoc_afterlines_end
 

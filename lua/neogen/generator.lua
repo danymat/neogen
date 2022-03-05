@@ -20,21 +20,21 @@ local function todo_text(type)
     local i = require("neogen.types.template").item
     local todo = conf.todo_text
     return ({
-            [i.Tparam] =         todo["tparam"],
-            [i.Parameter] =      todo["parameter"],
-            [i.Return] =         todo["return"],
-            [i.ReturnTypeHint] = todo["return"],
-            [i.ReturnAnonym] =   todo["return"],
-            [i.ClassName] =      todo["class"],
-            [i.Throw] =          todo["throw"],
-            [i.Vararg] =         todo["varargs"],
-            [i.Type] =           todo["type"],
-            [i.ClassAttribute] = todo["attribute"],
-            [i.HasParameter] =   todo["parameter"],
-            [i.HasReturn] =      todo["return"],
-            [i.ArbitraryArgs] =  todo["args"],
-            [i.Kwargs] =         todo["kwargs"],
-        })[type] or todo["description"]
+        [i.Tparam] = todo["tparam"],
+        [i.Parameter] = todo["parameter"],
+        [i.Return] = todo["return"],
+        [i.ReturnTypeHint] = todo["return"],
+        [i.ReturnAnonym] = todo["return"],
+        [i.ClassName] = todo["class"],
+        [i.Throw] = todo["throw"],
+        [i.Vararg] = todo["varargs"],
+        [i.Type] = todo["type"],
+        [i.ClassAttribute] = todo["attribute"],
+        [i.HasParameter] = todo["parameter"],
+        [i.HasReturn] = todo["return"],
+        [i.ArbitraryArgs] = todo["args"],
+        [i.Kwargs] = todo["kwargs"],
+    })[type] or todo["description"]
 end
 
 local function get_parent_node(filetype, typ, language)
@@ -121,9 +121,9 @@ local function generate_content(parent, data, template, required_type)
         table.insert(result, str == "" and str or prefix .. str)
         local x -- placeholders in the same line after the first are 'descriptions'
         for _ in string.gmatch(str, "%$1") do
-          n = n + 1
-          default_text[n] = not x and todo_text(inserted_type) or todo_text()
-          x = true
+            n = n + 1
+            default_text[n] = not x and todo_text(inserted_type) or todo_text()
+            x = true
         end
     end
 
