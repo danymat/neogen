@@ -7,7 +7,7 @@ local template = {}
 
 template.parent = {
     func = { "method" },
-    class = { "class" },
+    class = { "class", "module" },
     type = { "call" },
 }
 
@@ -53,7 +53,7 @@ template.data = {
         },
     },
     class = {
-        ["class"] = {
+        ["class|module"] = {
             ["0"] = {
                 extract = function()
                     return {}
@@ -72,6 +72,6 @@ template.data = {
     },
 }
 
-template.template = _template:add_default_annotation("yard"):add_annotation("rdoc")
+template.template = _template:add_default_annotation("yard"):add_annotation("rdoc"):add_annotation("tomdoc")
 
 return template
