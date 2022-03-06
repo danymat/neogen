@@ -8,9 +8,9 @@ return {
     { nil, "-@license $1", { no_results = true, type = { "file" } } },
     { nil, "", { no_results = true, type = { "file" } } },
 
-    { i.Parameter, "-@param %s $1|any $1" },
-    { i.Vararg, "-@vararg $1|any $1" },
-    { i.Return, "-@return $1|any $1" },
-    { i.ClassName, "-@class $1|any $1" },
-    { i.Type, "-@type $1 $1" },
+    { i.Parameter, "-@param %s $1|any" },
+    { i.Vararg, "-@vararg $1|any" },
+    { i.Return, "-@return $1|any" },
+    { i.ClassName, "-@class $1|any" },
+    { i.Type, "-@type $1" },
 }
