@@ -52,13 +52,45 @@ end
 ---@param pos table a tuple of row, col
 ---@private
 snippet.engines.luasnip = function(snip, pos)
-    local ok, luasnip = pcall(require, "luasnip")
+    local ok, ls = pcall(require, "luasnip")
     if not ok then
         notify("Luasnip not found, aborting...", vim.log.levels.ERROR)
         return
     end
+
+    local types = require("luasnip.util.types")
+
+    -- Append a new line to create the snippet
     vim.fn.append(pos[1], "")
-    luasnip.lsp_expand(table.concat(snip, "\n"), { pos = { pos[1], pos[2] } })
+
+    -- Convert the snippet to string
+    local _snip = table.concat(snip, "\n")
+
+    ls.snip_expand(
+        ls.s("", ls.parser.parse_snippet(nil, _snip), {
+
+            child_ext_opts = {
+                -- for highlighting the placeholders
+                [types.insertNode] = {
+                    -- when inside placeholder
+                    active = {
+                        hl_group = "DiagnosticHint",
+                    },
+                    -- when outside placeholder, but in snippet
+                    passive = {
+                        hl_group = "DiagnosticHint",
+                    },
+                    -- when outside snippet
+                    -- snippet_passive = {
+                    --     hl_group = "Todo",
+                    -- },
+                },
+            },
+            -- prevent mixing styles
+            merge_child_ext_opts = true,
+        }),
+        { pos = pos }
+    )
 end
 
 return snippet
