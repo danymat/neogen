@@ -72,18 +72,8 @@ snippet.engines.luasnip = function(snip, pos)
             child_ext_opts = {
                 -- for highlighting the placeholders
                 [types.insertNode] = {
-                    -- when inside placeholder
-                    active = {
-                        hl_group = "DiagnosticHint",
-                    },
                     -- when outside placeholder, but in snippet
-                    passive = {
-                        hl_group = "DiagnosticHint",
-                    },
-                    -- when outside snippet
-                    -- snippet_passive = {
-                    --     hl_group = "Todo",
-                    -- },
+                    passive = { hl_group = "DiagnosticHint" },
                 },
             },
             -- prevent mixing styles
