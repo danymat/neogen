@@ -32,6 +32,11 @@ template.data = {
                     }
                     local nodes = nodes_utils:matching_nodes_from(node, tree)
                     local res = extractors:extract_from_matched(nodes)
+
+                    -- Force return type as Kotlin parser does not differenciate return types
+                    -- https://github.com/danymat/neogen/issues/78#issuecomment-1062677446
+                    res[i.Return] = { true }
+
                     return res
                 end,
             },
