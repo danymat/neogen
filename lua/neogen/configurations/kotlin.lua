@@ -11,6 +11,25 @@ template.parent = {
     func = { "function_declaration" },
 }
 
+local type_parameter = {
+    node_type = "type_parameters",
+    retrieve = "first",
+    subtree = {
+        {
+            node_type = "type_parameter",
+            retrieve = "all",
+            subtree = {
+                {
+                    node_type = "type_identifier",
+                    retrieve = "all",
+                    extract = true,
+                    as = i.Parameter,
+                },
+            },
+        },
+    },
+}
+
 template.data = {
     func = {
         ["function_declaration"] = {
@@ -29,6 +48,7 @@ template.data = {
                                 },
                             },
                         },
+                        type_parameter,
                     }
                     local nodes = nodes_utils:matching_nodes_from(node, tree)
                     local res = extractors:extract_from_matched(nodes)
@@ -65,6 +85,7 @@ template.data = {
                                 },
                             },
                         },
+                        type_parameter,
                     }
                     local nodes = nodes_utils:matching_nodes_from(node, tree)
                     local res = extractors:extract_from_matched(nodes)
