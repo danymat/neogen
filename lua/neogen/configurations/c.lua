@@ -122,6 +122,7 @@ local c_config = {
             "template_declaration",
         },
         file = { "translation_unit" },
+        type = { "type_definition" },
     },
 
     data = {
@@ -137,6 +138,20 @@ local c_config = {
                 ["0"] = {
                     extract = function()
                         return {}
+                    end,
+                },
+            },
+        },
+        type = {
+            ["type_definition"] = {
+                ["1"] = {
+                    extract = function(node)
+                        local tree = {
+                            { retrieve = "first", node_type = "type_identifier", extract = true, as = i.Type },
+                        }
+                        local nodes = nodes_utils:matching_nodes_from(node, tree)
+                        local res = extractors:extract_from_matched(nodes)
+                        return res
                     end,
                 },
             },
