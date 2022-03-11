@@ -8,14 +8,14 @@ local function_tree = {
         retrieve = "first",
         node_type = "formal_parameters",
         subtree = {
-            { retrieve = "all", node_type = "identifier", extract = true },
+            { retrieve = "all", node_type = "identifier", extract = true, as = i.Parameter },
         },
     },
     {
         retrieve = "first",
         node_type = "statement_block",
         subtree = {
-            { retrieve = "first", node_type = "return_statement", extract = true },
+            { retrieve = "first", node_type = "return_statement", extract = true, as = i.Return },
         },
     },
 }
@@ -40,42 +40,42 @@ return {
                 ["0"] = {
 
                     extract = function(node)
-                        local results = {}
                         local tree = function_tree
                         local nodes = nodes_utils:matching_nodes_from(node, tree)
                         local res = extractors:extract_from_matched(nodes)
 
-                        results.parameters = res.identifier
-                        results.return_statement = res.return_statement
-                        return results
+                        if res[i.Return] then
+                            res[i.Return] = { true }
+                        end
+                        return res
                     end,
                 },
             },
             ["expression_statement|variable_declaration"] = {
                 ["0"] = {
                     extract = function(node)
-                        local results = {}
                         local tree = { { retrieve = "all", node_type = "function", subtree = function_tree } }
                         local nodes = nodes_utils:matching_nodes_from(node, tree)
                         local res = extractors:extract_from_matched(nodes)
 
-                        results.parameters = res.identifier
-                        results.return_statement = res.return_statement
-                        return results
+                        if res[i.Return] then
+                            res[i.Return] = { true }
+                        end
+                        return res
                     end,
                 },
             },
             ["lexical_declaration"] = {
                 ["1"] = {
                     extract = function(node)
-                        local results = {}
                         local tree = { { retrieve = "all", node_type = "arrow_function", subtree = function_tree } }
                         local nodes = nodes_utils:matching_nodes_from(node, tree)
                         local res = extractors:extract_from_matched(nodes)
 
-                        results.parameters = res.identifier
-                        results.return_statement = res.return_statement
-                        return results
+                        if res[i.Return] then
+                            res[i.Return] = { true }
+                        end
+                        return res
                     end,
                 },
             },

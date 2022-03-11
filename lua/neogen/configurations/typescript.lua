@@ -85,6 +85,9 @@ return {
                         local nodes = nodes_utils:matching_nodes_from(node, tree)
                         local res = extractors:extract_from_matched(nodes)
                         res[i.Tparam] = construct_type_annotation(nodes[i.Tparam])
+                        if res[i.Return] then
+                            res[i.Return] = { true }
+                        end
                         return res
                     end,
                 },
@@ -96,6 +99,9 @@ return {
                         local nodes = nodes_utils:matching_nodes_from(node, tree)
                         local res = extractors:extract_from_matched(nodes)
                         res[i.Tparam] = construct_type_annotation(nodes[i.Tparam])
+                        if res[i.Return] then
+                            res[i.Return] = { true }
+                        end
                         return res
                     end,
                 },
@@ -107,6 +113,9 @@ return {
                         local nodes = nodes_utils:matching_nodes_from(node, tree)
                         local res = extractors:extract_from_matched(nodes)
                         res[i.Tparam] = construct_type_annotation(nodes[i.Tparam])
+                        if res[i.Return] then
+                            res[i.Return] = { true }
+                        end
                         return res
                     end,
                 },
