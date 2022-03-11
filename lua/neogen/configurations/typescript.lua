@@ -52,6 +52,18 @@ local function_tree = {
             { retrieve = "all", node_type = "type_identifier", extract = true, as = i.Return },
         },
     },
+    {
+        retrieve = "first",
+        node_type = "type_parameters",
+        subtree = {
+            {
+                retrieve = "all",
+                node_type = "type_parameter",
+                extract = true,
+                as = i.Type,
+            },
+        },
+    },
 }
 
 return {
@@ -165,5 +177,5 @@ return {
 
     locator = require("neogen.locators.typescript"),
 
-    template = template:add_default_annotation("jsdoc"):add_annotation("tsdoc"),
+    template = template:add_default_annotation("tsdoc")
 }

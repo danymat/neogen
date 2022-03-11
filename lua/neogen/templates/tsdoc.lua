@@ -10,6 +10,7 @@ return {
 
     { nil, "/**", { type = { "class", "func" } } },
     { i.ClassName, " * $1", { type = { "class" } } },
+    { i.Type, " * @template %s - $1", { type = { "func" } } },
     { i.Parameter, " * @param %s - $1", { type = { "func" } } },
     {
         { i.Parameter },
