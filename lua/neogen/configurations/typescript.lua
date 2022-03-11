@@ -177,5 +177,5 @@ return {
 
     locator = require("neogen.locators.typescript"),
 
-    template = template:add_default_annotation("tsdoc")
+    template = template:add_default_annotation("jsdoc"):add_default_annotation("tsdoc"),
 }
