@@ -8,7 +8,7 @@ return {
 
     { nil, "/**", { type = { "func", "class", "type" } } },
     { i.ClassName, " * @class %s", { type = { "class" } } },
-    { i.Type, " * @typedef $1", { type = { "type" } } },
+    { i.Type, " * @typedef %s", { type = { "type" } } },
     { nil, " * @brief $1", { type = { "func", "class", "type" } } },
     { nil, " *", { type = { "func", "class", "type" } } },
     { i.Tparam, " * @tparam %s $1" },
