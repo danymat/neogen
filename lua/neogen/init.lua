@@ -242,6 +242,7 @@ end
 ---     None: placeholders are automatically set when using a bundled snippet engine.
 ---     - Add `enable_placeholders` option (see |neogen-configuration|)
 ---     - Add `placeholders_text` option (see |neogen-configuration|)
+---     - Add `placeholders_hl` option (see |neogen-configuration|)
 ---
 ---   Example placeholders:
 --- >
