@@ -52,6 +52,18 @@ local function_tree = {
             { retrieve = "all", node_type = "type_identifier", extract = true, as = i.Return },
         },
     },
+    {
+        retrieve = "first",
+        node_type = "type_parameters",
+        subtree = {
+            {
+                retrieve = "all",
+                node_type = "type_parameter",
+                extract = true,
+                as = i.Type,
+            },
+        },
+    },
 }
 
 return {
@@ -85,6 +97,9 @@ return {
                         local nodes = nodes_utils:matching_nodes_from(node, tree)
                         local res = extractors:extract_from_matched(nodes)
                         res[i.Tparam] = construct_type_annotation(nodes[i.Tparam])
+                        if res[i.Return] then
+                            res[i.Return] = { true }
+                        end
                         return res
                     end,
                 },
@@ -96,6 +111,9 @@ return {
                         local nodes = nodes_utils:matching_nodes_from(node, tree)
                         local res = extractors:extract_from_matched(nodes)
                         res[i.Tparam] = construct_type_annotation(nodes[i.Tparam])
+                        if res[i.Return] then
+                            res[i.Return] = { true }
+                        end
                         return res
                     end,
                 },
@@ -107,6 +125,9 @@ return {
                         local nodes = nodes_utils:matching_nodes_from(node, tree)
                         local res = extractors:extract_from_matched(nodes)
                         res[i.Tparam] = construct_type_annotation(nodes[i.Tparam])
+                        if res[i.Return] then
+                            res[i.Return] = { true }
+                        end
                         return res
                     end,
                 },
@@ -156,5 +177,5 @@ return {
 
     locator = require("neogen.locators.typescript"),
 
-    template = template:add_default_annotation("jsdoc"):add_annotation("tsdoc"),
+    template = template:add_default_annotation("jsdoc"):add_default_annotation("tsdoc"),
 }

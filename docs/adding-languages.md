@@ -2,7 +2,7 @@
 
 This sections aims to simplify the languages addition, without exposing the inner workings of neogen, but only showing the quickest way to add support to a language.
 
-For this, I will do a very quick recap about the backend concepts of Neogen. Pay very attention to this, because i will explain how the defaults are, so you can use the them.
+For this, I will do a very quick recap about the backend concepts of Neogen. Pay careful attention to this, because I will explain what the defaults are, so you can use them.
 
 ## Backend Summary
 
@@ -40,7 +40,7 @@ The granulator is a function that will try to fetch all desired information from
 
 ### Default Granulator
 
-The default granulator will use a data format like this one:
+The default granulator will use data format like this one:
 
 ```lua
 data = {
@@ -164,6 +164,3 @@ An annotation template is a set of tables, each one composed of 2 required param
     - `no_results`: (bool, default false) will only use this field when there is no value returned by the granulator
     - `type`: (string[], default nil) will only use this field for the required types. If not specified, it will use this field for all types
     - `before_first_item`: (string[], default nil) will append the lines before the first found item for the table
-
-
-

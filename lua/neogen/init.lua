@@ -98,7 +98,7 @@ end
 --- <
 ---   Default configurations for a languages can be found in `lua/neogen/configurations/<your_language>.lua`
 ---
----  - To know which snippet engines are supported, take a look at |snippet-integration|.
+---  - To know which snippet engines are supported, take a look at |neogen-snippet-integration|.
 ---    Example: `snippet_engine = "luasnip"`
 ---
 ---@toc_entry Configure the setup
@@ -254,7 +254,7 @@ end
 ---   - Improve godoc template (#75)
 --- ## 2.3.0~
 ---   - Added bundled support with snippet engines !
----     Check out |snippet-integration| for basic setup
+---     Check out |neogen-snippet-integration| for basic setup
 --- ## 2.2.0~
 ---   ### Python~
 ---     - Add support for `*args` and `**kwargs`

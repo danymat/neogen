@@ -8,7 +8,7 @@ Table of contents:
   Generate annotations.....................................|neogen.generate()|
   Contributing................................................|neogen-develop|
   Changes in neogen plugin..................................|neogen-changelog|
-  Use popular snippet engines............................|snippet-integration|
+  Use popular snippet engines.....................|neogen-snippet-integration|
   Configurations for the template table........|neogen-template-configuration|
   How to create/customize an annotation....................|neogen-annotation|
 
@@ -119,6 +119,9 @@ Neogen provides those defaults, and you can change them to suit your needs
           ["args"] = "[TODO:args]",
           ["kwargs"] = "[TODO:kwargs]",
       },
+
+      -- Placeholders highlights to use. If you don't want custom highlight, pass "None"
+      placeholders_hl = "DiagnosticHint",
   }
 <
 # Notes~
@@ -132,7 +135,7 @@ Neogen provides those defaults, and you can change them to suit your needs
 <
   Default configurations for a languages can be found in `lua/neogen/configurations/<your_language>.lua`
 
- - To know which snippet engines are supported, take a look at |snippet-integration|.
+ - To know which snippet engines are supported, take a look at |neogen-snippet-integration|.
    Example: `snippet_engine = "luasnip"`
 
 
@@ -200,7 +203,7 @@ Note: We will only document `major` and `minor` versions, not `patch` ones.
   - Improve godoc template (#75)
 ## 2.3.0~
   - Added bundled support with snippet engines !
-    Check out |snippet-integration| for basic setup
+    Check out |neogen-snippet-integration| for basic setup
 ## 2.2.0~
   ### Python~
     - Add support for `*args` and `**kwargs`
@@ -218,7 +221,7 @@ Note: We will only document `major` and `minor` versions, not `patch` ones.
 
 ==============================================================================
 ------------------------------------------------------------------------------
-                                                           *snippet-integration*
+                                                    *neogen-snippet-integration*
                                    `snippet`
 
 To use a snippet engine, pass the option into neogen setup:
@@ -239,6 +242,17 @@ If you want to customize the placeholders, you can use `placeholders_text` optio
    }
  })
 <
+
+# Add support for snippet engines~
+
+To add support to a snippet engine, go to `lua/neogen/snippet.lua`.
+There's a table called `snippet.engines` that holds functions that will be called
+depending of the snippet engine
+
+Those functions have this signature:
+`snippet_engine_name = function (snip, pos)` where
+- `snip` is a lsp styled snippet (in table format)
+- `pos` is a { row , col } table for placing the snippet
 
 
 ==============================================================================

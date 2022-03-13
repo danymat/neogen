@@ -20,7 +20,18 @@ local conf = require("neogen.config").get()
 ---    }
 ---  })
 --- <
----@tag snippet-integration
+---
+--- # Add support for snippet engines~
+---
+--- To add support to a snippet engine, go to `lua/neogen/snippet.lua`.
+--- There's a table called `snippet.engines` that holds functions that will be called
+--- depending of the snippet engine
+---
+--- Those functions have this signature:
+--- `snippet_engine_name = function (snip, pos)` where
+--- - `snip` is a lsp styled snippet (in table format)
+--- - `pos` is a { row , col } table for placing the snippet
+---@tag neogen-snippet-integration
 ---@toc_entry Use popular snippet engines
 local snippet = {}
 snippet.engines = {}

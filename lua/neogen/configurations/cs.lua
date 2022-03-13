@@ -29,7 +29,7 @@ return {
                                         retrieve = "all",
                                         node_type = "parameter",
                                         subtree = {
-                                            { position = 2, extract = true },
+                                            { position = 2, extract = true, as = i.Parameter },
                                         },
                                     },
                                 },
