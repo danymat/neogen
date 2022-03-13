@@ -16,6 +16,27 @@ local default_locator = require("neogen.locators.default")
 local snippet = require("neogen.snippet")
 local JUMP_TEXT = "$1"
 
+local function todo_text(type)
+    local i = require("neogen.types.template").item
+    local todo = conf.placeholders_text
+    return ({
+        [i.Tparam] = todo["tparam"],
+        [i.Parameter] = todo["parameter"],
+        [i.Return] = todo["return"],
+        [i.ReturnTypeHint] = todo["return"],
+        [i.ReturnAnonym] = todo["return"],
+        [i.ClassName] = todo["class"],
+        [i.Throw] = todo["throw"],
+        [i.Vararg] = todo["varargs"],
+        [i.Type] = todo["type"],
+        [i.ClassAttribute] = todo["attribute"],
+        [i.HasParameter] = todo["parameter"],
+        [i.HasReturn] = todo["return"],
+        [i.ArbitraryArgs] = todo["args"],
+        [i.Kwargs] = todo["kwargs"],
+    })[type] or todo["description"]
+end
+
 local function get_parent_node(filetype, typ, language)
     local parser = vim.treesitter.get_parser(0, filetype)
     local tstree = parser:parse()[1]
@@ -91,10 +112,19 @@ local function generate_content(parent, data, template, required_type)
     local generated_template = template[template.annotation_convention]
 
     local result = {}
+    local default_text = {}
     local prefix = prefix_generator(template, commentstring, col)
 
-    local function append_str(str)
+    local n = 0
+
+    local function append_str(str, inserted_type)
         table.insert(result, str == "" and str or prefix .. str)
+        local x -- placeholders in the same line after the first are 'descriptions'
+        for _ in string.gmatch(str, "%$1") do
+            n = n + 1
+            default_text[n] = not x and todo_text(inserted_type) or todo_text()
+            x = true
+        end
     end
 
     for _, values in ipairs(generated_template) do
@@ -121,7 +151,7 @@ local function generate_content(parent, data, template, required_type)
             elseif ins_type == "string" and type(data[inserted_type]) == "table" then
                 -- Format the output with the corresponding data
                 for _, s in ipairs(data[inserted_type]) do
-                    append_str(formatted_str:format(s))
+                    append_str(formatted_str:format(s), inserted_type)
                     if opts.after_each then
                         append_str(opts.after_each:format(s))
                     end
@@ -152,7 +182,7 @@ local function generate_content(parent, data, template, required_type)
         end
     end
 
-    return row, result
+    return row, result, default_text
 end
 
 return setmetatable({}, {
@@ -181,7 +211,7 @@ return setmetatable({}, {
         local data = granulator(parent_node, language.data[typ])
 
         -- Will try to generate the documentation from a template and the data found from the granulator
-        local row, template_content = generate_content(parent_node, data, template, typ)
+        local row, template_content, default_text = generate_content(parent_node, data, template, typ)
 
         local content = {}
         local marks_pos = {}
@@ -205,7 +235,9 @@ return setmetatable({}, {
                 end
                 if input_after_comment then
                     len = len + s - last_col - 1
-                    table.insert(marks_pos, { row + r - 1, len - 1 })
+                    local m = { row = row + r - 1, col = len - 1 }
+                    table.insert(marks_pos, m)
+                    m.text = default_text[#marks_pos]
                 end
                 last_col = e
             end

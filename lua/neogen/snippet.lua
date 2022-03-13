@@ -1,4 +1,5 @@
 local notify = require("neogen.utilities.helpers").notify
+local conf = require("neogen.config").get()
 
 ---
 --- To use a snippet engine, pass the option into neogen setup:
@@ -10,6 +11,15 @@ local notify = require("neogen.utilities.helpers").notify
 --- <
 --- Some snippet engines come out of the box bundled with neogen:
 --- - `"luasnip"` (https://github.com/L3MON4D3/LuaSnip)
+---
+--- If you want to customize the placeholders, you can use `placeholders_text` option:
+--- >
+---  require('neogen').setup({
+---    placeholders_text = {
+---      ['description'] = "[description]",
+---    }
+---  })
+--- <
 ---
 --- # Add support for snippet engines~
 ---
@@ -33,16 +43,17 @@ snippet.engines = {}
 ---@return table resulting snippet lines
 ---@private
 snippet.to_snippet = function(template, marks, pos)
-    local offset = {}
+    local offset, ph = {}, {}
     for i, m in ipairs(marks) do
-        local r, col = m[1] - pos[1] + 1, m[2]
+        local r, col = m.row - pos[1] + 1, m.col
+        ph[i] = (m.text and conf.enable_placeholders) and string.format("${%d:%s}", i, m.text) or "$" .. i
         if offset[r] then
-            offset[r] = offset[r] + tostring(i - 1):len() + 1
+            offset[r] = offset[r] + ph[i - 1]:len() + 1
         else
             offset[r] = 0
         end
         local pre = template[r]:sub(1, col + offset[r])
-        template[r] = pre .. "$" .. i .. template[r]:sub(col + 1 + offset[r])
+        template[r] = pre .. ph[i] .. template[r]:sub(col + 1 + offset[r])
     end
     return template
 end
@@ -52,13 +63,35 @@ end
 ---@param pos table a tuple of row, col
 ---@private
 snippet.engines.luasnip = function(snip, pos)
-    local ok, luasnip = pcall(require, "luasnip")
+    local ok, ls = pcall(require, "luasnip")
     if not ok then
         notify("Luasnip not found, aborting...", vim.log.levels.ERROR)
         return
     end
+
+    local types = require("luasnip.util.types")
+
+    -- Append a new line to create the snippet
     vim.fn.append(pos[1], "")
-    luasnip.lsp_expand(table.concat(snip, "\n"), { pos = { pos[1], pos[2] } })
+
+    -- Convert the snippet to string
+    local _snip = table.concat(snip, "\n")
+
+    ls.snip_expand(
+        ls.s("", ls.parser.parse_snippet(nil, _snip), {
+
+            child_ext_opts = {
+                -- for highlighting the placeholders
+                [types.insertNode] = {
+                    -- when outside placeholder, but in snippet
+                    passive = { hl_group = conf.placeholders_hl },
+                },
+            },
+            -- prevent mixing styles
+            merge_child_ext_opts = true,
+        }),
+        { pos = pos }
+    )
 end
 
 return snippet

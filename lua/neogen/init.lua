@@ -115,6 +115,27 @@ neogen.configuration = {
 
     -- Use a snippet engine to generate annotations.
     snippet_engine = nil,
+
+    -- Enables placeholders when inserting annotation
+    enable_placeholders = true,
+
+    -- Placeholders used during annotation expansion
+    placeholders_text = {
+        ["description"] = "[TODO:description]",
+        ["tparam"] = "[TODO:tparam]",
+        ["parameter"] = "[TODO:parameter]",
+        ["return"] = "[TODO:return]",
+        ["class"] = "[TODO:class]",
+        ["throw"] = "[TODO:throw]",
+        ["varargs"] = "[TODO:varargs]",
+        ["type"] = "[TODO:type]",
+        ["attribute"] = "[TODO:attribute]",
+        ["args"] = "[TODO:args]",
+        ["kwargs"] = "[TODO:kwargs]",
+    },
+
+    -- Placeholders highlights to use. If you don't want custom highlight, pass "None"
+    placeholders_hl = "DiagnosticHint",
 }
 --minidoc_afterlines_end
 
@@ -216,6 +237,18 @@ end
 ---
 --- Note: We will only document `major` and `minor` versions, not `patch` ones.
 ---
+--- ## 2.6.0~
+---   - Add support for placeholders in snippet insertion !
+---     None: placeholders are automatically set when using a bundled snippet engine.
+---     - Add `enable_placeholders` option (see |neogen-configuration|)
+---     - Add `placeholders_text` option (see |neogen-configuration|)
+---
+---   Example placeholders:
+--- >
+---  --- [TODO:description]
+---  ---@param param1 [TODO:parameter] [TODO:description]
+---  function test(param1) end
+--- <
 --- ## 2.5.0~
 ---   - Ruby: Add support for `tomdoc` (http://tomdoc.org)
 --- ## 2.4.0~
@@ -238,7 +271,7 @@ end
 ---     with multiple annotation conventions.
 ---@tag neogen-changelog
 ---@toc_entry Changes in neogen plugin
-neogen.version = "2.5.0"
+neogen.version = "2.6.0"
 --minidoc_afterlines_end
 
 return neogen
