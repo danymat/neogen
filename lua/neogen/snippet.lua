@@ -73,7 +73,7 @@ snippet.engines.luasnip = function(snip, pos)
                 -- for highlighting the placeholders
                 [types.insertNode] = {
                     -- when outside placeholder, but in snippet
-                    passive = { hl_group = "DiagnosticHint" },
+                    passive = { hl_group = conf.placeholders_hl },
                 },
             },
             -- prevent mixing styles

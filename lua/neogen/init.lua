@@ -133,6 +133,9 @@ neogen.configuration = {
         ["args"] = "[TODO:args]",
         ["kwargs"] = "[TODO:kwargs]",
     },
+
+    -- Placeholders highlights to use. If you don't want custom highlight, pass "None"
+    placeholders_hl = "DiagnosticHint",
 }
 --minidoc_afterlines_end
 
