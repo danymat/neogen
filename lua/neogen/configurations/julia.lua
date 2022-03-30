@@ -85,7 +85,7 @@ return {
                             for _, n in pairs(nodes["typed_parameter"]) do
                                 local type_subtree = {
                                     { retrieve = "all", node_type = "identifier", extract = true, as = i.Parameter },
-                                    -- { retrieve = "last", node_type = "type", extract = true, as = i.Type },
+                                    { retrieve = "last", node_type = "type", extract = true, as = i.Type },
                                 }
                                 local typed_parameters = nodes_utils:matching_nodes_from(n, type_subtree)
                                 typed_parameters = extractors:extract_from_matched(typed_parameters)
@@ -146,6 +146,26 @@ return {
 
     template = template
         :config({
-            append = { position = "after", child_name = "comment", fallback = "block",  },
+            append = { position = "after", child_name = "comment", fallback = "block", disabled = { "file" } },
+            position = function(node, type)
+                if type == "file" then
+                    -- Checks if the file starts wt means it's a shebang line
+                    -- We will then write file annotations just after it
+                    for child in node:iter_children() do
+                        if child:type() == "comment" then
+                            local start_row = child:start()
+                            if start_row == 0 then
+                                if vim.startswith(ts_utils.get_node_text(node, 0)[1], "#!") then
+                                    return 1, 0
+                                end
+                            end
+                        end
+                    end
+                    return 0, 0
+                end
+            end,
         })
+        :add_default_annotation("google_docstrings")
+        :add_annotation("numpydoc")
+        :add_annotation("reST"),
 }
