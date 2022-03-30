@@ -32,18 +32,7 @@ return {
                                     {
                                         retrieve = "all",
                                         node_type = "typed_parameter",
-																				subtree = {
-																					{
-																						position = 1,
-																						extract = true,
-																						as = i.Identifier
-																					},
-																						{
-																						position = 2,
-																						extract = true,
-																						as = i.Type
-																					},
-                                        }
+																				extract = true
 
                                     },
                                     -- {
@@ -92,19 +81,19 @@ return {
                             -- },
                         }
                         local nodes = nodes_utils:matching_nodes_from(node, tree)
-                        if nodes["typed_parameter"] then
-                            results["typed_parameters"] = {}
-                            for _, n in pairs(nodes["typed_parameter"]) do
-                                local type_subtree = {
-                                  -- XXX:
-                                    { retrieve = "all", node_type = "identifier", extract = true, as = i.Parameter },
-                                    { retrieve = "all", node_type = "identifier", extract = true, as = i.Type },
-                                }
-                                local typed_parameters = nodes_utils:matching_nodes_from(n, type_subtree)
-                                typed_parameters = extractors:extract_from_matched(typed_parameters)
-                                table.insert(results["typed_parameters"], typed_parameters)
-                            end
-                        end
+                        -- if nodes["typed_parameter"] then
+                        --     results["typed_parameters"] = {}
+                        --     for _, n in pairs(nodes["typed_parameter"]) do
+                        --         local type_subtree = {
+                        --           -- XXX:
+                        --             { retrieve = "all", node_type = "identifier", extract = true, as = i.Parameter },
+                        --             { retrieve = "all", node_type = "identifier", extract = true, as = i.Type },
+                        --         }
+                        --         local typed_parameters = nodes_utils:matching_nodes_from(n, type_subtree)
+                        --         typed_parameters = extractors:extract_from_matched(typed_parameters)
+                        --         table.insert(results["typed_parameters"], typed_parameters)
+                        --     end
+                        -- end
                         local res = extractors:extract_from_matched(nodes)
 
                         -- Return type hints takes precedence over all other types for generating template
