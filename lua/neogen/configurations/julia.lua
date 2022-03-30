@@ -35,12 +35,12 @@ return {
 																				extract = true,
                                         subtree= {
                                           {
-                                            position = 1,
+                                            retrieve = "first",
                                             extract = true,
                                             as = i.Identifier
                                           },
                                           {
-                                            position = 2,
+                                            retrieve = "last",
                                             extract = true,
                                             as = i.Type
                                           },
