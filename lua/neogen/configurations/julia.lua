@@ -87,7 +87,7 @@ return {
                                 local type_subtree = {
                                   -- XXX:
                                     { retrieve = "all", position=1, extract = true, as = i.Parameter },
-                                    { retrieve = "all", position=2, extract = true, as = i.Type },
+                                    { retrieve = "all", position=3, extract = true, as = i.Type },
                                 }
                                 local typed_parameters = nodes_utils:matching_nodes_from(n, type_subtree)
                                 typed_parameters = extractors:extract_from_matched(typed_parameters)
