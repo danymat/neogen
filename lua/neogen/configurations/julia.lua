@@ -7,7 +7,7 @@ local i = require("neogen.types.template").item
 
 local parent = {
     func = { "function_definition" },
-    struct = { "struct_definition" },
+    -- struct = { "struct_definition" },
 }
 
 
