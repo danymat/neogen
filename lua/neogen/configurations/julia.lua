@@ -32,20 +32,9 @@ return {
                                     {
                                         retrieve = "all",
                                         node_type = "typed_parameter",
-																				subtree = {
-																					{
-																						position = 1,
-																						extract = true,
-																						as = i.Identifier
-																					},
-																						{
-																						position = 2,
-																						extract = true,
-																						as = i.Type
-																					},
-}
-
+																				extract = true
                                     },
+
                                     -- {
                                     --     retrieve = "all",
                                     --     node_type = "typed_parameter",
