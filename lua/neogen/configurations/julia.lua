@@ -28,22 +28,11 @@ return {
                                 retrieve = "all",
                                 node_type = "parameter_list",
                                 subtree = {
-                                    { retrieve = "all", node_type = "identifier", extract = true },
+                                    { retrieve = "all", node_type = "identifier", extract = true, recursive=true },
                                     {
                                         retrieve = "all",
                                         node_type = "typed_parameter",
 																				extract = true,
-                                        subtree= {
-                                          {
-                                            retrieve = "first",
-                                            extract = true,
-                                            as = i.Identifier
-                                          },
-                                          {
-                                            retrieve = "last",
-                                            extract = true,
-                                            as = i.Type
-                                          },
                                         }
                                     },
 
