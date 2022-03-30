@@ -122,7 +122,7 @@ return {
                         --     end
                         -- end
 
-                        results[i.HasParameter] = (--[[ res.typed_parameter  or ]]res.identifier) and { true } or nil
+                        results[i.HasParameter] = ( res.typed_parameter  or res.identifier) and { true } or nil
                         results[i.Type] = res.type
                         results[i.Parameter] = res.identifier
                         results[i.Return] = res.return_statement
