@@ -32,7 +32,7 @@ return {
                                     {
                                         retrieve = "all",
                                         node_type = "typed_parameter",
-																				extract = true
+																				extract = true,
                                         subtree= {
                                           {
                                             position = 1,
