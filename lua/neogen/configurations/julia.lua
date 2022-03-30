@@ -84,6 +84,7 @@ return {
                         if nodes["typed_parameter"] then
                             results["typed_parameters"] = {}
                             for _, n in pairs(nodes["typed_parameter"]) do
+                                print(n)
                                 local type_subtree = {
                                   -- XXX:
                                     { retrieve = "all", node_type = "identifier", extract = true, as = i.Parameter },
