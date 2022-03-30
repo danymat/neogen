@@ -12,7 +12,7 @@ return {
             "delegate_declaration",
             "conversion_operator_declaration",
         },
-        class = { "class_declaration" },
+        class = { "class_declaration", "interface_declaration" },
         type = { "field_declaration", "property_declaration", "event_field_declaration", "indexer_declaration" },
     },
     data = {
@@ -35,20 +35,16 @@ return {
                                 },
                             },
                             {
-                                retrieve = "first",
-                                node_type = "block",
-                                subtree = {
-                                    {
-                                        retrieve = "first",
-                                        recursive = true,
-                                        node_type = "return_statement",
-                                        extract = true,
-                                    },
-                                },
+                                position = 1,
+                                extract = true,
+                                as = i.Return
                             },
                         }
                         local nodes = nodes_utils:matching_nodes_from(node, tree)
                         local res = extractors:extract_from_matched(nodes)
+                        if res.return_statement[1] == "void" then
+                            res.return_statement = nil
+                        end
                         res.identifier = res["_"]
                         return res
                     end,
@@ -56,7 +52,7 @@ return {
             },
         },
         class = {
-            ["class_declaration"] = {
+            ["class_declaration|interface_declaration"] = {
                 ["0"] = {
                     extract = function()
                         return {}
