@@ -84,15 +84,14 @@ return {
                         if nodes["typed_parameter"] then
                             results["typed_parameters"] = {}
                             for _, n in pairs(nodes["typed_parameter"]) do
-                                print(n)
-                                local type_subtree = {
-                                  -- XXX:
-                                    { retrieve = "all", node_type = "identifier", extract = true, as = i.Parameter },
-                                    { retrieve = "all", node_type = "type", extract = true, as = i.Type },
-                                }
-                                local typed_parameters = nodes_utils:matching_nodes_from(n, type_subtree)
-                                typed_parameters = extractors:extract_from_matched(typed_parameters)
-                                table.insert(results["typed_parameters"], typed_parameters)
+                                -- local type_subtree = {
+                                --   -- XXX:
+                                --     { retrieve = "all", node_type = "identifier", extract = true, as = i.Parameter },
+                                --     { retrieve = "all", node_type = "type", extract = true, as = i.Type },
+                                -- }
+                                -- local typed_parameters = nodes_utils:matching_nodes_from(n, type_subtree)
+                                -- typed_parameters = extractors:extract_from_matched(typed_parameters)
+                                table.insert(results["typed_parameters"], n)
                             end
                         end
                         local res = extractors:extract_from_matched(nodes)
