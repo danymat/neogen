@@ -32,7 +32,19 @@ return {
                                     {
                                         retrieve = "all",
                                         node_type = "typed_parameter",
-                                        subtree = { { retrieve = "all", node_type = "identifier", extract = true } },
+																				subtree = {
+																					{
+																						position = 1,
+																						extract = true,
+																						as = i.Identifier
+																					},
+																						{
+																						position = 2,
+																						extract = true,
+																						as = i.type
+																					},
+}
+
                                     },
                                     -- {
                                     --     retrieve = "all",
@@ -84,6 +96,7 @@ return {
                             results["typed_parameters"] = {}
                             for _, n in pairs(nodes["typed_parameter"]) do
                                 local type_subtree = {
+                                  -- XXX:
                                     { retrieve = "all", node_type = "identifier", extract = true, as = i.Parameter },
                                     { retrieve = "all", node_type = "identifier", extract = true, as = i.Type },
                                 }
