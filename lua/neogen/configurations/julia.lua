@@ -97,7 +97,7 @@ return {
                             for _, n in pairs(nodes["typed_parameter"]) do
                                 local type_subtree = {
                                   -- XXX:
-                                    { retrieve = "all", node_type = "typed_parameter", extract = true, as = i.Parameter },
+                                    { retrieve = "all", node_type = "identifier", extract = true, as = i.Parameter },
                                     { retrieve = "all", node_type = "identifier", extract = true, as = i.Type },
                                 }
                                 local typed_parameters = nodes_utils:matching_nodes_from(n, type_subtree)
