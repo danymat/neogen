@@ -35,6 +35,19 @@ return {
                                 },
                             },
                             {
+                                retrieve = "first",
+                                node_type = "type_parameter_list",
+                                subtree = {
+                                    {
+                                        retrieve = "all",
+                                        node_type = "type_parameter",
+                                        subtree = {
+                                            { position = 1, extract = true, as = i.Tparam },
+                                        },
+                                    },
+                                },
+                            },
+                            {
                                 position = 1,
                                 extract = true,
                                 as = i.Return
@@ -54,8 +67,26 @@ return {
         class = {
             ["class_declaration|interface_declaration"] = {
                 ["0"] = {
-                    extract = function()
-                        return {}
+                    extract = function(node)
+                        local tree = {
+                            {
+                                retrieve = "first",
+                                node_type = "type_parameter_list",
+                                subtree = {
+                                    {
+                                        retrieve = "all",
+                                        node_type = "type_parameter",
+                                        subtree = {
+                                            { position = 1, extract = true, as = i.Tparam },
+                                        },
+                                    },
+                                },
+                            },
+                        }
+                        local nodes = nodes_utils:matching_nodes_from(node, tree)
+                        local res = extractors:extract_from_matched(nodes)
+                        res.identifier = res["_"]
+                        return res
                     end,
                 },
             },
