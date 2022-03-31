@@ -5,12 +5,12 @@ return {
     { nil, '"""$1' },
     {
         { i.Parameter, i.Type },
-        "\t%s::%s - $1",
+        "\t%s::%s,",
         { required = "typed_parameters", type = { "func" } },
     },
     {
          i.Parameter,
-        "\t%s - $1",
+        "\t%s,",
         { required = "parameters", type = { "func" } },
     },
 
