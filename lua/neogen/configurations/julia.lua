@@ -38,23 +38,69 @@ return {
                                     },
                                     {
                                         retrieve = "all",
+                                        node_type = "optional_parameter",
+                                        subtree = {
+                                            { retrieve = "all", node_type = "typed_parameter", extract = true },
+                                        },
+                                    },
+
+                                    {
+                                        retrieve = "all",
+                                        node_type = "optional_parameter",
+                                        subtree = { { retrieve = "all", node_type = "identifier", extract = true } },
+                                    },
+                                    {
+                                        retrieve = "all",
                                         node_type = "spread_parameter",
                                         extract = true,
                                         subtree = { { retrieve = "all", node_type = "identifier", extract = true } },
-                                        as = "identifier"
+                                        as = "identifier",
                                     },
                                     {
                                         retrieve = "all",
-                                        node_type = "optional_parameter",
-                                        subtree = { { retrieve = "all", node_type = "typed_parameter", extract = true } },
-                                    },
+                                        node_type = "keyword_parameter",
+                                        extract = true,
+                                        subtree = {
+                                            {
+                                                retrieve = "all",
+                                                node_type = "identifier",
+                                                extract = true,
+                                            },
+                                            {
+                                                retrieve = "all",
+                                                node_type = "typed_parameter",
+                                                extract = true,
+                                            },
+                                            {
+                                                retrieve = "all",
+                                                node_type = "optional_parameter",
+                                                subtree = {
+                                                    {
+                                                        retrieve = "all",
+                                                        node_type = "typed_parameter",
+                                                        extract = true,
+                                                    },
+                                                },
+                                            },
 
-                                    {
-                                        retrieve = "all",
-                                        node_type = "optional_parameter",
-                                        subtree = { { retrieve = "all", node_type = "identifier", extract = true } },
+                                            {
+                                                retrieve = "all",
+                                                node_type = "optional_parameter",
+                                                subtree = {
+                                                    { retrieve = "all", node_type = "identifier", extract = true },
+                                                },
+                                            },
+                                            {
+                                                retrieve = "all",
+                                                node_type = "spread_parameter",
+                                                extract = true,
+                                                subtree = {
+                                                    { retrieve = "all", node_type = "identifier", extract = true },
+                                                },
+                                                as = "identifier",
+                                            },
+                                        },
                                     },
-
                                 },
                             },
                             {
