@@ -31,6 +31,12 @@ return {
                                         node_type = "identifier",
                                         extract = true,
                                     },
+
+                                    {
+                                        retrieve = "all",
+                                        node_type = "optional_parameter",
+                                        subtree = { { retrieve = "all", node_type = "identifier", extract = true } },
+                                    },
                                     {
                                         retrieve = "all",
                                         node_type = "typed_parameter",
