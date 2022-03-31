@@ -5,13 +5,13 @@ return {
     { nil, '"""$1' },
     {
         { i.Parameter, i.Type },
-        "%s::%s - $1",
+        "\t%s::%s - $1",
         { required = "typed_parameters", type = { "func" } },
     },
     {
          i.Parameter,
-        "%s - $1",
-        { required = "identifier", type = { "func" } },
+        "\t%s - $1",
+        { required = "parameters", type = { "func" } },
     },
 
     { nil, '"""' },
