@@ -6,4 +6,9 @@ return {
         "# %s : %s $1",
         { required = "typed_parameters", type = { "func" } },
     },
+    {
+        { i.Parameter, },
+        "# %s : $1",
+        { required = "parameters", type = { "func" } },
+    },
 }
