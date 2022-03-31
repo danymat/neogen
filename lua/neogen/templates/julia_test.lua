@@ -2,7 +2,8 @@ local i = require("neogen.types.template").item
 
 return {
     { nil, '""" $1 """', { no_results = true, type = { "func" } } },
-    { nil, '"""$1' },
+    { nil, '"""' },
+    { nil, '$1' },
     {
         { i.Parameter, i.Type },
         "\t%s::%s,",
