@@ -30,6 +30,7 @@ return {
                                         retrieve = "all",
                                         node_type = "identifier",
                                         extract = true,
+                                        as = "parameter"
                                     },
                                     {
                                         retrieve = "all",
@@ -64,6 +65,19 @@ return {
                                 typed_parameters = extractors:extract_from_matched(typed_parameters)
                                 table.insert(results["typed_parameters"], typed_parameters)
                             end
+
+                        end
+                        if nodes["parameter"] then
+                            results["parameters"] = {}
+                            for _, n in pairs(nodes["parameter"]) do
+                                local type_subtree = {
+                                    { position = 1, extract = true, as = i.Parameter },
+                                }
+                                local parameters = nodes_utils:matching_nodes_from(n, type_subtree)
+                                parameters = extractors:extract_from_matched(parameters)
+                                table.insert(results["parameters"], parameters)
+                            end
+
                         end
                         local res = extractors:extract_from_matched(nodes)
 
