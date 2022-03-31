@@ -22,10 +22,14 @@ return {
                         local results = {}
 
                         local tree = {
+                          {
+                                retrieve = "all",
+                                node_type = "parameter_list",
+                                extract = true
+                          },
                             {
                                 retrieve = "all",
                                 node_type = "parameter_list",
-                                extract = true,
                                 subtree = {
                                     {
                                         retrieve = "all",
