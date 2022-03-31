@@ -4,6 +4,11 @@ return {
     { nil, '""" $1 """', { no_results = true, type = { "func" } } },
     { nil, '"""' },
     { nil, 'Overview:' },
+    {
+        { "name", "param_list" },
+        "\t%s(%s)",
+        { required = "definition", type = { "func" } },
+    },
     { nil, '\t$1' },
     { nil, 'Where:' },
     {
