@@ -54,6 +54,7 @@ return {
                                         node_type = "spread_parameter",
                                         extract = true,
                                         subtree = { { retrieve = "all", node_type = "identifier", extract = true } },
+                                        as = "identifier",
                                     },
                                     {
                                         retrieve = "all",
@@ -66,6 +67,7 @@ return {
                                                 extract = true,
                                             },
                                         },
+                                        as = "identifier"
                                     },
                                     {
                                         retrieve = "all",
