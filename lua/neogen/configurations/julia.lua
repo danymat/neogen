@@ -23,9 +23,16 @@ return {
 
                         local tree = {
                           {
+                                position = 1,
+                                node_type = "identifier",
+                                extract = true,
+                                as = "name"
+                          },
+                          {
                                 retrieve = "all",
                                 node_type = "parameter_list",
-                                extract = true
+                                extract = true,
+                                as = "param_list"
                           },
                             {
                                 retrieve = "all",
