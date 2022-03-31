@@ -30,7 +30,6 @@ return {
                                         retrieve = "all",
                                         node_type = "identifier",
                                         extract = true,
-                                        as = "parameter"
                                     },
                                     {
                                         retrieve = "all",
@@ -65,21 +64,17 @@ return {
                                 typed_parameters = extractors:extract_from_matched(typed_parameters)
                                 table.insert(results["typed_parameters"], typed_parameters)
                             end
-
-                        end
-                        if nodes["parameter"] then
-                            results["parameters"] = {}
-                            for _, n in pairs(nodes["parameter"]) do
-                                local type_subtree = {
-                                    { position = 1, extract = true, as = i.Parameter },
-                                }
-                                local parameters = nodes_utils:matching_nodes_from(n, type_subtree)
-                                parameters = extractors:extract_from_matched(parameters)
-                                table.insert(results["parameters"], parameters)
-                            end
-
                         end
                         local res = extractors:extract_from_matched(nodes)
+
+                        results[i.HasParameter] = (res.typed_parameter or res.identifier) and { true } or nil
+                        results[i.Type] = res.type
+                        results[i.Parameter] = res.identifier
+                        results[i.Return] = res.return_statement
+                        results[i.ReturnTypeHint] = res[i.ReturnTypeHint]
+                        results[i.HasReturn] = (res.return_statement or res.anonymous_return or res[i.ReturnTypeHint])
+                                and { true }
+                            or nil
 
                         return results
                     end,
