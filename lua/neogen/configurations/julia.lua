@@ -31,6 +31,12 @@ return {
                                         node_type = "typed_parameter",
                                         extract = true,
                                     },
+
+                                    {
+                                        retrieve = "all",
+                                        node_type = "identifier",
+                                        extract = true,
+                                    },
                                 },
                             },
                             {
