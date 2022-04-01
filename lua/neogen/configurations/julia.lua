@@ -22,6 +22,7 @@ return {
                         local results = {}
 
                         local tree = {
+                          -- TODO: Figure this one out, for now what we have is sufficient, but we can make it more convenient
                           {
                                 position = 1,
                                 node_type = "identifier",
@@ -164,5 +165,5 @@ return {
     granulator = nil,
     generator = nil,
 
-    template = template:add_default_annotation("julia_test"),
+    template = template:add_default_annotation("julia"),
 }
