@@ -7,7 +7,8 @@ return {
 
     { nil, "/// <summary>", {} },
     { nil, "/// $1", {} },
-    { i.Parameter, '/// <param name="%s">$1</param>', { type = { "func", "type" } } },
-    { i.Return, "/// <returns>$1</returns>", { type = { "func", "type" } } },
     { nil, "/// </summary>", {} },
+    { i.Parameter, '/// <param name="%s">$1</param>', { type = { "func", "type" } } },
+    { i.Tparam, '/// <typeparam name="%s">$1</typeparam>', { type = { "func", "class" } } },
+    { i.Return, "/// <returns>$1</returns>", { type = { "func", "type" } } },
 }
