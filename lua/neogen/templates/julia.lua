@@ -5,15 +5,16 @@ return {
     { nil, '""" $1 """', { no_results = true, type = { "struct" } } },
     { nil, '"""' },
     -- { nil, 'Overview:' },
-    { nil, "" },
+    -- { nil, "" },
     { nil, "\t$1" },
-    {
-      { "name", "param_list" },
-      "\t%s(%s)",
-      {required = "definition", type = { "func" }}
-    },
+    -- {
+    --   { "name", "param_list" },
+    --   "\t%s(%s)",
+    --   {required = "definition", type = { "func" }}
+    -- },
     { nil, "" },
     { nil, "Where..." },
+    { nil, "" },
     {
         i.Parameter,
         "\t%s is $1",
