@@ -6,7 +6,7 @@ return {
     { nil, '"""' },
     -- { nil, 'Overview:' },
     -- { nil, "" },
-    { nil, "\t$1" },
+    { nil, "$1" },
     -- {
     --   { "name", "param_list" },
     --   "\t%s(%s)",
