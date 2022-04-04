@@ -2,7 +2,7 @@ local i = require("neogen.types.template").item
 
 return {
     { nil, '""" $1 """', { no_results = true, type = { "func" } } },
-    { nil, '""" $1 """', { no_results = true, type = { "type" } } },
+    { nil, '""" $1 """', { no_results = true, type = { "struct" } } },
     { nil, '"""' },
     { nil, 'Overview:' },
     { nil, '' },
@@ -12,7 +12,7 @@ return {
     {
          i.Parameter,
         "\t%s is $1",
-        { required = "parameters", type = { "type" } },
+        { required = "parameters", type = { "struct" } },
     },
     {
         { i.Parameter, i.Type },
@@ -22,7 +22,7 @@ return {
     {
         { i.Parameter, i.Type },
         "\t%s::%s is $1",
-        { required = "typed_parameters", type = { "type" } },
+        { required = "typed_parameters", type = { "struct" } },
     },
     {
          i.Parameter,
