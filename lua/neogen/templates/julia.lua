@@ -7,7 +7,11 @@ return {
     -- { nil, 'Overview:' },
     { nil, "" },
     { nil, "\t$1" },
-    { { "name", "param_list" }, "\t%s(%s)", type = { "func" } },
+    {
+      { "name", "param_list" },
+      "\t%s(%s)",
+      {required = "definition", type = { "func" }}
+    },
     { nil, "" },
     { nil, "Where..." },
     {
