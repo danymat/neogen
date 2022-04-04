@@ -5,7 +5,9 @@ return {
     { nil, '"""' },
     { nil, 'Overview:' },
     { nil, '' },
-    { nil, 'Where:' },
+    { nil, '\t$1' },
+    {nil, ''},
+    { nil, 'Where...' },
     {
         { i.Parameter, i.Type },
         "\t%s::%s is $1",
