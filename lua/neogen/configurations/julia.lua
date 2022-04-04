@@ -59,7 +59,7 @@ return {
             local res = extractors:extract_from_matched(nodes)
 
             results[i.HasParameter] = (res.typed_parameter or res.identifier) and { true } or nil
-            -- results["definition"] = {name = res.name, param_list = res.param_list}
+            results["definition"] = {name = res.name, param_list = res.param_list}
             results[i.Type] = res.type
             results[i.Parameter] = res.identifier
             -- TODO: Remove this
@@ -206,7 +206,7 @@ return {
             local res = extractors:extract_from_matched(nodes)
 
             results[i.HasParameter] = (res.typed_parameter or res.identifier) and { true } or nil
-            -- results["definition"] = {name = res.name, param_list = res.param_list}
+            results["definition"] = {name = res.name, param_list = res.param_list}
             results[i.Type] = res.type
             results[i.Parameter] = res.identifier
             results[i.Return] = res.return_statement

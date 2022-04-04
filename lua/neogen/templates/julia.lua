@@ -4,9 +4,10 @@ return {
     { nil, '""" $1 """', { no_results = true, type = { "func" } } },
     { nil, '""" $1 """', { no_results = true, type = { "struct" } } },
     { nil, '"""' },
-    { nil, 'Overview:' },
+    -- { nil, 'Overview:' },
     { nil, '' },
     { nil, '\t$1' },
+    { {"name", "param_list"}, "\t%s(%s)", type = "func"},
     {nil, ''},
     { nil, 'Where...' },
     {
