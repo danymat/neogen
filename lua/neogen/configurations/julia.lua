@@ -74,7 +74,7 @@ return {
         },
       },
 
-    }
+    },
     func = {
 
       ["function_definition"] = {
