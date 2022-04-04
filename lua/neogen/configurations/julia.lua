@@ -7,6 +7,7 @@ local i = require("neogen.types.template").item
 
 local parent = {
     func = { "function_definition" },
+    struct = {"struct_definition"}
 }
 
 return {
@@ -16,25 +17,81 @@ return {
     -- Traverse down these nodes and extract the information as necessary
     data = {
         func = {
+            ["struct_definition"] = {
+                ["0"] = {
+                    extract = function(node)
+                        local results = {}
+
+                        local tree = {
+                            -- TODO: Figure this one out, for now what we have is sufficient, but we can make it more convenient
+                            -- goal is to get the function name and parameters in the docstring, e.g. at the top f(x,y,z), in the overview section
+                            {
+                                retrieve = "all",
+                                node_type = "type_parameter_list",
+                                subtree = {
+                                    {
+                                        retrieve = "all",
+                                        node_type = "identifier",
+                                        extract = true,
+                                    },
+                                },
+                            },
+                            {
+                                retrieve = "all",
+                                node_type = "typed_expression",
+                                extract = true,
+                            },
+                        }
+                        local nodes = nodes_utils:matching_nodes_from(node, tree)
+                        if nodes["typed_expression"] then
+                            results["typed_parameters"] = {}
+                            for _, n in pairs(nodes["typed_expression"]) do
+                                local type_subtree = {
+                                    { position = 1, extract = true, as = i.Parameter },
+                                    { position = 2, extract = true, as = i.Type },
+                                }
+                                local typed_parameters = nodes_utils:matching_nodes_from(n, type_subtree)
+                                typed_parameters = extractors:extract_from_matched(typed_parameters)
+                                table.insert(results["typed_parameters"], typed_parameters)
+                            end
+                        end
+                        local res = extractors:extract_from_matched(nodes)
+
+                        results[i.HasParameter] = (res.typed_parameter or res.identifier) and { true } or nil
+                        -- results["definition"] = {name = res.name, param_list = res.param_list}
+                        results[i.Type] = res.type
+                        results[i.Parameter] = res.identifier
+                        -- TODO: Remove this
+                        results[i.Return] = res.return_statement
+                        results[i.ReturnTypeHint] = res[i.ReturnTypeHint]
+                        results[i.HasReturn] = (res.return_statement or res.anonymous_return or res[i.ReturnTypeHint])
+                                and { true }
+                            or nil
+
+                        return results
+                    end,
+                },
+            },
             ["function_definition"] = {
                 ["0"] = {
                     extract = function(node)
                         local results = {}
 
                         local tree = {
-                          -- TODO: Figure this one out, for now what we have is sufficient, but we can make it more convenient
-                          {
+                            -- TODO: Figure this one out, for now what we have is sufficient, but we can make it more convenient
+                            -- goal is to get the function name and parameters in the docstring, e.g. at the top f(x,y,z), in the overview section
+                            {
                                 position = 1,
                                 node_type = "identifier",
                                 extract = true,
-                                as = "name"
-                          },
-                          {
+                                as = "name",
+                            },
+                            {
                                 retrieve = "all",
                                 node_type = "parameter_list",
                                 extract = true,
-                                as = "param_list"
-                          },
+                                as = "param_list",
+                            },
                             {
                                 retrieve = "all",
                                 node_type = "parameter_list",
