@@ -16,7 +16,7 @@ return {
 
     -- Traverse down these nodes and extract the information as necessary
     data = {
-        func = {
+        struct = {
             ["struct_definition"] = {
                 ["0"] = {
                     extract = function(node)
