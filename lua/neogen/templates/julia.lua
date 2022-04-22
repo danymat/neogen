@@ -15,26 +15,26 @@ return {
     --   {required = "definition", type = { "func" }}
     -- },
     { nil, "" },
-    { nil, "Where..." },
+    { nil, "# Arguments" },
     { nil, "" },
     {
         i.Parameter,
-        "`\t%s` is $1",
+        "- `\t%s` is $1",
         { required = "parameters", type = { "struct" } },
     },
     {
         { i.Parameter, i.Type },
-        "`\t%s::%s` is $1",
+        "- `\t%s::%s` is $1",
         { required = "typed_parameters", type = { "func" } },
     },
     {
         { i.Parameter, i.Type },
-        "`\t%s::%s` is $1",
+        "- `\t%s::%s` is $1",
         { required = "typed_parameters", type = { "struct" } },
     },
     {
         i.Parameter,
-        "`\t%s` is $1",
+        "- `\t%s` is $1",
         { required = "parameters", type = { "func" } },
     },
 
