@@ -6,6 +6,7 @@ if not ok then
     notify("neogen requires nvim-treesitter to operate :(", vim.log.levels.ERROR)
     return function(_, _) end
 end
+local ts_parsers = require("nvim-treesitter.parsers")
 
 local conf = require("neogen.config").get()
 local granulator = require("neogen.granulator")
@@ -38,7 +39,8 @@ local function todo_text(type)
 end
 
 local function get_parent_node(filetype, typ, language)
-    local parser = vim.treesitter.get_parser(0, filetype)
+    local parser_name = ts_parsers.ft_to_lang(filetype)
+    local parser = vim.treesitter.get_parser(0, parser_name)
     local tstree = parser:parse()[1]
     local tree = tstree:root()
 
