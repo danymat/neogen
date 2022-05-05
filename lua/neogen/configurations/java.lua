@@ -19,7 +19,9 @@ local function_tree = {
     {
         retrieve = "all",
         node_type = "throws",
-        extract = true,
+        subtree = {
+            { retrieve = "all",node_type= "type_identifier", extract = true, as="throw_statement"}
+        }
     },
     {
         retrieve = "first",
@@ -65,11 +67,7 @@ return {
                         local nodes = nodes_utils:matching_nodes_from(node, tree)
                         local res = extractors:extract_from_matched(nodes)
 
-                        if res.throws then
-                            results.throw_statement = res.throws
-                        else
-                            results.throw_statement = res.throw_statement
-                        end
+                        results.throw_statement = res.throw_statement
                         results.parameters = res.identifier
                         return results
                     end,

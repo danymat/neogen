@@ -11,6 +11,6 @@ return {
     { i.Parameter, " * @param %s $1" },
     { i.ClassAttribute, " * @property %s $1" },
     { i.Return, " * @return $1" },
-    { i.Throw, " * @throws $1" },
+    { i.Throw, " * @throws %s $1" },
     { nil, " */" },
 }
