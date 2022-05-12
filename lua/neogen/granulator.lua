@@ -1,4 +1,4 @@
-local ts_utils = require("nvim-treesitter.ts_utils")
+local get_node_text = require("neogen.utilities.helpers").get_node_text
 local helpers = require("neogen.utilities.helpers")
 
 --- Tries to use the configuration to find all required content nodes from the parent node
@@ -34,7 +34,7 @@ return function(parent_node, node_data)
                         end
                     else
                         -- if not extract function, get the text from the node (required: data.type)
-                        result[data.type] = ts_utils.get_node_text(child_node)
+                        result[data.type] = get_node_text(child_node)
                     end
                 end
             end

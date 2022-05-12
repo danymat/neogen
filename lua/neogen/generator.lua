@@ -1,5 +1,6 @@
 local helpers = require("neogen.utilities.helpers")
 local notify = helpers.notify
+local get_node_text = helpers.get_node_text
 
 local ok, ts_utils = pcall(require, "nvim-treesitter.ts_utils")
 if not ok then
