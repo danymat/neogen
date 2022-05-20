@@ -11,6 +11,7 @@ local conf = require("neogen.config").get()
 --- <
 --- Some snippet engines come out of the box bundled with neogen:
 --- - `"luasnip"` (https://github.com/L3MON4D3/LuaSnip)
+--- - `"snippy"` (https://github.com/dcampos/nvim-snippy)
 ---
 --- If you want to customize the placeholders, you can use `placeholders_text` option:
 --- >
@@ -92,6 +93,22 @@ snippet.engines.luasnip = function(snip, pos)
         }),
         { pos = pos }
     )
+end
+
+--- Expand snippet for snippy engine
+---@param snip string the snippet to expand
+---@param pos table a tuple of row, col
+---@private
+snippet.engines.snippy = function (snip, pos)
+    local ok, snippy = pcall(require, "snippy")
+    if not ok then
+        notify("Snippy not found, aborting...", vim.log.levels.ERROR)
+        return
+    end
+    local row, _ = unpack(pos)
+    vim.api.nvim_buf_set_lines(0, row, row, true, {''}) -- snippy will change `row`
+    vim.api.nvim_win_set_cursor(0, {row + 1, 0}) -- `snip` already has indent so we should ignore `col`
+    snippy.expand_snippet({body = snip})
 end
 
 return snippet
