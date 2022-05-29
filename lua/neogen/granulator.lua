@@ -34,7 +34,12 @@ return function(parent_node, node_data)
                         end
                     else
                         -- if not extract function, get the text from the node (required: data.type)
-                        result[data.type] = ts_utils.get_node_text(child_node)
+                        local gnt = vim.treesitter.query.get_node_text
+                        if gnt ~= nil then
+                            result[data.type] = gnt(child_node)
+                        else
+                            result[data.type] = ts_utils.get_node_text(child_node)
+                        end
                     end
                 end
             end

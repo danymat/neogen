@@ -14,7 +14,12 @@ return {
                 return node:type()
             end
             local get_text = function(node)
-                return ts_utils.get_node_text(node)[1]
+                local gnt = vim.treesitter.query.get_node_text
+                if gnt ~= nil then
+                    return gnt(node)
+                else
+                    return ts_utils.get_node_text(node)[1]
+                end
             end
             if opts.type then
                 result[k] = vim.tbl_map(get_type, v)
