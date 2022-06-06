@@ -110,7 +110,7 @@ return {
                             -- Check if function is a static method. If so, will not remove the first parameter
                             if node:parent():type() == "decorated_definition" then
                                 local decorator = nodes_utils:matching_child_nodes(node:parent(), "decorator")
-                                decorator = ts_utils.get_node_text(decorator[1])[1]
+                                decorator = vim.split(vim.treesitter.query.get_node_text((decorator[1],0),"\n")[1]
                                 if decorator == "@staticmethod" then
                                     remove_identifier = false
                                 end
@@ -185,7 +185,7 @@ return {
                         for _, assignment in pairs(nodes["assignment"]) do
                             local left_side = assignment:field("left")[1]
                             local left_attribute = left_side:field("attribute")[1]
-                            left_attribute = ts_utils.get_node_text(left_attribute)[1]
+                            left_attribute = vim.split(vim.treesitter.query.get_node_text(left_attribute,0),"\n")[1]
                             if left_attribute and not vim.startswith(left_attribute, "_") then
                                 table.insert(results[i.ClassAttribute], left_attribute)
                             end
@@ -233,7 +233,7 @@ return {
                         if child:type() == "comment" then
                             local start_row = child:start()
                             if start_row == 0 then
-                                if vim.startswith(ts_utils.get_node_text(node, 0)[1], "#!") then
+                                if vim.startswith(vim.split(vim.treesitter.query.get_node_text(node, 0),"\n")[1], "#!") then
                                     return 1, 0
                                 end
                             end

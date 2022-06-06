@@ -34,7 +34,7 @@ return function(parent_node, node_data)
                         end
                     else
                         -- if not extract function, get the text from the node (required: data.type)
-                        result[data.type] = ts_utils.get_node_text(child_node)
+                        result[data.type] = vim.split(vim.treesitter.query.get_node_text(child_node, 0), "\n")
                     end
                 end
             end
