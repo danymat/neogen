@@ -150,6 +150,8 @@ neogen.configuration = {
 ---@param opts table Optional configs to change default behaviour of generation.
 ---  - {opts.type} `(string, default: "func")` Which type we are trying to use for generating annotations.
 ---    Currently supported: `func`, `class`, `type`, `file`
+---  - {opts.annotation_convention} `(table)` convention to use for generating annotations.
+---    This is language specific. For example, `generate({annotation_convention = {python = 'numpydoc'}})`
 ---  - {opts.return_snippet} `boolean` if true, will return 3 values from the function call.
 ---  This option is useful if you want to get the snippet to use with a unsupported snippet engine
 ---  Below are the returned values:
@@ -163,7 +165,8 @@ neogen.generate = function(opts)
         return
     end
 
-    return require("neogen.generator")(vim.bo.filetype, opts and opts.type, opts and opts.return_snippet)
+    opts = opts or {}
+    return require("neogen.generator")(vim.bo.filetype, opts.type, opts.return_snippet, opts.annotation_convention)
 end
 
 -- Expose more API  ============================================================
