@@ -1,5 +1,3 @@
-local ts_utils = require("nvim-treesitter.ts_utils")
-
 return {
     --- Extract the content from each node from data
     --- @param _ any self
@@ -14,7 +12,7 @@ return {
                 return node:type()
             end
             local get_text = function(node)
-                return ts_utils.get_node_text(node)[1]
+                return vim.treesitter.query.get_node_text(node, 0)
             end
             if opts.type then
                 result[k] = vim.tbl_map(get_type, v)
