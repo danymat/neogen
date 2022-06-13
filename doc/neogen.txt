@@ -287,7 +287,7 @@ Class~
 Fields~
 {annotation_convention} `(string)` select which annotation convention to use
 {use_default_comment} `(boolean)` Prepend default filetype comment before a annotation
-{append?} neogen.TemplateConfig.Append custom placement of the annotation
+{append} `(optional)` neogen.TemplateConfig.Append custom placement of the annotation
 {position} `(fun(node: userdata, type: string): number,number)` Provide an absolute position for the annotation
   If values are `nil`, use default positioning
 
@@ -296,7 +296,7 @@ Class~
 {child_name} `(string)` Which child node to use for appending the annotation
 {fallback} `(string)` Node to fallback if `child_name` is not found
 {position} "'after'"|"'before'" Place the annotation relative to position with `child_name` or `fallback`
-{disabled?} `(table)` Disable custom placement for provided types
+{disabled} `(optional)` `(table)` Disable custom placement for provided types
 
 For example, to customize the placement for a python annotation, we can use `append`, like so:
 
