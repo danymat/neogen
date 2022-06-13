@@ -1,4 +1,3 @@
-local ts_utils = require("nvim-treesitter.ts_utils")
 local helpers = require("neogen.utilities.helpers")
 
 --- Tries to use the configuration to find all required content nodes from the parent node
@@ -27,14 +26,13 @@ return function(parent_node, node_data)
                 end
 
                 if not data.match or child_node:type() == data.match then
-                    if type(data.extract) == "function" then
-                        -- Extract content from it { [type] = { data } }
-                        for type, extracted_data in pairs(data.extract(child_node)) do
-                            result[type] = extracted_data
-                        end
-                    else
-                        -- if not extract function, get the text from the node (required: data.type)
-                        result[data.type] = ts_utils.get_node_text(child_node)
+                    if not type(data.extract) == "function" then
+                        return
+                    end
+
+                    -- Extract content from it { [type] = { data } }
+                    for type, extracted_data in pairs(data.extract(child_node)) do
+                        result[type] = extracted_data
                     end
                 end
             end
