@@ -1,4 +1,5 @@
 local nodes_utils = require("neogen.utilities.nodes")
+local helpers = require("neogen.utilities.helpers")
 local extractors = require("neogen.utilities.extractors")
 local locator = require("neogen.locators.default")
 local template = require("neogen.template")
@@ -109,7 +110,7 @@ return {
                             -- Check if function is a static method. If so, will not remove the first parameter
                             if node:parent():type() == "decorated_definition" then
                                 local decorator = nodes_utils:matching_child_nodes(node:parent(), "decorator")
-                                decorator = vim.treesitter.query.get_node_text(decorator[1], 0)
+                                decorator = helpers.get_node_text(decorator[1])
                                 if decorator == "@staticmethod" then
                                     remove_identifier = false
                                 end
@@ -128,7 +129,7 @@ return {
                         results[i.Return] = res.return_statement
                         results[i.ReturnTypeHint] = res[i.ReturnTypeHint]
                         results[i.HasReturn] = (res.return_statement or res.anonymous_return or res[i.ReturnTypeHint])
-                                and { true }
+                            and { true }
                             or nil
                         results[i.ArbitraryArgs] = res[i.ArbitraryArgs]
                         results[i.Kwargs] = res[i.Kwargs]
@@ -184,7 +185,7 @@ return {
                         for _, assignment in pairs(nodes["assignment"]) do
                             local left_side = assignment:field("left")[1]
                             local left_attribute = left_side:field("attribute")[1]
-                            left_attribute = vim.treesitter.query.get_node_text(left_attribute, 0)
+                            left_attribute = helpers.get_node_text(left_attribute)
                             if left_attribute and not vim.startswith(left_attribute, "_") then
                                 table.insert(results[i.ClassAttribute], left_attribute)
                             end
@@ -232,7 +233,7 @@ return {
                         if child:type() == "comment" then
                             local start_row = child:start()
                             if start_row == 0 then
-                                if vim.startswith(vim.treesitter.query.get_node_text(node, 0), "#!") then
+                                if vim.startswith(helpers.get_node_text(node), "#!") then
                                     return 1, 0
                                 end
                             end

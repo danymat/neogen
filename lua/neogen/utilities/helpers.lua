@@ -22,4 +22,13 @@ return {
     split = function(s, sep, plain)
         return vim.fn.has("nvim-0.6") == 1 and vim.split(s, sep, { plain = plain }) or vim.split(s, sep, plain)
     end,
+
+    --- Gets the text from the node
+    ---@private
+    ---@param node userdata node to fetch text from
+    ---@param bufnr? number originated buffer number. Defaults to 0
+    ---@return table newline separated list of text
+    get_node_text = function(node, bufnr)
+        return vim.split(vim.treesitter.query.get_node_text(node, bufnr or 0), "\n")
+    end,
 }
