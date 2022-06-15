@@ -180,12 +180,14 @@ Feel free to submit a PR, I will be happy to help you !
 We use semantic versioning ! (https://semver.org)
 Here is the current Neogen version:
 >
-  neogen.version = "2.6.0"
+  neogen.version = "2.7.0"
 <
 # Changelog~
 
 Note: We will only document `major` and `minor` versions, not `patch` ones.
 
+## 2.7.0~
+  - Add support for `snippy` snippet engine ! (see |neogen-snippet-integration|)
 ## 2.6.0~
   - Add support for placeholders in snippet insertion !
     None: placeholders are automatically set when using a bundled snippet engine.
@@ -235,6 +237,7 @@ To use a snippet engine, pass the option into neogen setup:
 <
 Some snippet engines come out of the box bundled with neogen:
 - `"luasnip"` (https://github.com/L3MON4D3/LuaSnip)
+- `"snippy"` (https://github.com/dcampos/nvim-snippy)
 
 If you want to customize the placeholders, you can use `placeholders_text` option:
 >
