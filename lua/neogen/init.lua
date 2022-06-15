@@ -240,6 +240,10 @@ end
 ---
 --- Note: We will only document `major` and `minor` versions, not `patch` ones.
 ---
+--- ## 2.8.0~
+---   - Specify annotation convention on `generate()` method (see |neogen.generate()|)
+--- ## 2.7.0~
+---   - Add support for `snippy` snippet engine ! (see |neogen-snippet-integration|)
 --- ## 2.6.0~
 ---   - Add support for placeholders in snippet insertion !
 ---     None: placeholders are automatically set when using a bundled snippet engine.
@@ -275,7 +279,7 @@ end
 ---     with multiple annotation conventions.
 ---@tag neogen-changelog
 ---@toc_entry Changes in neogen plugin
-neogen.version = "2.6.0"
+neogen.version = "2.8.0"
 --minidoc_afterlines_end
 
 return neogen
