@@ -235,6 +235,7 @@ To use a snippet engine, pass the option into neogen setup:
 <
 Some snippet engines come out of the box bundled with neogen:
 - `"luasnip"` (https://github.com/L3MON4D3/LuaSnip)
+- `"snippy"` (https://github.com/dcampos/nvim-snippy)
 
 If you want to customize the placeholders, you can use `placeholders_text` option:
 >

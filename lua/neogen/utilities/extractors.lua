@@ -1,3 +1,5 @@
+local helpers = require("neogen.utilities.helpers")
+
 return {
     --- Extract the content from each node from data
     --- @param _ any self
@@ -12,7 +14,7 @@ return {
                 return node:type()
             end
             local get_text = function(node)
-                return vim.treesitter.query.get_node_text(node, 0)
+                return helpers.get_node_text(node)[1]
             end
             if opts.type then
                 result[k] = vim.tbl_map(get_type, v)
