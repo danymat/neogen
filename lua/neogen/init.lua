@@ -151,7 +151,8 @@ neogen.configuration = {
 ---  - {opts.type} `(string, default: "func")` Which type we are trying to use for generating annotations.
 ---    Currently supported: `func`, `class`, `type`, `file`
 ---  - {opts.annotation_convention} `(table)` convention to use for generating annotations.
----    This is language specific. For example, `generate({annotation_convention = {python = 'numpydoc'}})`
+---    This is language specific. For example, `generate({ annotation_convention = { python = 'numpydoc' } })`
+---    If not convention is specified for a specific language, it'll use the default annotation convention for the language.
 ---  - {opts.return_snippet} `boolean` if true, will return 3 values from the function call.
 ---  This option is useful if you want to get the snippet to use with a unsupported snippet engine
 ---  Below are the returned values:
