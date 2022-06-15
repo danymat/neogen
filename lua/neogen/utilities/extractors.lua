@@ -14,7 +14,7 @@ return {
                 return node:type()
             end
             local get_text = function(node)
-                return helpers.get_node_text(node)
+                return helpers.get_node_text(node)[1]
             end
             if opts.type then
                 result[k] = vim.tbl_map(get_type, v)
