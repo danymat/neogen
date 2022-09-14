@@ -12,6 +12,7 @@ local conf = require("neogen.config").get()
 --- Some snippet engines come out of the box bundled with neogen:
 --- - `"luasnip"` (https://github.com/L3MON4D3/LuaSnip)
 --- - `"snippy"` (https://github.com/dcampos/nvim-snippy)
+--- - `"vsnip"` (https://github.com/hrsh7th/vim-vsnip)
 ---
 --- If you want to customize the placeholders, you can use `placeholders_text` option:
 --- >
@@ -109,6 +110,23 @@ snippet.engines.snippy = function (snip, pos)
     vim.api.nvim_buf_set_lines(0, row, row, true, {''}) -- snippy will change `row`
     vim.api.nvim_win_set_cursor(0, {row + 1, 0}) -- `snip` already has indent so we should ignore `col`
     snippy.expand_snippet({body = snip})
+end
+
+--- Expand snippet for vsnip engine
+---@param snip string the snippet to expand
+---@param pos table a tuple of row, col
+---@private
+snippet.engines.vsnip = function (snip, pos)
+    local ok = vim.g.loaded_vsnip
+    if not ok then
+        notify("Vsnip not found, aborting...", vim.log.levels.ERROR)
+        return
+    end
+    local row, _ = unpack(pos)
+    vim.api.nvim_buf_set_lines(0, row, row, true, {''}) -- vsnip will change `row`
+    vim.api.nvim_win_set_cursor(0, {row + 1, 0}) -- `snip` already has indent so we should ignore `col`
+    snip = table.concat(snip, "\n") -- vsnip expects on string instead of a list/table of lines
+    vim.fn["vsnip#anonymous"](snip)
 end
 
 return snippet
