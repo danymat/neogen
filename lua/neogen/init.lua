@@ -239,7 +239,7 @@ end
 ---@eval return MiniDoc.afterlines_to_code(MiniDoc.current.eval_section)
 ---@text # Changelog~
 ---
---- Note: We will only document `major` and `minor` versions, not `patch` ones.
+--- Note: We will only document `major` and `minor` versions, not `patch` ones. (only X and Y in X.Y.z)
 ---
 --- ## 2.8.0~
 ---   - Specify annotation convention on `generate()` method (see |neogen.generate()|)
@@ -280,7 +280,7 @@ end
 ---     with multiple annotation conventions.
 ---@tag neogen-changelog
 ---@toc_entry Changes in neogen plugin
-neogen.version = "2.8.0"
+neogen.version = "2.8.1"
 --minidoc_afterlines_end
 
 return neogen
