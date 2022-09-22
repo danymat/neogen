@@ -183,11 +183,11 @@ Feel free to submit a PR, I will be happy to help you !
 We use semantic versioning ! (https://semver.org)
 Here is the current Neogen version:
 >
-  neogen.version = "2.8.0"
+  neogen.version = "2.8.1"
 <
 # Changelog~
 
-Note: We will only document `major` and `minor` versions, not `patch` ones.
+Note: We will only document `major` and `minor` versions, not `patch` ones. (only X and Y in X.Y.z)
 
 ## 2.8.0~
   - Specify annotation convention on `generate()` method (see |neogen.generate()|)
