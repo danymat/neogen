@@ -239,7 +239,7 @@ end
 ---@eval return MiniDoc.afterlines_to_code(MiniDoc.current.eval_section)
 ---@text # Changelog~
 ---
---- Note: We will only document `major` and `minor` versions, not `patch` ones.
+--- Note: We will only document `major` and `minor` versions, not `patch` ones. (only X and Y in X.Y.z)
 ---
 --- ## 2.9.0~
 ---   - Add support for `vsnip` snippet engine ! (see |neogen-snippet-integration|)
