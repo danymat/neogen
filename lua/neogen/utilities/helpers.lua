@@ -19,6 +19,7 @@ return {
 
         return vim.tbl_keys(language.parent)
     end,
+
     split = function(s, sep, plain)
         return vim.fn.has("nvim-0.6") == 1 and vim.split(s, sep, { plain = plain }) or vim.split(s, sep, plain)
     end,
