@@ -71,6 +71,19 @@ return {
                                         recursive = true,
                                         extract = true,
                                     },
+                                    {
+                                        retrieve = "all",
+                                        node_type = "raise_statement",
+                                        recursive = true,
+                                        subtree = {
+                                            {
+                                                retrieve = "first",
+                                                node_type = "identifier",
+                                                extract = true,
+                                                as = i.Throw,
+                                            },
+                                        },
+                                    },
                                 },
                             },
                             {
@@ -133,6 +146,7 @@ return {
                             or nil
                         results[i.ArbitraryArgs] = res[i.ArbitraryArgs]
                         results[i.Kwargs] = res[i.Kwargs]
+                        results[i.Throw] = res[i.Throw]
                         return results
                     end,
                 },

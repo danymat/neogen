@@ -1,6 +1,5 @@
 local i = require("neogen.types.template").item
 
-
 return {
     { nil, '""" $1 """', { no_results = true, type = { "class", "func" } } },
     { nil, '"""$1', { no_results = true, type = { "file" } } },
@@ -27,6 +26,7 @@ return {
         },
     },
     { i.ClassAttribute, ":param %s: $1" },
+    { i.Throw, ":raises %s: $1", { type = { "func" } } },
     { i.HasReturn, ":return: $1", { type = { "func" } } },
     { i.HasReturn, ":rtype: $1", { type = { "func" } } },
     { nil, '"""' },
