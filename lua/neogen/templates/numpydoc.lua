@@ -22,7 +22,7 @@ return {
     {
         { i.Parameter, i.Type },
         "%s : %s",
-        { after_each = "    $1", required = "typed_parameters", type = { "func" } },
+        { after_each = "    $1", required = i.Tparam, type = { "func" } },
     },
     {
         i.ArbitraryArgs,

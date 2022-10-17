@@ -39,11 +39,11 @@ return {
                                         retrieve = "all",
                                         node_type = "typed_parameter",
                                         extract = true,
+                                        as = i.Tparam,
                                     },
                                     {
                                         retrieve = "all",
                                         node_type = "typed_default_parameter",
-                                        as = "typed_parameter",
                                         extract = true,
                                         subtree = { { retrieve = "all", node_type = "identifier", extract = true } },
                                     },
@@ -81,16 +81,16 @@ return {
                             },
                         }
                         local nodes = nodes_utils:matching_nodes_from(node, tree)
-                        if nodes["typed_parameter"] then
-                            results["typed_parameters"] = {}
-                            for _, n in pairs(nodes["typed_parameter"]) do
+                        if nodes[i.Tparam] then
+                            results[i.Tparam] = {}
+                            for _, n in pairs(nodes[i.Tparam]) do
                                 local type_subtree = {
                                     { retrieve = "all", node_type = "identifier", extract = true, as = i.Parameter },
                                     { retrieve = "all", node_type = "type", extract = true, as = i.Type },
                                 }
                                 local typed_parameters = nodes_utils:matching_nodes_from(n, type_subtree)
                                 typed_parameters = extractors:extract_from_matched(typed_parameters)
-                                table.insert(results["typed_parameters"], typed_parameters)
+                                table.insert(results[i.Tparam], typed_parameters)
                             end
                         end
                         local res = extractors:extract_from_matched(nodes)
