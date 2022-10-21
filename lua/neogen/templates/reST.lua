@@ -27,7 +27,7 @@ return {
     },
     { i.ClassAttribute, ":param %s: $1" },
     { i.Throw, ":raises %s: $1", { type = { "func" } } },
-    { i.HasReturn, ":return: $1", { type = { "func" } } },
-    { i.HasReturn, ":rtype: $1", { type = { "func" } } },
+    { i.Return, ":return: $1", { type = { "func" }, after_each = ":rtype: $1" } },
+    { i.ReturnTypeHint, ":return: $1", { type = { "func" } } },
     { nil, '"""' },
 }

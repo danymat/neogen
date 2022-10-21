@@ -22,18 +22,23 @@ return {
             ["function_definition"] = {
                 ["0"] = {
                     extract = function(node)
-                        local results = {}
-
                         local tree = {
                             {
                                 retrieve = "all",
                                 node_type = "parameters",
                                 subtree = {
-                                    { retrieve = "all", node_type = "identifier", extract = true },
+                                    { retrieve = "all", node_type = "identifier", extract = true, as = i.Parameter },
                                     {
                                         retrieve = "all",
                                         node_type = "default_parameter",
-                                        subtree = { { retrieve = "all", node_type = "identifier", extract = true } },
+                                        subtree = {
+                                            {
+                                                retrieve = "all",
+                                                node_type = "identifier",
+                                                extract = true,
+                                                as = i.Parameter,
+                                            },
+                                        },
                                     },
                                     {
                                         retrieve = "all",
@@ -45,7 +50,14 @@ return {
                                         retrieve = "all",
                                         node_type = "typed_default_parameter",
                                         extract = true,
-                                        subtree = { { retrieve = "all", node_type = "identifier", extract = true } },
+                                        subtree = {
+                                            {
+                                                retrieve = "all",
+                                                node_type = "identifier",
+                                                extract = true,
+                                                as = i.Tparam,
+                                            },
+                                        },
                                     },
                                     {
                                         retrieve = "first",
@@ -70,6 +82,7 @@ return {
                                         node_type = "return_statement",
                                         recursive = true,
                                         extract = true,
+                                        as = i.Return,
                                     },
                                     {
                                         retrieve = "all",
@@ -94,8 +107,9 @@ return {
                             },
                         }
                         local nodes = nodes_utils:matching_nodes_from(node, tree)
+                        local temp = {}
                         if nodes[i.Tparam] then
-                            results[i.Tparam] = {}
+                            temp[i.Tparam] = {}
                             for _, n in pairs(nodes[i.Tparam]) do
                                 local type_subtree = {
                                     { retrieve = "all", node_type = "identifier", extract = true, as = i.Parameter },
@@ -103,14 +117,15 @@ return {
                                 }
                                 local typed_parameters = nodes_utils:matching_nodes_from(n, type_subtree)
                                 typed_parameters = extractors:extract_from_matched(typed_parameters)
-                                table.insert(results[i.Tparam], typed_parameters)
+                                table.insert(temp[i.Tparam], typed_parameters)
                             end
                         end
                         local res = extractors:extract_from_matched(nodes)
+                        res[i.Tparam] = temp[i.Tparam]
 
                         -- Return type hints takes precedence over all other types for generating template
                         if res[i.ReturnTypeHint] then
-                            res["return_statement"] = nil
+                            res[i.HasReturn] = nil
                             if res[i.ReturnTypeHint][1] == "None" then
                                 res[i.ReturnTypeHint] = nil
                             end
@@ -136,17 +151,31 @@ return {
                             end
                         end
 
-                        results[i.HasParameter] = (res.typed_parameter or res.identifier) and { true } or nil
-                        results[i.Type] = res.type
-                        results[i.Parameter] = res.identifier
-                        results[i.Return] = res.return_statement
-                        results[i.ReturnTypeHint] = res[i.ReturnTypeHint]
-                        results[i.HasReturn] = (res.return_statement or res.anonymous_return or res[i.ReturnTypeHint])
-                            and { true }
-                            or nil
-                        results[i.ArbitraryArgs] = res[i.ArbitraryArgs]
-                        results[i.Kwargs] = res[i.Kwargs]
-                        results[i.Throw] = res[i.Throw]
+                        local results = helpers.copy({
+                            [i.HasParameter] = function(t)
+                                return t[i.Parameter] and { true } or nil
+                            end,
+                            [i.Type] = true,
+                            [i.Parameter] = function(t)
+                                return t[i.Parameter]
+                            end,
+                            [i.Return] = true,
+                            [i.HasReturn] = true,
+                            [i.ReturnTypeHint] = true,
+                            [i.ArbitraryArgs] = true,
+                            [i.Kwargs] = true,
+                            [i.Throw] = true,
+                            [i.Tparam] = true,
+                        }, res) or {}
+
+                        -- Generates a "flag" return
+                        results[i.HasReturn] = (results[i.ReturnTypeHint] or results[i.Return]) and { true } or nil
+
+                        -- Removes generation for returns that are not typed
+                        if results[i.ReturnTypeHint] then
+                            results[i.Return] = nil
+                        end
+
                         return results
                     end,
                 },

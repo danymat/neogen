@@ -32,4 +32,32 @@ return {
     get_node_text = function(node, bufnr)
         return vim.split(vim.treesitter.query.get_node_text(node, bufnr or 0), "\n")
     end,
+
+    --- Copies a table to another table depending of the parameters that we want to expose
+    ---TODO: create a doc for the table structure
+    ---@param rules table the rules that we want to execute
+    ---@param table table the table to copy
+    ---@return table?
+    ---@private
+    copy = function(rules, table)
+        P(rules, table)
+        local copy = {}
+
+        for parameter, rule in pairs(rules) do
+            local parameter_value = table[parameter]
+
+            if parameter_value then
+                if type(rule) == "function" then
+                    copy[parameter] = vim.tbl_deep_extend("error", rule(table), copy[parameter] or {})
+                elseif rule == true and parameter_value ~= nil then
+                    copy[parameter] = parameter_value
+                else
+                    vim.notify("Incorrect rule format for parameter " .. parameter, vim.log.levels.ERROR)
+                    return
+                end
+            end
+        end
+
+        return copy
+    end,
 }
