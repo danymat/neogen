@@ -40,7 +40,6 @@ return {
     ---@return table?
     ---@private
     copy = function(rules, table)
-        P(rules, table)
         local copy = {}
 
         for parameter, rule in pairs(rules) do
