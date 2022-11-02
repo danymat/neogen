@@ -224,13 +224,21 @@ return {
                             return {}
                         end
 
+                        -- Deliberately check inside the init function for assignments to "self"
                         results[i.ClassAttribute] = {}
                         for _, assignment in pairs(nodes["assignment"]) do
-                            local left_side = assignment:field("left")[1]
-                            local left_attribute = left_side:field("attribute")[1]
-                            left_attribute = helpers.get_node_text(left_attribute)[1]
-                            if left_attribute and not vim.startswith(left_attribute, "_") then
-                                table.insert(results[i.ClassAttribute], left_attribute)
+                            -- Getting left side in assignment
+                            local left = assignment:field("left")
+
+                            -- Checking if left side is an "attribute", which means assigning to an attribute to the function
+                            if not vim.tbl_isempty(left) and not vim.tbl_isempty(left[1]:field("attribute")) then
+                                --Adding it to the list
+                                local left_attribute = assignment:field("left")[1]:field("attribute")[1]
+                                left_attribute = helpers.get_node_text(left_attribute)[1]
+
+                                if not vim.startswith(left_attribute, "_") then
+                                    table.insert(results[i.ClassAttribute], left_attribute)
+                                end
                             end
                         end
                         if vim.tbl_isempty(results[i.ClassAttribute]) then
