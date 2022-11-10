@@ -189,7 +189,7 @@ return {
                         local row, col = vim.treesitter.get_node_range(parent)
                         return row, col
                     end
-                    return 0, 0
+                    return
                 end
             end,
         })
