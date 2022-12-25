@@ -38,6 +38,20 @@
 
 Use your favorite package manager to install Neogen, e.g:
 
+###  Lazy
+
+```
+{ 
+    "danymat/neogen", 
+    dependencies = "nvim-treesitter/nvim-treesitter", 
+    config = true,
+    -- Uncomment next line if you want to follow only stable versions
+    -- version = "*" 
+}
+```
+
+### Packer
+
 ```lua
 use {
     "danymat/neogen",
