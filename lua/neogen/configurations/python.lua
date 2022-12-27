@@ -153,23 +153,20 @@ return {
 
                         local results = helpers.copy({
                             [i.HasParameter] = function(t)
-                                return t[i.Parameter] and { true } or nil
+                                return (t[i.Parameter] or t[i.Tparam]) and { true }
+                            end,
+                            [i.HasReturn] = function(t)
+                                return (t[i.ReturnTypeHint] or t[i.Return]) and { true }
                             end,
                             [i.Type] = true,
-                            [i.Parameter] = function(t)
-                                return t[i.Parameter]
-                            end,
+                            [i.Parameter] = true,
                             [i.Return] = true,
-                            [i.HasReturn] = true,
                             [i.ReturnTypeHint] = true,
                             [i.ArbitraryArgs] = true,
                             [i.Kwargs] = true,
                             [i.Throw] = true,
                             [i.Tparam] = true,
                         }, res) or {}
-
-                        -- Generates a "flag" return
-                        results[i.HasReturn] = (results[i.ReturnTypeHint] or results[i.Return]) and { true } or nil
 
                         -- Removes generation for returns that are not typed
                         if results[i.ReturnTypeHint] then

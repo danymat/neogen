@@ -43,17 +43,14 @@ return {
         local copy = {}
 
         for parameter, rule in pairs(rules) do
-            local parameter_value = table[parameter]
 
-            if parameter_value then
-                if type(rule) == "function" then
-                    copy[parameter] = vim.tbl_deep_extend("error", rule(table), copy[parameter] or {})
-                elseif rule == true and parameter_value ~= nil then
-                    copy[parameter] = parameter_value
-                else
-                    vim.notify("Incorrect rule format for parameter " .. parameter, vim.log.levels.ERROR)
-                    return
-                end
+            if type(rule) == "function" then
+                copy[parameter] = rule(table)
+            elseif rule == true then
+                copy[parameter] = table[parameter]
+            else
+                vim.notify("Incorrect rule format for parameter " .. parameter, vim.log.levels.ERROR)
+                return
             end
         end
 
