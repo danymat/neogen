@@ -6,6 +6,7 @@ if not ok then
     notify("neogen requires nvim-treesitter to operate :(", vim.log.levels.ERROR)
     return function(_, _) end
 end
+local ts_parsers = require("nvim-treesitter.parsers")
 
 local conf = require("neogen.config").get()
 local granulator = require("neogen.granulator")
@@ -38,7 +39,8 @@ local function todo_text(type)
 end
 
 local function get_parent_node(filetype, typ, language)
-    local parser = vim.treesitter.get_parser(0, filetype)
+    local parser_name = ts_parsers.ft_to_lang(filetype)
+    local parser = vim.treesitter.get_parser(0, parser_name)
     local tstree = parser:parse()[1]
     local tree = tstree:root()
 
@@ -104,12 +106,14 @@ end
 ---@param data table the data from the granulator, which is a set of [type] = results
 ---@param template table a template from the configuration
 ---@param required_type string
+---@param annotation_convention string
 ---@return table { line, content }, with line being the line to append the content
-local function generate_content(parent, data, template, required_type)
+local function generate_content(parent, data, template, required_type, annotation_convention)
     local row, col = get_place_pos(parent, template.position, template.append, required_type)
 
     local commentstring = vim.trim(vim.bo.commentstring:format(""))
-    local generated_template = template[template.annotation_convention]
+    annotation_convention = annotation_convention or template.annotation_convention
+    local generated_template = template[annotation_convention]
 
     local result = {}
     local default_text = {}
@@ -186,7 +190,7 @@ local function generate_content(parent, data, template, required_type)
 end
 
 return setmetatable({}, {
-    __call = function(_, filetype, typ, return_snippet)
+    __call = function(_, filetype, typ, return_snippet, annotation_convention)
         if filetype == "" then
             notify("No filetype detected", vim.log.levels.WARN)
             return
@@ -202,6 +206,17 @@ return setmetatable({}, {
             notify("Type `" .. typ .. "` not supported", vim.log.levels.WARN)
             return
         end
+        annotation_convention = annotation_convention or {}
+        if annotation_convention[filetype] and not template[annotation_convention[filetype]] then
+            notify(
+                ("Annotation convention %s not supported for language %s"):format(
+                    annotation_convention[filetype],
+                    filetype
+                ),
+                vim.log.levels.WARN
+            )
+            return
+        end
 
         local parent_node = get_parent_node(filetype, typ, language)
         if not parent_node then
@@ -211,7 +226,13 @@ return setmetatable({}, {
         local data = granulator(parent_node, language.data[typ])
 
         -- Will try to generate the documentation from a template and the data found from the granulator
-        local row, template_content, default_text = generate_content(parent_node, data, template, typ)
+        local row, template_content, default_text = generate_content(
+            parent_node,
+            data,
+            template,
+            typ,
+            annotation_convention[filetype]
+        )
 
         local content = {}
         local marks_pos = {}

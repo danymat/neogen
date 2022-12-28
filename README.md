@@ -38,6 +38,20 @@
 
 Use your favorite package manager to install Neogen, e.g:
 
+###  Lazy
+
+```lua
+{ 
+    "danymat/neogen", 
+    dependencies = "nvim-treesitter/nvim-treesitter", 
+    config = true,
+    -- Uncomment next line if you want to follow only stable versions
+    -- version = "*" 
+}
+```
+
+### Packer
+
 ```lua
 use {
     "danymat/neogen",
@@ -100,7 +114,7 @@ And this is done via the `snippet_engine` option in neogen's setup:
 
 - `snippet_engine` option will use provided engine to place the annotations:
 
-Currently supported: `luasnip`.
+Currently supported: `luasnip`, `snippy`, `vsnip`.
 
 ```lua
 require('neogen').setup({ snippet_engine = "luasnip" })
@@ -147,8 +161,8 @@ cmp.setup {
     -- You must set mapping if you want.
     mapping = {
         ["<tab>"] = cmp.mapping(function(fallback)
-            if require('neogen').jumpable() then
-                require('neogen').jump_next()
+            if neogen.jumpable() then
+                neogen.jump_next()
             else
                 fallback()
             end
@@ -157,8 +171,8 @@ cmp.setup {
             "s",
         }),
         ["<S-tab>"] = cmp.mapping(function(fallback)
-            if require('neogen').jumpable(true) then
-                require('neogen').jump_prev()
+            if neogen.jumpable(true) then
+                neogen.jump_prev()
             else
                 fallback()
             end
@@ -177,10 +191,9 @@ cmp.setup {
 
 ```lua
 require('neogen').setup {
-        enabled = true,             --if you want to disable Neogen
-        input_after_comment = true, -- (default: true) automatic jump (with insert mode) on inserted annotation
-        -- jump_map = "<C-e>"       -- (DROPPED SUPPORT, see [here](#cycle-between-annotations) !) The keymap in order to jump in the annotation fields (in insert mode)
-    }
+    enabled = true,             --if you want to disable Neogen
+    input_after_comment = true, -- (default: true) automatic jump (with insert mode) on inserted annotation
+    -- jump_map = "<C-e>"       -- (DROPPED SUPPORT, see [here](#cycle-between-annotations) !) The keymap in order to jump in the annotation fields (in insert mode)
 }
 ```
 

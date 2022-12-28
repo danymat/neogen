@@ -150,6 +150,9 @@ neogen.configuration = {
 ---@param opts table Optional configs to change default behaviour of generation.
 ---  - {opts.type} `(string, default: "func")` Which type we are trying to use for generating annotations.
 ---    Currently supported: `func`, `class`, `type`, `file`
+---  - {opts.annotation_convention} `(table)` convention to use for generating annotations.
+---    This is language specific. For example, `generate({ annotation_convention = { python = 'numpydoc' } })`
+---    If no convention is specified for a specific language, it'll use the default annotation convention for the language.
 ---  - {opts.return_snippet} `boolean` if true, will return 3 values from the function call.
 ---  This option is useful if you want to get the snippet to use with a unsupported snippet engine
 ---  Below are the returned values:
@@ -163,7 +166,8 @@ neogen.generate = function(opts)
         return
     end
 
-    return require("neogen.generator")(vim.bo.filetype, opts and opts.type, opts and opts.return_snippet)
+    opts = opts or {}
+    return require("neogen.generator")(vim.bo.filetype, opts.type, opts.return_snippet, opts.annotation_convention)
 end
 
 -- Expose more API  ============================================================
@@ -235,8 +239,17 @@ end
 ---@eval return MiniDoc.afterlines_to_code(MiniDoc.current.eval_section)
 ---@text # Changelog~
 ---
---- Note: We will only document `major` and `minor` versions, not `patch` ones.
+--- Note: We will only document `major` and `minor` versions, not `patch` ones. (only X and Y in X.Y.z)
 ---
+--- ## 2.10.0~
+---   - Add support for Throw statements in python
+---     Note: only active for reST template as of right now (please open an issue request for more templates)
+--- ## 2.9.0~
+---   - Add support for `vsnip` snippet engine ! (see |neogen-snippet-integration|)
+--- ## 2.8.0~
+---   - Specify annotation convention on `generate()` method (see |neogen.generate()|)
+--- ## 2.7.0~
+---   - Add support for `snippy` snippet engine ! (see |neogen-snippet-integration|)
 --- ## 2.6.0~
 ---   - Add support for placeholders in snippet insertion !
 ---     None: placeholders are automatically set when using a bundled snippet engine.
@@ -272,7 +285,7 @@ end
 ---     with multiple annotation conventions.
 ---@tag neogen-changelog
 ---@toc_entry Changes in neogen plugin
-neogen.version = "2.6.0"
+neogen.version = "2.10.3"
 --minidoc_afterlines_end
 
 return neogen

@@ -57,7 +57,7 @@ return {
     --- @param tree table a nested table : { retrieve = "all|first", node_type = node_name, subtree = tree, recursive = true }
     --- If you want to extract the node, do not specify the subtree and instead: extract = true
     --- Optional: you can specify position = number instead of retrieve, and it will fetch the child node at position number
-    --- @param result table the table of results
+    --- @param result? table the table of results
     --- @return table result a table of k,v where k are node_types and v all matched nodes
     matching_nodes_from = function(self, parent, tree, result)
         result = result or {}

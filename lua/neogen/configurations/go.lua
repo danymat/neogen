@@ -5,7 +5,8 @@ local nodes_utils = require("neogen.utilities.nodes")
 return {
     parent = {
         func = { "function_declaration", "method_declaration" },
-        type = { "package_clause", "const_declaration", "var_declaration", "type_declaration" },
+        type = { "const_declaration", "var_declaration", "type_declaration" },
+        file = { "package_clause" },
     },
 
     data = {
@@ -45,8 +46,27 @@ return {
                 },
             },
         },
+        file = {
+            ["package_clause"] = {
+                ["0"] = {
+                    extract = function(node)
+                        local tree = {
+                            {
+                                retrieve = "first",
+                                node_type = "package_identifier",
+                                extract = "true",
+                                as = "package_name",
+                            },
+                        }
+                        local nodes = nodes_utils:matching_nodes_from(node, tree)
+                        local res = extractors:extract_from_matched(nodes)
+                        return res
+                    end,
+                },
+            },
+        },
         type = {
-            ["package_clause|const_declaration|var_declaration"] = {
+            ["const_declaration|var_declaration"] = {
                 ["0"] = {
                     extract = function()
                         return {}

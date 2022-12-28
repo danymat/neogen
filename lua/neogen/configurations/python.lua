@@ -1,5 +1,5 @@
-local ts_utils = require("nvim-treesitter.ts_utils")
 local nodes_utils = require("neogen.utilities.nodes")
+local helpers = require("neogen.utilities.helpers")
 local extractors = require("neogen.utilities.extractors")
 local locator = require("neogen.locators.default")
 local template = require("neogen.template")
@@ -22,30 +22,42 @@ return {
             ["function_definition"] = {
                 ["0"] = {
                     extract = function(node)
-                        local results = {}
-
                         local tree = {
                             {
                                 retrieve = "all",
                                 node_type = "parameters",
                                 subtree = {
-                                    { retrieve = "all", node_type = "identifier", extract = true },
+                                    { retrieve = "all", node_type = "identifier", extract = true, as = i.Parameter },
                                     {
                                         retrieve = "all",
                                         node_type = "default_parameter",
-                                        subtree = { { retrieve = "all", node_type = "identifier", extract = true } },
+                                        subtree = {
+                                            {
+                                                retrieve = "all",
+                                                node_type = "identifier",
+                                                extract = true,
+                                                as = i.Parameter,
+                                            },
+                                        },
                                     },
                                     {
                                         retrieve = "all",
                                         node_type = "typed_parameter",
                                         extract = true,
+                                        as = i.Tparam,
                                     },
                                     {
                                         retrieve = "all",
                                         node_type = "typed_default_parameter",
-                                        as = "typed_parameter",
                                         extract = true,
-                                        subtree = { { retrieve = "all", node_type = "identifier", extract = true } },
+                                        subtree = {
+                                            {
+                                                retrieve = "all",
+                                                node_type = "identifier",
+                                                extract = true,
+                                                as = i.Tparam,
+                                            },
+                                        },
                                     },
                                     {
                                         retrieve = "first",
@@ -70,6 +82,20 @@ return {
                                         node_type = "return_statement",
                                         recursive = true,
                                         extract = true,
+                                        as = i.Return,
+                                    },
+                                    {
+                                        retrieve = "all",
+                                        node_type = "raise_statement",
+                                        recursive = true,
+                                        subtree = {
+                                            {
+                                                retrieve = "first",
+                                                node_type = "identifier",
+                                                extract = true,
+                                                as = i.Throw,
+                                            },
+                                        },
                                     },
                                 },
                             },
@@ -81,23 +107,25 @@ return {
                             },
                         }
                         local nodes = nodes_utils:matching_nodes_from(node, tree)
-                        if nodes["typed_parameter"] then
-                            results["typed_parameters"] = {}
-                            for _, n in pairs(nodes["typed_parameter"]) do
+                        local temp = {}
+                        if nodes[i.Tparam] then
+                            temp[i.Tparam] = {}
+                            for _, n in pairs(nodes[i.Tparam]) do
                                 local type_subtree = {
                                     { retrieve = "all", node_type = "identifier", extract = true, as = i.Parameter },
                                     { retrieve = "all", node_type = "type", extract = true, as = i.Type },
                                 }
                                 local typed_parameters = nodes_utils:matching_nodes_from(n, type_subtree)
                                 typed_parameters = extractors:extract_from_matched(typed_parameters)
-                                table.insert(results["typed_parameters"], typed_parameters)
+                                table.insert(temp[i.Tparam], typed_parameters)
                             end
                         end
                         local res = extractors:extract_from_matched(nodes)
+                        res[i.Tparam] = temp[i.Tparam]
 
                         -- Return type hints takes precedence over all other types for generating template
                         if res[i.ReturnTypeHint] then
-                            res["return_statement"] = nil
+                            res[i.HasReturn] = nil
                             if res[i.ReturnTypeHint][1] == "None" then
                                 res[i.ReturnTypeHint] = nil
                             end
@@ -110,7 +138,7 @@ return {
                             -- Check if function is a static method. If so, will not remove the first parameter
                             if node:parent():type() == "decorated_definition" then
                                 local decorator = nodes_utils:matching_child_nodes(node:parent(), "decorator")
-                                decorator = ts_utils.get_node_text(decorator[1])[1]
+                                decorator = helpers.get_node_text(decorator[1])[1]
                                 if decorator == "@staticmethod" then
                                     remove_identifier = false
                                 end
@@ -123,16 +151,31 @@ return {
                             end
                         end
 
-                        results[i.HasParameter] = (res.typed_parameter or res.identifier) and { true } or nil
-                        results[i.Type] = res.type
-                        results[i.Parameter] = res.identifier
-                        results[i.Return] = res.return_statement
-                        results[i.ReturnTypeHint] = res[i.ReturnTypeHint]
-                        results[i.HasReturn] = (res.return_statement or res.anonymous_return or res[i.ReturnTypeHint])
-                                and { true }
-                            or nil
-                        results[i.ArbitraryArgs] = res[i.ArbitraryArgs]
-                        results[i.Kwargs] = res[i.Kwargs]
+                        local results = helpers.copy({
+                            [i.HasParameter] = function(t)
+                                return t[i.Parameter] and { true } or nil
+                            end,
+                            [i.Type] = true,
+                            [i.Parameter] = function(t)
+                                return t[i.Parameter]
+                            end,
+                            [i.Return] = true,
+                            [i.HasReturn] = true,
+                            [i.ReturnTypeHint] = true,
+                            [i.ArbitraryArgs] = true,
+                            [i.Kwargs] = true,
+                            [i.Throw] = true,
+                            [i.Tparam] = true,
+                        }, res) or {}
+
+                        -- Generates a "flag" return
+                        results[i.HasReturn] = (results[i.ReturnTypeHint] or results[i.Return]) and { true } or nil
+
+                        -- Removes generation for returns that are not typed
+                        if results[i.ReturnTypeHint] then
+                            results[i.Return] = nil
+                        end
+
                         return results
                     end,
                 },
@@ -181,13 +224,21 @@ return {
                             return {}
                         end
 
+                        -- Deliberately check inside the init function for assignments to "self"
                         results[i.ClassAttribute] = {}
                         for _, assignment in pairs(nodes["assignment"]) do
-                            local left_side = assignment:field("left")[1]
-                            local left_attribute = left_side:field("attribute")[1]
-                            left_attribute = ts_utils.get_node_text(left_attribute)[1]
-                            if left_attribute and not vim.startswith(left_attribute, "_") then
-                                table.insert(results[i.ClassAttribute], left_attribute)
+                            -- Getting left side in assignment
+                            local left = assignment:field("left")
+
+                            -- Checking if left side is an "attribute", which means assigning to an attribute to the function
+                            if not vim.tbl_isempty(left) and not vim.tbl_isempty(left[1]:field("attribute")) then
+                                --Adding it to the list
+                                local left_attribute = assignment:field("left")[1]:field("attribute")[1]
+                                left_attribute = helpers.get_node_text(left_attribute)[1]
+
+                                if not vim.startswith(left_attribute, "_") then
+                                    table.insert(results[i.ClassAttribute], left_attribute)
+                                end
                             end
                         end
                         if vim.tbl_isempty(results[i.ClassAttribute]) then
@@ -233,7 +284,7 @@ return {
                         if child:type() == "comment" then
                             local start_row = child:start()
                             if start_row == 0 then
-                                if vim.startswith(ts_utils.get_node_text(node, 0)[1], "#!") then
+                                if vim.startswith(helpers.get_node_text(node)[1], "#!") then
                                     return 1, 0
                                 end
                             end

@@ -177,5 +177,22 @@ return {
 
     locator = require("neogen.locators.typescript"),
 
-    template = template:add_default_annotation("jsdoc"):add_default_annotation("tsdoc"),
+    template = template
+        :config({
+            append = { position = "after", child_name = "comment", fallback = "block", disabled = { "file" } },
+            position = function(node, type)
+                if vim.tbl_contains({ "func", "class" }, type) then
+                    local parent = node:parent()
+
+                    -- Verify if the parent is an export_statement (prevents offset of generated annotation)
+                    if parent and parent:type() == "export_statement" then
+                        local row, col = vim.treesitter.get_node_range(parent)
+                        return row, col
+                    end
+                    return
+                end
+            end,
+        })
+        :add_default_annotation("jsdoc")
+        :add_default_annotation("tsdoc"),
 }
