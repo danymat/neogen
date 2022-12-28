@@ -144,7 +144,6 @@ return {
                             end
                         end
 
-                        vim.pretty_print(res)
                         local results = helpers.copy({
                             [i.HasParameter] = function(t)
                                 return (t[i.Parameter] or t[i.Tparam]) and { true }
