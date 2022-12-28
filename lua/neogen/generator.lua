@@ -247,7 +247,7 @@ return setmetatable({}, {
             notify("Language " .. filetype .. " not supported.", vim.log.levels.WARN)
             return
         end
-        node_type = (type(node_type) ~= "string" or node_type == "") and "any" or node_type -- Default type
+        node_type = (type(node_type) ~= "string" or node_type == "") and ANY_TYPE or node_type -- Default type
 
         local template = language.template
         if not template or not template.annotation_convention then
