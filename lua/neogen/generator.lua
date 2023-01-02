@@ -40,8 +40,10 @@ local function todo_text(type)
     })[type] or todo["description"]
 end
 
+--- Create per filetype table of node types
+---@param filetype string
+---@param language any
 local function populate_filetype(filetype, language)
-    -- Create a table with all possible node types
     for lang_type, set in pairs(language.parent) do
         if all_types_map[filetype] == nil then
             all_types_map[filetype] = {}
