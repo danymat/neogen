@@ -253,9 +253,10 @@ return setmetatable({}, {
 
         local template = language.template
         if not template or not template.annotation_convention then
-            notify("Type `" .. node_type .. "` not supported", vim.log.levels.WARN)
+            notify("Language " .. filetype .. " does not support any annotation convention", vim.log.levels.WARN)
             return
         end
+
         annotation_convention = annotation_convention or {}
         if annotation_convention[filetype] and not template[annotation_convention[filetype]] then
             notify(
