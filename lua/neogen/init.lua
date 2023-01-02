@@ -148,8 +148,8 @@ neogen.configuration = {
 --- Neogen will go until the start of the function and start annotating for you.
 ---
 ---@param opts table Optional configs to change default behaviour of generation.
----  - {opts.type} `(string, default: "func")` Which type we are trying to use for generating annotations.
----    Currently supported: `func`, `class`, `type`, `file`
+---  - {opts.type} `(string, default: "any")` Which type we are trying to use for generating annotations.
+---    Currently supported: `any`, `func`, `class`, `type`, `file`
 ---  - {opts.annotation_convention} `(table)` convention to use for generating annotations.
 ---    This is language specific. For example, `generate({ annotation_convention = { python = 'numpydoc' } })`
 ---    If no convention is specified for a specific language, it'll use the default annotation convention for the language.
