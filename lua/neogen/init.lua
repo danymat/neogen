@@ -241,6 +241,11 @@ end
 ---
 --- Note: We will only document `major` and `minor` versions, not `patch` ones. (only X and Y in X.Y.z)
 ---
+--- ## 2.11.0~
+---   - Calling `:Neogen` will try to find the best type used to generate annotations (#116)
+---     It'll recursively go up the syntax tree from the cursor position. 
+---     For example, if a function is defined inside class and the cursor is inside the function,
+---     the annotation will be generated for the function.
 --- ## 2.10.0~
 ---   - Add support for Throw statements in python
 ---     Note: only active for reST template as of right now (please open an issue request for more templates)
@@ -285,7 +290,7 @@ end
 ---     with multiple annotation conventions.
 ---@tag neogen-changelog
 ---@toc_entry Changes in neogen plugin
-neogen.version = "2.10.3"
+neogen.version = "2.11.0"
 --minidoc_afterlines_end
 
 return neogen
