@@ -148,8 +148,8 @@ neogen.configuration = {
 --- Neogen will go until the start of the function and start annotating for you.
 ---
 ---@param opts table Optional configs to change default behaviour of generation.
----  - {opts.type} `(string, default: "func")` Which type we are trying to use for generating annotations.
----    Currently supported: `func`, `class`, `type`, `file`
+---  - {opts.type} `(string, default: "any")` Which type we are trying to use for generating annotations.
+---    Currently supported: `any`, `func`, `class`, `type`, `file`
 ---  - {opts.annotation_convention} `(table)` convention to use for generating annotations.
 ---    This is language specific. For example, `generate({ annotation_convention = { python = 'numpydoc' } })`
 ---    If no convention is specified for a specific language, it'll use the default annotation convention for the language.
@@ -241,6 +241,11 @@ end
 ---
 --- Note: We will only document `major` and `minor` versions, not `patch` ones. (only X and Y in X.Y.z)
 ---
+--- ## 2.11.0~
+---   - Calling `:Neogen` will try to find the best type used to generate annotations (#116)
+---     It'll recursively go up the syntax tree from the cursor position. 
+---     For example, if a function is defined inside class and the cursor is inside the function,
+---     the annotation will be generated for the function.
 --- ## 2.10.0~
 ---   - Add support for Throw statements in python
 ---     Note: only active for reST template as of right now (please open an issue request for more templates)
@@ -285,7 +290,7 @@ end
 ---     with multiple annotation conventions.
 ---@tag neogen-changelog
 ---@toc_entry Changes in neogen plugin
-neogen.version = "2.10.4"
+neogen.version = "2.11.0"
 --minidoc_afterlines_end
 
 return neogen
