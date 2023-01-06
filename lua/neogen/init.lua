@@ -241,6 +241,8 @@ end
 ---
 --- Note: We will only document `major` and `minor` versions, not `patch` ones. (only X and Y in X.Y.z)
 ---
+--- ## 2.12.0~
+---   - Fetch singleton methods in ruby (#121)
 --- ## 2.11.0~
 ---   - Calling `:Neogen` will try to find the best type used to generate annotations (#116)
 ---     It'll recursively go up the syntax tree from the cursor position. 
@@ -290,7 +292,7 @@ end
 ---     with multiple annotation conventions.
 ---@tag neogen-changelog
 ---@toc_entry Changes in neogen plugin
-neogen.version = "2.11.0"
+neogen.version = "2.12.0"
 --minidoc_afterlines_end
 
 return neogen
