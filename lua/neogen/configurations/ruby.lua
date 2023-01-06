@@ -6,7 +6,7 @@ local extractors = require("neogen.utilities.extractors")
 local template = {}
 
 template.parent = {
-    func = { "method" },
+    func = { "method", "singleton_method" },
     class = { "class", "module" },
     type = { "call" },
 }
@@ -20,7 +20,7 @@ local identifier = {
 
 template.data = {
     func = {
-        ["method"] = {
+        ["method|singleton_method"] = {
             ["0"] = {
                 extract = function(node)
                     local tree = {
