@@ -214,6 +214,16 @@ require('neogen').setup {
 }
 ```
 
+For example, if you want to quickly add support for new filetypes based around existing ones, you can do like this:
+
+```lua
+require('neogen').setup({
+    languages = {
+        ['cpp.doxygen'] = require('neogen.configurations.cpp')
+    }
+})
+```
+
 ## Supported Languages
 
 There is a list of supported languages and fields, with their annotation style
