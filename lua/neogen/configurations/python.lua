@@ -127,7 +127,7 @@ return {
 
                         -- Check if the function is inside a class
                         -- If so, remove reference to the first parameter (that can be `self`, `cls`, or a custom name)
-                        if res.parameters and locator({ current = node }, parent.class) then
+                        if res[i.Parameter] and locator({ current = node }, parent.class) then
                             local remove_identifier = true
                             -- Check if function is a static method. If so, will not remove the first parameter
                             if node:parent():type() == "decorated_definition" then
@@ -138,9 +138,9 @@ return {
                                 end
                             end
                             if remove_identifier then
-                                table.remove(res.parameters, 1)
-                                if vim.tbl_isempty(res.parameters) then
-                                    res.parameters = nil
+                                table.remove(res[i.Parameter], 1)
+                                if vim.tbl_isempty(res[i.Parameter]) then
+                                    res[i.Parameter] = nil
                                 end
                             end
                         end
