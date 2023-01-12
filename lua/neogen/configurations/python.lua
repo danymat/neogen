@@ -50,7 +50,7 @@ return {
                                         retrieve = "all",
                                         node_type = "typed_default_parameter",
                                         as = i.Tparam,
-                                        extract = true
+                                        extract = true,
                                     },
                                     {
                                         retrieve = "first",
@@ -85,6 +85,7 @@ return {
                                             {
                                                 retrieve = "first",
                                                 node_type = "identifier",
+                                                recursive = true,
                                                 extract = true,
                                                 as = i.Throw,
                                             },
@@ -126,7 +127,7 @@ return {
 
                         -- Check if the function is inside a class
                         -- If so, remove reference to the first parameter (that can be `self`, `cls`, or a custom name)
-                        if res.identifier and locator({ current = node }, parent.class) then
+                        if res[i.Parameter] and locator({ current = node }, parent.class) then
                             local remove_identifier = true
                             -- Check if function is a static method. If so, will not remove the first parameter
                             if node:parent():type() == "decorated_definition" then
@@ -137,9 +138,9 @@ return {
                                 end
                             end
                             if remove_identifier then
-                                table.remove(res.identifier, 1)
-                                if vim.tbl_isempty(res.identifier) then
-                                    res.identifier = nil
+                                table.remove(res[i.Parameter], 1)
+                                if vim.tbl_isempty(res[i.Parameter]) then
+                                    res[i.Parameter] = nil
                                 end
                             end
                         end

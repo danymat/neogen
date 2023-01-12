@@ -14,7 +14,7 @@ return {
     { i.HasParameter, "", { type = { "func" } } },
     { i.HasParameter, "Args:", { type = { "func" } } },
     { i.Parameter, "    %s ($1): $1", { type = { "func" } } },
-    { { i.Parameter, i.Type }, "    %s (%s): $1", { required = i.Tparam, type = { "func" } } },
+    { { i.Parameter, i.Type }, "    %s: $1", { required = i.Tparam, type = { "func" } } },
     { i.ArbitraryArgs, "    %s: $1", { type = { "func" } } },
     { i.Kwargs, "    %s: $1", { type = { "func" } } },
     { i.ClassAttribute, "    %s: $1", { before_first_item = { "", "Attributes: " } } },

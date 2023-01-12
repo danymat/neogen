@@ -241,6 +241,9 @@ end
 ---
 --- Note: We will only document `major` and `minor` versions, not `patch` ones. (only X and Y in X.Y.z)
 ---
+--- ## 2.13.0~
+---   - Improve google docstrings template (#124)
+---   - Fix minor python retriever issues (#124)
 --- ## 2.12.0~
 ---   - Fetch singleton methods in ruby (#121)
 --- ## 2.11.0~
@@ -292,7 +295,7 @@ end
 ---     with multiple annotation conventions.
 ---@tag neogen-changelog
 ---@toc_entry Changes in neogen plugin
-neogen.version = "2.12.0"
+neogen.version = "2.13.0"
 --minidoc_afterlines_end
 
 return neogen
