@@ -1,8 +1,8 @@
 local i = require("neogen.types.template").item
 
 return {
-    { nil, "/* $1 */", { no_results = true, type = { "func", "class" } } },
-    { nil, "/* @type $1 */", { no_results = true, type = { "type" } } },
+    { nil, "/** $1 */", { no_results = true, type = { "func", "class" } } },
+    { nil, "/** @type $1 */", { no_results = true, type = { "type" } } },
 
     { nil, "/**", { no_results = true, type = { "file" } } },
     { nil, " * @module $1", { no_results = true, type = { "file" } } },
