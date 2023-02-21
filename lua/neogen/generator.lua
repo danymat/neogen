@@ -129,7 +129,7 @@ local function get_place_pos(parent, position, append, typ)
         if typ == "file" then
             row, col = 0, 0
         else
-            row, col = ts_utils.get_node_range(parent)
+            row, col = vim.treesitter.get_node_range(parent)
         end
     end
 
