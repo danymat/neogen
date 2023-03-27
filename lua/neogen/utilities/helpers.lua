@@ -30,7 +30,11 @@ return {
     ---@param bufnr? number originated buffer number. Defaults to 0
     ---@return table newline separated list of text
     get_node_text = function(node, bufnr)
-        return vim.split(vim.treesitter.query.get_node_text(node, bufnr or 0), "\n")
+        return vim.split(
+            vim.treesitter.get_node_text and vim.treesitter.get_node_text(node, bufnr or 0)
+                or vim.treesitter.query.get_node_text(node, bufnr or 0),
+            "\n"
+        )
     end,
 
     --- Copies a table to another table depending of the parameters that we want to expose
@@ -43,7 +47,6 @@ return {
         local copy = {}
 
         for parameter, rule in pairs(rules) do
-
             if type(rule) == "function" then
                 copy[parameter] = rule(table)
             elseif rule == true then
