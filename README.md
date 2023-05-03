@@ -253,6 +253,10 @@ There is a list of supported languages and fields, with their annotation style
 1. Using the defaults to generate a new language support: [Adding Languages](./docs/adding-languages.md)
 2. (advanced) Only if the defaults aren't enough, please see here: [Advanced Integration](./docs/advanced-integration.md)
 
+Tip: Take a look at this beatiful diagram, showing a representation of the codebase. You can then take a first understanding of what is under the hood. For more details, you can see `:h neogen-develop`.
+    
+![Visualization of this repo](./diagram.svg)
+
 ## GIFS
 
 ![screen1](https://user-images.githubusercontent.com/5306901/135055052-6ee6a5e8-3f30-4c41-872e-e624e21a1e98.gif)
