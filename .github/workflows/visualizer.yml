@@ -13,4 +13,4 @@ jobs:
       - name: Update diagram
         uses: githubocto/repo-visualizer@0.7.1
         with:
-          excluded_paths: ".github"
+          root_path: 'lua/neogen'
