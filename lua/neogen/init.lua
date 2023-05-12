@@ -248,7 +248,7 @@ end
 ---   - Fetch singleton methods in ruby (#121)
 --- ## 2.11.0~
 ---   - Calling `:Neogen` will try to find the best type used to generate annotations (#116)
----     It'll recursively go up the syntax tree from the cursor position. 
+---     It'll recursively go up the syntax tree from the cursor position.
 ---     For example, if a function is defined inside class and the cursor is inside the function,
 ---     the annotation will be generated for the function.
 --- ## 2.10.0~

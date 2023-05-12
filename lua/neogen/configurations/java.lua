@@ -20,8 +20,8 @@ local function_tree = {
         retrieve = "all",
         node_type = "throws",
         subtree = {
-            { retrieve = "all",node_type= "type_identifier", extract = true, as="throw_statement"}
-        }
+            { retrieve = "all", node_type = "type_identifier", extract = true, as = "throw_statement" },
+        },
     },
     {
         retrieve = "first",
