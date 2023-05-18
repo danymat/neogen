@@ -84,10 +84,17 @@ return {
                                         subtree = {
                                             {
                                                 retrieve = "first",
-                                                node_type = "identifier",
+                                                node_type = "call",
                                                 recursive = true,
-                                                extract = true,
-                                                as = i.Throw,
+                                                subtree = {
+                                                    {
+                                                        retrieve = "first",
+                                                        node_type = "identifier",
+                                                        recursive = false,
+                                                        extract = true,
+                                                        as = i.Throw,
+                                                    }
+                                                }
                                             },
                                         },
                                     },
