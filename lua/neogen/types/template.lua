@@ -18,6 +18,7 @@ template.item = {
     ClassAttribute = "attributes",
     HasParameter = "has_parameters",
     HasReturn = "has_return",
+    HasThrow = "has_throw",
     ArbitraryArgs = "arbitrary_args",
     Kwargs = "kwargs",
 }

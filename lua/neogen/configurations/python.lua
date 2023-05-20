@@ -152,6 +152,9 @@ return {
                             [i.HasReturn] = function(t)
                                 return (t[i.ReturnTypeHint] or t[i.Return]) and { true }
                             end,
+                            [i.HasThrow] = function(t)
+                                return t[i.Throw] and { true }
+                            end,
                             [i.Type] = true,
                             [i.Parameter] = true,
                             [i.Return] = true,
