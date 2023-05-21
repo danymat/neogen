@@ -12,6 +12,32 @@ local parent = {
     type = { "expression_statement" },
 }
 
+-- Modify ``nodes`` if the found return(s) are **all** bare-returns.
+--
+-- A bare-return is used to return early from a function and aren't meant to be
+-- assigned so they should not be included in docstring output.
+--
+-- If at least one return is not a bare-return then this function does nothing.
+--
+local validate_bare_returns = function(nodes)
+    local return_node = nodes[i.Return]
+    local has_data = false
+
+    for _, value in pairs(return_node)
+    do
+        if value:child_count() > 1
+        then
+            has_data = true
+        end
+    end
+
+    if not has_data
+    then
+        nodes[i.Return] = nil
+    end
+end
+
+
 return {
     -- Search for these nodes
     parent = parent,
@@ -114,6 +140,11 @@ return {
                                 table.insert(temp[i.Tparam], typed_parameters)
                             end
                         end
+
+                        if nodes[i.Return] then
+                            validate_bare_returns(nodes)
+                        end
+
                         local res = extractors:extract_from_matched(nodes)
                         res[i.Tparam] = temp[i.Tparam]
 
