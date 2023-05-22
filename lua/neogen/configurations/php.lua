@@ -63,6 +63,13 @@ return {
                         }
                         local nodes = nodes_utils:matching_nodes_from(node, tree)
                         local res = extractors:extract_from_matched(nodes)
+
+                        -- "Return" tag MUST NOT occur more than once in a PHPDoc
+                        if res[i.Return] and #res[i.Return] > 1 then
+                            res[i.Return] = { res[i.Return][1] }
+                        end
+
+
                         return res
                     end,
                 },
