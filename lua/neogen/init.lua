@@ -241,6 +241,8 @@ end
 ---
 --- Note: We will only document `major` and `minor` versions, not `patch` ones. (only X and Y in X.Y.z)
 ---
+--- ## 2.14.0~
+---   - Google docstrings now include "Raises:", whenever possible
 --- ## 2.13.0~
 ---   - Improve google docstrings template (#124)
 ---   - Fix minor python retriever issues (#124)
@@ -248,7 +250,7 @@ end
 ---   - Fetch singleton methods in ruby (#121)
 --- ## 2.11.0~
 ---   - Calling `:Neogen` will try to find the best type used to generate annotations (#116)
----     It'll recursively go up the syntax tree from the cursor position. 
+---     It'll recursively go up the syntax tree from the cursor position.
 ---     For example, if a function is defined inside class and the cursor is inside the function,
 ---     the annotation will be generated for the function.
 --- ## 2.10.0~
@@ -295,7 +297,7 @@ end
 ---     with multiple annotation conventions.
 ---@tag neogen-changelog
 ---@toc_entry Changes in neogen plugin
-neogen.version = "2.13.2"
+neogen.version = "2.14.0"
 --minidoc_afterlines_end
 
 return neogen

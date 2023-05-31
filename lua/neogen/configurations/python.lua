@@ -41,7 +41,6 @@ end
 return {
     -- Search for these nodes
     parent = parent,
-
     -- Traverse down these nodes and extract the information as necessary
     data = {
         func = {
@@ -110,10 +109,16 @@ return {
                                         subtree = {
                                             {
                                                 retrieve = "first",
-                                                node_type = "identifier",
+                                                node_type = "call",
                                                 recursive = true,
-                                                extract = true,
-                                                as = i.Throw,
+                                                subtree = {
+                                                    {
+                                                        retrieve = "first",
+                                                        node_type = "identifier",
+                                                        extract = true,
+                                                        as = i.Throw,
+                                                    }
+                                                }
                                             },
                                         },
                                     },
@@ -133,7 +138,7 @@ return {
                             for _, n in pairs(nodes[i.Tparam]) do
                                 local type_subtree = {
                                     { retrieve = "all", node_type = "identifier", extract = true, as = i.Parameter },
-                                    { retrieve = "all", node_type = "type", extract = true, as = i.Type },
+                                    { retrieve = "all", node_type = "type",       extract = true, as = i.Type },
                                 }
                                 local typed_parameters = nodes_utils:matching_nodes_from(n, type_subtree)
                                 typed_parameters = extractors:extract_from_matched(typed_parameters)
@@ -182,6 +187,9 @@ return {
                             end,
                             [i.HasReturn] = function(t)
                                 return (t[i.ReturnTypeHint] or t[i.Return]) and { true }
+                            end,
+                            [i.HasThrow] = function(t)
+                                return t[i.Throw] and { true }
                             end,
                             [i.Type] = true,
                             [i.Parameter] = true,
@@ -289,12 +297,10 @@ return {
             },
         },
     },
-
     -- Use default granulator and generator
     locator = nil,
     granulator = nil,
     generator = nil,
-
     template = template
         :config({
             append = { position = "after", child_name = "comment", fallback = "block", disabled = { "file" } },

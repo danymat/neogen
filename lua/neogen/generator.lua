@@ -35,6 +35,7 @@ local function todo_text(type)
         [i.ClassAttribute] = todo["attribute"],
         [i.HasParameter] = todo["parameter"],
         [i.HasReturn] = todo["return"],
+        [i.HasThrow] = todo["throw"],
         [i.ArbitraryArgs] = todo["args"],
         [i.Kwargs] = todo["kwargs"],
     })[type] or todo["description"]
@@ -75,7 +76,7 @@ local function get_parent_node(filetype, node_type, language)
     local function get_node(type)
         return locator({
             root = tree,
-            current = current_node
+            current = current_node,
         }, type)
     end
 
@@ -284,13 +285,8 @@ return setmetatable({}, {
         local data = granulator(parent_node, language.data[node_type])
 
         -- Will try to generate the documentation from a template and the data found from the granulator
-        local row, template_content, default_text = generate_content(
-            parent_node,
-            data,
-            template,
-            node_type,
-            annotation_convention[filetype]
-        )
+        local row, template_content, default_text =
+            generate_content(parent_node, data, template, node_type, annotation_convention[filetype])
 
         local content = {}
         local marks_pos = {}

@@ -81,7 +81,7 @@ snippet.engines.luasnip = function(snip, pos)
 
     ls.snip_expand(
 
-        ls.s("", ls.parser.parse_snippet(nil, _snip,{trim_empty = false, dedent = false}), {
+        ls.s("", ls.parser.parse_snippet(nil, _snip, { trim_empty = false, dedent = false }), {
 
             child_ext_opts = {
                 -- for highlighting the placeholders
@@ -101,31 +101,31 @@ end
 ---@param snip string the snippet to expand
 ---@param pos table a tuple of row, col
 ---@private
-snippet.engines.snippy = function (snip, pos)
+snippet.engines.snippy = function(snip, pos)
     local ok, snippy = pcall(require, "snippy")
     if not ok then
         notify("Snippy not found, aborting...", vim.log.levels.ERROR)
         return
     end
     local row, _ = unpack(pos)
-    vim.api.nvim_buf_set_lines(0, row, row, true, {''}) -- snippy will change `row`
-    vim.api.nvim_win_set_cursor(0, {row + 1, 0}) -- `snip` already has indent so we should ignore `col`
-    snippy.expand_snippet({body = snip})
+    vim.api.nvim_buf_set_lines(0, row, row, true, { "" }) -- snippy will change `row`
+    vim.api.nvim_win_set_cursor(0, { row + 1, 0 }) -- `snip` already has indent so we should ignore `col`
+    snippy.expand_snippet({ body = snip })
 end
 
 --- Expand snippet for vsnip engine
 ---@param snip string the snippet to expand
 ---@param pos table a tuple of row, col
 ---@private
-snippet.engines.vsnip = function (snip, pos)
+snippet.engines.vsnip = function(snip, pos)
     local ok = vim.g.loaded_vsnip
     if not ok then
         notify("Vsnip not found, aborting...", vim.log.levels.ERROR)
         return
     end
     local row, _ = unpack(pos)
-    vim.api.nvim_buf_set_lines(0, row, row, true, {''}) -- vsnip will change `row`
-    vim.api.nvim_win_set_cursor(0, {row + 1, 0}) -- `snip` already has indent so we should ignore `col`
+    vim.api.nvim_buf_set_lines(0, row, row, true, { "" }) -- vsnip will change `row`
+    vim.api.nvim_win_set_cursor(0, { row + 1, 0 }) -- `snip` already has indent so we should ignore `col`
     snip = table.concat(snip, "\n") -- vsnip expects on string instead of a list/table of lines
     vim.fn["vsnip#anonymous"](snip)
 end
