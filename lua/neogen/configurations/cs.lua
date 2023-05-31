@@ -50,7 +50,7 @@ return {
                             {
                                 position = 1,
                                 extract = true,
-                                as = i.Return
+                                as = i.Return,
                             },
                         }
                         local nodes = nodes_utils:matching_nodes_from(node, tree)
