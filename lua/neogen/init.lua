@@ -241,6 +241,8 @@ end
 ---
 --- Note: We will only document `major` and `minor` versions, not `patch` ones. (only X and Y in X.Y.z)
 ---
+--- ## 2.14.0~
+---   - Google docstrings now include "Raises:", whenever possible
 --- ## 2.13.0~
 ---   - Improve google docstrings template (#124)
 ---   - Fix minor python retriever issues (#124)
@@ -295,7 +297,7 @@ end
 ---     with multiple annotation conventions.
 ---@tag neogen-changelog
 ---@toc_entry Changes in neogen plugin
-neogen.version = "2.13.2"
+neogen.version = "2.14.0"
 --minidoc_afterlines_end
 
 return neogen

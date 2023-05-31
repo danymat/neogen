@@ -35,6 +35,7 @@ local function todo_text(type)
         [i.ClassAttribute] = todo["attribute"],
         [i.HasParameter] = todo["parameter"],
         [i.HasReturn] = todo["return"],
+        [i.HasThrow] = todo["throw"],
         [i.ArbitraryArgs] = todo["args"],
         [i.Kwargs] = todo["kwargs"],
     })[type] or todo["description"]
