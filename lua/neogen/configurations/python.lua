@@ -12,6 +12,31 @@ local parent = {
     type = { "expression_statement" },
 }
 
+--- Modify `nodes` if the found return(s) are **all** bare-returns.
+---
+--- A bare-return is used to return early from a function and aren't meant to be
+--- assigned so they should not be included in docstring output.
+---
+--- If at least one return is not a bare-return then this function does nothing.
+---
+---@param nodes table
+local validate_bare_returns = function(nodes)
+    local return_node = nodes[i.Return]
+    local has_data = false
+
+    for _, value in pairs(return_node) do
+        if value:child_count() > 1
+        then
+            has_data = true
+        end
+    end
+
+    if not has_data
+    then
+        nodes[i.Return] = nil
+    end
+end
+
 return {
     -- Search for these nodes
     parent = parent,
@@ -119,6 +144,11 @@ return {
                                 table.insert(temp[i.Tparam], typed_parameters)
                             end
                         end
+
+                        if nodes[i.Return] then
+                            validate_bare_returns(nodes)
+                        end
+
                         local res = extractors:extract_from_matched(nodes)
                         res[i.Tparam] = temp[i.Tparam]
 
@@ -151,24 +181,24 @@ return {
                         end
 
                         local results = helpers.copy({
-                            [i.HasParameter] = function(t)
-                                return (t[i.Parameter] or t[i.Tparam]) and { true }
-                            end,
-                            [i.HasReturn] = function(t)
-                                return (t[i.ReturnTypeHint] or t[i.Return]) and { true }
-                            end,
-                            [i.HasThrow] = function(t)
-                                return t[i.Throw] and { true }
-                            end,
-                            [i.Type] = true,
-                            [i.Parameter] = true,
-                            [i.Return] = true,
-                            [i.ReturnTypeHint] = true,
-                            [i.ArbitraryArgs] = true,
-                            [i.Kwargs] = true,
-                            [i.Throw] = true,
-                            [i.Tparam] = true,
-                        }, res) or {}
+                                [i.HasParameter] = function(t)
+                                    return (t[i.Parameter] or t[i.Tparam]) and { true }
+                                end,
+                                [i.HasReturn] = function(t)
+                                    return (t[i.ReturnTypeHint] or t[i.Return]) and { true }
+                                end,
+                                [i.HasThrow] = function(t)
+                                    return t[i.Throw] and { true }
+                                end,
+                                [i.Type] = true,
+                                [i.Parameter] = true,
+                                [i.Return] = true,
+                                [i.ReturnTypeHint] = true,
+                                [i.ArbitraryArgs] = true,
+                                [i.Kwargs] = true,
+                                [i.Throw] = true,
+                                [i.Tparam] = true,
+                            }, res) or {}
 
                         -- Removes generation for returns that are not typed
                         if results[i.ReturnTypeHint] then
