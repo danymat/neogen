@@ -90,7 +90,6 @@ return {
                                                     {
                                                         retrieve = "first",
                                                         node_type = "identifier",
-                                                        recursive = false,
                                                         extract = true,
                                                         as = i.Throw,
                                                     }
