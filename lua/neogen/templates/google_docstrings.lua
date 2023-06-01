@@ -24,5 +24,8 @@ return {
     { i.HasReturn, "", { type = { "func" } } },
     { i.HasReturn, "Returns:", { type = { "func" } } },
     { i.HasReturn, "    $1", { type = { "func" } } },
+    { i.HasYield, "", { type = { "func" } } },
+    { i.HasYield, "Yields:", { type = { "func" } } },
+    { i.HasYield, "    $1", { type = { "func" } } },
     { nil, '"""' },
 }

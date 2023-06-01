@@ -26,6 +26,7 @@ local function todo_text(type)
         [i.Tparam] = todo["tparam"],
         [i.Parameter] = todo["parameter"],
         [i.Return] = todo["return"],
+        [i.Yield] = todo["yield"],
         [i.ReturnTypeHint] = todo["return"],
         [i.ReturnAnonym] = todo["return"],
         [i.ClassName] = todo["class"],
@@ -36,6 +37,7 @@ local function todo_text(type)
         [i.HasParameter] = todo["parameter"],
         [i.HasReturn] = todo["return"],
         [i.HasThrow] = todo["throw"],
+        [i.HasYield] = todo["yield"],
         [i.ArbitraryArgs] = todo["args"],
         [i.Kwargs] = todo["kwargs"],
     })[type] or todo["description"]
