@@ -37,6 +37,23 @@ local validate_bare_returns = function(nodes)
     end
 end
 
+
+--- Remove `i.Return` details from `nodes` if a Python generator was found.
+---
+--- If there is at least one `yield` found, Python converts the function to a generator.
+---
+--- In which case, any `return` statement no longer actually functions as an
+--- actual "Returns:" docstring block so we need to strip them.
+---
+---@param nodes table
+local validate_yield_nodes = function(nodes)
+    if nodes[i.Yield] ~= nil and nodes[i.Return] ~= nil
+    then
+        nodes[i.Return] = nil
+    end
+end
+
+
 return {
     -- Search for these nodes
     parent = parent,
@@ -103,6 +120,20 @@ return {
                                     },
                                     {
                                         retrieve = "all",
+                                        node_type = "expression_statement",
+                                        recursive = true,
+                                        subtree = {
+                                            {
+                                                retrieve = "first",
+                                                node_type = "yield",
+                                                recursive = true,
+                                                extract = true,
+                                                as = i.Yield,
+                                            },
+                                        },
+                                    },
+                                    {
+                                        retrieve = "all",
                                         node_type = "raise_statement",
                                         recursive = true,
                                         subtree = {
@@ -149,6 +180,8 @@ return {
                             validate_bare_returns(nodes)
                         end
 
+                        validate_yield_nodes(nodes)
+
                         local res = extractors:extract_from_matched(nodes)
                         res[i.Tparam] = temp[i.Tparam]
 
@@ -194,6 +227,9 @@ return {
                                 [i.Parameter] = true,
                                 [i.Return] = true,
                                 [i.ReturnTypeHint] = true,
+                                [i.HasYield] = function(t)
+                                    return t[i.Yield] and { true }
+                                end,
                                 [i.ArbitraryArgs] = true,
                                 [i.Kwargs] = true,
                                 [i.Throw] = true,

@@ -183,12 +183,14 @@ Feel free to submit a PR, I will be happy to help you !
 We use semantic versioning ! (https://semver.org)
 Here is the current Neogen version:
 >
-  neogen.version = "2.14.1"
+  neogen.version = "2.15.0"
 <
 # Changelog~
 
 Note: We will only document `major` and `minor` versions, not `patch` ones. (only X and Y in X.Y.z)
 
+## 2.15.0~
+  - Google docstrings now include "Yields:", whenever possible
 ## 2.14.0~
   - Google docstrings now include "Raises:", whenever possible
 ## 2.13.0~
