@@ -74,7 +74,7 @@ return {
                                         node_type = "default_parameter",
                                         subtree = {
                                             {
-                                                retrieve = "all",
+                                                position = 1,
                                                 node_type = "identifier",
                                                 extract = true,
                                                 as = i.Parameter,
