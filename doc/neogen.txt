@@ -183,7 +183,7 @@ Feel free to submit a PR, I will be happy to help you !
 We use semantic versioning ! (https://semver.org)
 Here is the current Neogen version:
 >
-  neogen.version = "2.15.0"
+  neogen.version = "2.15.1"
 <
 # Changelog~
 
