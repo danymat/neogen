@@ -204,7 +204,10 @@ return {
                                 if decorator == "@staticmethod" then
                                     remove_identifier = false
                                 end
+                            elseif node:parent():parent():type() == "function_definition" then
+                                remove_identifier = false
                             end
+
                             if remove_identifier then
                                 table.remove(res[i.Parameter], 1)
                                 if vim.tbl_isempty(res[i.Parameter]) then
