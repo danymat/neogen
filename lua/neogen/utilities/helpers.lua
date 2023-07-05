@@ -20,13 +20,17 @@ return {
         return vim.tbl_keys(language.parent)
     end,
 
+    ---@param s string
+    ---@param sep string
+    ---@param plain boolean
+    ---@return string[]
     split = function(s, sep, plain)
         return vim.fn.has("nvim-0.6") == 1 and vim.split(s, sep, { plain = plain }) or vim.split(s, sep, plain)
     end,
 
     --- Gets the text from the node
     ---@private
-    ---@param node userdata node to fetch text from
+    ---@param node TSNode node to fetch text from
     ---@param bufnr? number originated buffer number. Defaults to 0
     ---@return table newline separated list of text
     get_node_text = function(node, bufnr)

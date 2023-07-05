@@ -2,7 +2,7 @@ local helpers = require("neogen.utilities.helpers")
 return {
     --- Get a list of child nodes that match the provided node name
     --- @param _ any
-    --- @param parent userdata the parent's node
+    --- @param parent TSNode the parent's node
     --- @param node_type? string the node type to search for (if multiple childrens, separate each one with "|")
     --- @return table a table of nodes that matched the name
     matching_child_nodes = function(_, parent, node_type)
@@ -27,7 +27,7 @@ return {
     end,
 
     --- Find all nested childs from `parent` that match `node_name`. Returns a table of found nodes
-    --- @param parent userdata
+    --- @param parent TSNode
     --- @param node_name string
     --- @param opts table
     ---   - opts.first (bool):      if true, breaks at the first recursive item
@@ -53,7 +53,7 @@ return {
     end,
 
     --- Get all required nodes from tree
-    --- @param parent userdata the parent node
+    --- @param parent TSNode the parent node
     --- @param tree table a nested table : { retrieve = "all|first", node_type = node_name, subtree = tree, recursive = true }
     --- If you want to extract the node, do not specify the subtree and instead: extract = true
     --- Optional: you can specify position = number instead of retrieve, and it will fetch the child node at position number
