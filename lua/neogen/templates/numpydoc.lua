@@ -1,7 +1,7 @@
 local i = require("neogen.types.template").item
 
 return {
-    { nil, '""" $1 """', { no_results = true, type = { "class", "func" } } },
+    { nil, '"""$1"""', { no_results = true, type = { "class", "func" } } },
     { nil, '"""$1', { no_results = true, type = { "file" } } },
     { nil, "", { no_results = true, type = { "file" } } },
     { nil, "$1", { no_results = true, type = { "file" } } },
