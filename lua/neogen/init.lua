@@ -301,7 +301,7 @@ end
 ---     with multiple annotation conventions.
 ---@tag neogen-changelog
 ---@toc_entry Changes in neogen plugin
-neogen.version = "2.16.0"
+neogen.version = "2.16.1"
 --minidoc_afterlines_end
 
 return neogen
