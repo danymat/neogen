@@ -333,6 +333,18 @@ return {
                                             },
                                         },
                                     },
+                                    {
+                                        retrieve = "all",
+                                        node_type = "expression_statement",
+                                        subtree = {
+                                            {
+                                                retrieve = "first",
+                                                node_type = "assignment",
+                                                extract = true,
+                                                as = i.ClassAttribute,
+                                            },
+                                        },
+                                    },
                                 },
                             },
                         }
@@ -343,20 +355,33 @@ return {
                             return {}
                         end
 
-                        -- Deliberately check inside the init function for assignments to "self"
+                        -- Initialize results
                         results[i.ClassAttribute] = {}
-                        for _, assignment in pairs(nodes["assignment"]) do
-                            -- Getting left side in assignment
-                            local left = assignment:field("left")
 
-                            -- Checking if left side is an "attribute", which means assigning to an attribute to the function
-                            if not vim.tbl_isempty(left) and not vim.tbl_isempty(left[1]:field("attribute")) then
-                                --Adding it to the list
-                                local left_attribute = assignment:field("left")[1]:field("attribute")[1]
-                                left_attribute = helpers.get_node_text(left_attribute)[1]
+                        -- Extracting left field for the ones already marked as attributes
+                        if nodes[i.ClassAttribute] then
+                            for _, assignment in pairs(nodes[i.ClassAttribute]) do
+                                local left = assignment:field("left")
+                                left = left and helpers.get_node_text(left[1])[1]
+                                table.insert(results[i.ClassAttribute], left)
+                            end
+                        end
 
-                                if not vim.startswith(left_attribute, "_") then
-                                    table.insert(results[i.ClassAttribute], left_attribute)
+                        -- For other attributes only marked as assignments, we will check if they are not private and add them to the list
+                        -- Deliberately check inside the init function for assignments to "self"
+                        if nodes["assignment"] then
+                            for _, assignment in pairs(nodes["assignment"]) do
+                                -- Getting left side in assignment
+                                local left = assignment:field("left")
+                                -- Checking if left side is an "attribute", which means assigning to an attribute to the function
+                                if not vim.tbl_isempty(left) and not vim.tbl_isempty(left[1]:field("attribute")) then
+                                    --Adding it to the list
+                                    local left_attribute = assignment:field("left")[1]:field("attribute")[1]
+                                    left_attribute = helpers.get_node_text(left_attribute)[1]
+
+                                    if not vim.startswith(left_attribute, "_") then
+                                        table.insert(results[i.ClassAttribute], left_attribute)
+                                    end
                                 end
                             end
                         end
