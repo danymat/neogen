@@ -1,4 +1,3 @@
-local ts_utils = require("nvim-treesitter.ts_utils")
 local default_locator = require("neogen.locators.default")
 
 return function(node_info, nodes_to_match)
@@ -6,7 +5,7 @@ return function(node_info, nodes_to_match)
     if node_info.current and node_info.current:type() == "source" then
         local start_row, _, _, _ = vim.treesitter.get_node_range(node_info.current)
         vim.api.nvim_win_set_cursor(0, { start_row + 1, 0 })
-        node_info.current = ts_utils.get_node_at_cursor()
+        node_info.current = vim.treesitter.get_node()
     end
 
     local found_node = default_locator(node_info, nodes_to_match)

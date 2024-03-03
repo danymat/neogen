@@ -2,7 +2,7 @@
 
 ## Configuration file
 
-The configuration file for a language is in `lua/configurations/{lang}.lua`. 
+The configuration file for a language is in `lua/configurations/{lang}.lua`.
 
 _Note: Be aware that Neogen uses Treesitter to operate. You can install [TSPlayground](https://github.com/nvim-treesitter/playground) to check the AST._
 
@@ -11,7 +11,7 @@ Below is a commented sample of the configuration file for `lua`.
 ```lua
 -- Search for these nodes
 parent = { "function", "local_function", "local_variable_declaration", "field", "variable_declaration" },
-                                                                                                          
+
 -- Traverse down these nodes and extract the information as necessary
 data = {
     -- If function or local_function is found as a parent
@@ -20,12 +20,12 @@ data = {
         ["2"] = {
             -- This second child has to be of type "parameters", otherwise does nothing
             match = "parameters",
-                                                                                       
+
 	    -- Extractor function that returns a set of TSname = values with values being of type string[]
             extract = function(node)
                 local regular_params = neogen.utilities.extractors:extract_children_text("identifier")(node)
                 local varargs = neogen.utilities.extractors:extract_children_text("spread")(node)
-                                                                                                          
+
                 return {
                     parameters = regular_params,
                     vararg = varargs,
@@ -34,15 +34,15 @@ data = {
         },
     },
 },
-                                                                                                          
+
 -- Custom lua locator that escapes from comments (More on locators below)
 -- Passing nil will use the default locator
 locator = require("neogen.locators.lua"),
-                                                                                                          
+
 -- Use default granulator and generator (More on them below)
 granulator = nil,
 generator = nil,
-                                                            
+
 -- Template to use with the generator. (More on this below)
 template = {
     -- Which annotation convention to use
@@ -127,7 +127,7 @@ data = {
 
 Notes:
 
-- If you create your own granulator, you can add any kind of parameters in the `data` field from configuration file as long as the function signature is the same provided. 
+- If you create your own granulator, you can add any kind of parameters in the `data` field from configuration file as long as the function signature is the same provided.
 - Utilities are provided. You can check out their documentation in `lua/utilities/`.
 
 ## Generators
@@ -145,6 +145,6 @@ end
 - `parent` is the parent node found with the locator
 - `data` is the result from the granulator
 - `template` being the `template` field from the language configuration file.
-- `start_row` is the row in which we will append `generated_template` 
+- `start_row` is the row in which we will append `generated_template`
 - `start_col` is the col in which the `generated_template` will start
 - `generated_template` is the output we will append on the specified locations.

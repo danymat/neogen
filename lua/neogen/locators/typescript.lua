@@ -1,5 +1,8 @@
 local default_locator = require("neogen.locators.default")
 
+---@param node_info Neogen.node_info
+---@param nodes_to_match TSNode[]
+---@return TSNode?
 return function(node_info, nodes_to_match)
     local found_node = default_locator(node_info, nodes_to_match)
 

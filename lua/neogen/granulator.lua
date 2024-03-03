@@ -1,7 +1,7 @@
 local helpers = require("neogen.utilities.helpers")
 
 --- Tries to use the configuration to find all required content nodes from the parent node
----@param parent_node userdata the node found by the locator
+---@param parent_node TSNode the node found by the locator
 ---@param node_data table the data from configurations[lang].data
 return function(parent_node, node_data)
     local result = {}
