@@ -13,7 +13,7 @@ local conf = require("neogen.config").get()
 --- - `"luasnip"` (https://github.com/L3MON4D3/LuaSnip)
 --- - `"snippy"` (https://github.com/dcampos/nvim-snippy)
 --- - `"vsnip"` (https://github.com/hrsh7th/vim-vsnip)
---- - `"nvim"`
+--- - `"nvim"` (`:h vim.snippet`)
 ---
 --- If you want to customize the placeholders, you can use `placeholders_text` option:
 --- >
