@@ -4,6 +4,8 @@
 
 The configuration file for a language is in `lua/configurations/{lang}.lua`.
 
+_Note: Be aware that Neogen uses Treesitter to operate. You can install [TSPlayground](https://github.com/nvim-treesitter/playground) to check the AST._
+
 Below is a commented sample of the configuration file for `lua`.
 
 ```lua
