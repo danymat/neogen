@@ -13,6 +13,7 @@ local conf = require("neogen.config").get()
 --- - `"luasnip"` (https://github.com/L3MON4D3/LuaSnip)
 --- - `"snippy"` (https://github.com/dcampos/nvim-snippy)
 --- - `"vsnip"` (https://github.com/hrsh7th/vim-vsnip)
+--- - `"nvim"` (`:h vim.snippet`)
 ---
 --- If you want to customize the placeholders, you can use `placeholders_text` option:
 --- >
@@ -128,6 +129,18 @@ snippet.engines.vsnip = function(snip, pos)
     vim.api.nvim_win_set_cursor(0, { row + 1, 0 }) -- `snip` already has indent so we should ignore `col`
     snip = table.concat(snip, "\n") -- vsnip expects on string instead of a list/table of lines
     vim.fn["vsnip#anonymous"](snip)
+end
+
+--- Expand snippet for vim.snippet engine
+---@param snip string the snippet to expand
+---@param pos table a tuple of row, col
+---@private
+snippet.engines.nvim = function(snip, pos)
+    local row, _ = unpack(pos)
+    vim.api.nvim_buf_set_lines(0, row, row, true, { "" })
+    vim.api.nvim_win_set_cursor(0, { row + 1, 0 })
+    snip = table.concat(snip, "\n")
+    vim.snippet.expand(snip)
 end
 
 return snippet

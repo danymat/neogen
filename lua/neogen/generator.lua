@@ -1,13 +1,6 @@
 local helpers = require("neogen.utilities.helpers")
 local notify = helpers.notify
 
-local ok, ts_utils = pcall(require, "nvim-treesitter.ts_utils")
-if not ok then
-    notify("neogen requires nvim-treesitter to operate :(", vim.log.levels.ERROR)
-    return function(_, _) end
-end
-local ts_parsers = require("nvim-treesitter.parsers")
-
 local conf = require("neogen.config").get()
 local granulator = require("neogen.granulator")
 
@@ -65,11 +58,11 @@ end
 
 -- Get nearest parent node
 local function get_parent_node(filetype, node_type, language)
-    local parser_name = ts_parsers.ft_to_lang(filetype)
+    local parser_name = vim.treesitter.language.get_lang(filetype)
     local parser = vim.treesitter.get_parser(0, parser_name)
     local tstree = parser:parse()[1]
     local tree = tstree:root()
-    local current_node = ts_utils.get_node_at_cursor(0)
+    local current_node = vim.treesitter.get_node()
     local match_any = node_type == ANY_TYPE
     local target_node, target_type
     local locator = language.locator or default_locator

@@ -32,7 +32,7 @@
 
 ## Requirements
 
-- Install [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter)
+Have Tree-sitter parsers installed on your system. For more information, check out the [:treesitter-parsers](https://neovim.io/doc/user/treesitter.html#treesitter-parsers) neovim help page.
 
 ## Installation
 
@@ -43,7 +43,6 @@ Use your favorite package manager to install Neogen, e.g:
 ```lua
 { 
     "danymat/neogen", 
-    dependencies = "nvim-treesitter/nvim-treesitter", 
     config = true,
     -- Uncomment next line if you want to follow only stable versions
     -- version = "*" 
@@ -58,7 +57,6 @@ use {
     config = function()
         require('neogen').setup {}
     end,
-    requires = "nvim-treesitter/nvim-treesitter",
     -- Uncomment next line if you want to follow only stable versions
     -- tag = "*"
 }

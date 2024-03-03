@@ -36,10 +36,10 @@ Check out the up-to-date readme section: https://github.com/danymat/neogen#suppo
                              `neogen.setup`({opts})
 Module setup
 
-Parameters~
+Parameters ~
 {opts} `(table)` Config table (see |neogen.configuration|)
 
-Usage~
+Usage ~
 `require('neogen').setup({})` (replace `{}` with your `config` table)
 
 ------------------------------------------------------------------------------
@@ -148,7 +148,7 @@ It'll try to find the first parent that matches a certain type.
 For example, if you are inside a function, and called `generate({ type = "func" })`,
 Neogen will go until the start of the function and start annotating for you.
 
-Parameters~
+Parameters ~
 {opts} `(table)` Optional configs to change default behaviour of generation.
  - {opts.type} `(string, default: "any")` Which type we are trying to use for generating annotations.
    Currently supported: `any`, `func`, `class`, `type`, `file`
@@ -183,12 +183,14 @@ Feel free to submit a PR, I will be happy to help you !
 We use semantic versioning ! (https://semver.org)
 Here is the current Neogen version:
 >
-  neogen.version = "2.15.2"
+  neogen.version = "2.16.0"
 <
 # Changelog~
 
 Note: We will only document `major` and `minor` versions, not `patch` ones. (only X and Y in X.Y.z)
 
+## 2.16.0~
+  - Add support for `nvim` snippet engine (default nvim snippet engine) ! (see |neogen-snippet-integration|)
 ## 2.15.0~
   - Google docstrings now include "Yields:", whenever possible
 ## 2.14.0~
@@ -263,6 +265,7 @@ Some snippet engines come out of the box bundled with neogen:
 - `"luasnip"` (https://github.com/L3MON4D3/LuaSnip)
 - `"snippy"` (https://github.com/dcampos/nvim-snippy)
 - `"vsnip"` (https://github.com/hrsh7th/vim-vsnip)
+- `"nvim"` (`:h vim.snippet`)
 
 If you want to customize the placeholders, you can use `placeholders_text` option:
 >
@@ -295,7 +298,7 @@ corresponding to annotation conventions,
 as well as providing custom configurations in order to be precise about
 how to customize the annotations.
 
-Type~
+Type ~
 neogen.TemplateConfig
 
 Default values:
@@ -310,16 +313,16 @@ Default values:
 ------------------------------------------------------------------------------
 # neogen.TemplateConfig~
 
-Class~
+Class ~
 {neogen.TemplateConfig} see |template_config|
-Fields~
+Fields ~
 {annotation_convention} `(string)` select which annotation convention to use
 {use_default_comment} `(boolean)` Prepend default filetype comment before a annotation
 {append} `(optional)` neogen.TemplateConfig.Append custom placement of the annotation
 {position} `(fun(node: userdata, type: string): number,number)` Provide an absolute position for the annotation
   If values are `nil`, use default positioning
 
-Class~
+Class ~
 {neogen.TemplateConfig.Append}
 {child_name} `(string)` Which child node to use for appending the annotation
 {fallback} `(string)` Node to fallback if `child_name` is not found
@@ -445,9 +448,9 @@ Last step, if you want to use your own annotation convention for a language:
 ------------------------------------------------------------------------------
 # neogen.AnnotationLine~
 
-Class~
+Class ~
 {neogen.AnnotationLine.Opts}
-Fields~
+Fields ~
 {no_results} `(boolean)` If true, will only generate the line if there are no values returned by the configuration
 {type} `(string[])` If specified, will only generate the line for the required types.
 If not specified, will use this line for all types.
