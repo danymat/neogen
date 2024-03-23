@@ -202,6 +202,26 @@ return {
                                             },
                                         },
                                     },
+                                    {
+                                        retrieve = "all",
+                                        node_type = "raise_statement",
+                                        recursive = true,
+                                        subtree = {
+                                            {
+                                                retrieve = "first",
+                                                node_type = "call",
+                                                recursive = true,
+                                                subtree = {
+                                                    {
+                                                        retrieve = "first",
+                                                        node_type = "attribute",
+                                                        extract = true,
+                                                        as = i.Throw,
+                                                    }
+                                                }
+                                            },
+                                        },
+                                    },
                                 },
                             },
                             {
