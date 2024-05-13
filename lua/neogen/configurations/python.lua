@@ -247,8 +247,8 @@ return {
                         end
 
                         if nodes[i.Return] then
-                            validate_bare_returns(nodes)
                             validate_direct_returns(nodes, node)
+                            validate_bare_returns(nodes)
                         end
 
                         validate_yield_nodes(nodes)
