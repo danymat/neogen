@@ -183,12 +183,15 @@ Feel free to submit a PR, I will be happy to help you !
 We use semantic versioning ! (https://semver.org)
 Here is the current Neogen version:
 >
-  neogen.version = "2.17.1"
+  neogen.version = "2.18.0"
 <
 # Changelog~
 
 Note: We will only document `major` and `minor` versions, not `patch` ones. (only X and Y in X.Y.z)
 
+## 2.18.0~
+  - Added plenary unittests to the repository
+  - Added Python + Google-style docstrings
 ## 2.17.1~
   - Python raises now supports `raise foo.Bar()` syntax
 ## 2.17.0~
