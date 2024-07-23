@@ -12,7 +12,6 @@ Table of contents:
   Configurations for the template table........|neogen-template-configuration|
   How to create/customize an annotation....................|neogen-annotation|
 
-
 ------------------------------------------------------------------------------
                                                                         *neogen*
 What is Neogen ?
@@ -88,7 +87,7 @@ NOTE: calling `:Neogen` without any type is the same as `:Neogen func`
 # Basic configurations~
 
 Neogen provides those defaults, and you can change them to suit your needs
->
+>lua
   neogen.configuration = {
       -- Enables Neogen capabilities
       enabled = true,
@@ -182,16 +181,13 @@ Feel free to submit a PR, I will be happy to help you !
                                 `neogen.version`
 We use semantic versioning ! (https://semver.org)
 Here is the current Neogen version:
->
+>lua
   neogen.version = "2.18.0"
 <
 # Changelog~
 
 Note: We will only document `major` and `minor` versions, not `patch` ones. (only X and Y in X.Y.z)
 
-## 2.18.0~
-  - Added plenary unittests to the repository
-  - Added Python + Google-style docstrings
 ## 2.17.1~
   - Python raises now supports `raise foo.Bar()` syntax
 ## 2.17.0~
@@ -310,13 +306,12 @@ neogen.TemplateConfig
 
 Default values:
 
->
+>lua
   local neogen_template = {
       annotation_convention = nil,
       use_default_comment = false,
   }
 <
-
 ------------------------------------------------------------------------------
 # neogen.TemplateConfig~
 
@@ -366,7 +361,6 @@ Or:
      """ """
      pass
 <
-
 ------------------------------------------------------------------------------
                                                              *neogen-annotation*
 
