@@ -2,72 +2,38 @@
 ---
 --- @module 'tests.neogen.python_spec'
 
-local textmate = require("tests.textmate")
-local neogen = require("neogen")
+local specs = require('tests.utils.specs')
 
---- Make a Python docstring and return the `neogen` result.
----@param source string Pseudo-Python source-code to call. It contains `"|cursor|"` which is the expected user position.
----@return string? # The same source code, after calling neogen.
-local function _make_python_docstring(source)
-    local result = textmate.extract_cursors(source)
-
-    if not result then
-        vim.notify(
-            string.format("Source\n\n%s\n\nwas not parsable. Does it have a |cursor| defined?", source),
-            vim.log.levels.ERROR
-        )
-
-        return nil
-    end
-
-    local cursors, code = unpack(result)
-
-    local buffer = vim.api.nvim_create_buf(true, true)
-    vim.bo[buffer].filetype = "python"
-    vim.cmd.buffer(buffer)
-    local window = vim.fn.win_getid() -- We just created the buffer so the current window works
-
-    local strict_indexing = false
-    vim.api.nvim_buf_set_lines(buffer, 0, -1, strict_indexing, vim.fn.split(code, "\n"))
-
-    -- IMPORTANT: Because we are adding docstrings in the buffer, we must start
-    -- from the bottom docstring up. Otherwise the row/column positions of the
-    -- next `cursor` in `cursors` will be out of date.
-    for index = #cursors, 1, -1 do
-        local cursor = cursors[index]
-        vim.api.nvim_win_set_cursor(window, cursor)
-
-        neogen.generate({ snippet_engine = "nvim" })
-    end
-
-    return table.concat(vim.api.nvim_buf_get_lines(buffer, 0, -1, strict_indexing), "\n")
+local function make_google_docstrings(source)
+    return specs.make_docstring(source, 'python', { annotation_convention = { python = 'google_docstrings' } })
 end
 
-describe("python function docstrings", function()
-    it("works with an empty function", function()
-        local source = [[
+describe("python: google_docstrings", function()
+    describe("func", function()
+        it("works with an empty function", function()
+            local source = [[
         def foo():|cursor|
             pass
         ]]
 
-        local expected = [[
+            local expected = [[
         def foo():
             """[TODO:description]"""
             pass
         ]]
 
-        local result = _make_python_docstring(source)
+            local result = make_google_docstrings(source)
 
-        assert.equal(expected, result)
-    end)
+            assert.equal(expected, result)
+        end)
 
-    it("works with typed arguments", function()
-        local source = [[
+        it("works with typed arguments", function()
+            local source = [[
         def foo(bar: list[str], fizz: int, buzz: dict[str, int]):|cursor|
             pass
         ]]
 
-        local expected = [[
+            local expected = [[
         def foo(bar: list[str], fizz: int, buzz: dict[str, int]):
             """[TODO:description]
 
@@ -79,15 +45,15 @@ describe("python function docstrings", function()
             pass
         ]]
 
-        local result = _make_python_docstring(source)
+            local result = make_google_docstrings(source)
 
-        assert.equal(expected, result)
+            assert.equal(expected, result)
+        end)
     end)
-end)
 
-describe("python function docstrings - arguments", function()
-    it("works with class methods", function()
-        local source = [[
+    describe("func - arguments", function()
+        it("works with class methods", function()
+            local source = [[
         class Foo:
             @classmethod
             def no_arguments(cls):|cursor|
@@ -102,7 +68,7 @@ describe("python function docstrings - arguments", function()
                 return 9
         ]]
 
-        local expected = [[
+            local expected = [[
         class Foo:
             @classmethod
             def no_arguments(cls):
@@ -139,13 +105,13 @@ describe("python function docstrings - arguments", function()
                 return 9
         ]]
 
-        local result = _make_python_docstring(source)
+            local result = make_google_docstrings(source)
 
-        assert.equal(expected, result)
-    end)
+            assert.equal(expected, result)
+        end)
 
-    it("works with methods + nested functions", function()
-        local source = [[
+        it("works with methods + nested functions", function()
+            local source = [[
         # Reference: https://github.com/danymat/neogen/pull/151
         class Thing(object):
             def foo(self, bar, fizz, buzz):|cursor|
@@ -154,7 +120,7 @@ describe("python function docstrings - arguments", function()
                         pass
         ]]
 
-        local expected = [[
+            local expected = [[
         # Reference: https://github.com/danymat/neogen/pull/151
         class Thing(object):
             def foo(self, bar, fizz, buzz):
@@ -182,13 +148,13 @@ describe("python function docstrings - arguments", function()
                         pass
         ]]
 
-        local result = _make_python_docstring(source)
+            local result = make_google_docstrings(source)
 
-        assert.equal(expected, result)
-    end)
+            assert.equal(expected, result)
+        end)
 
-    it("works with static methods", function()
-        local source = [[
+        it("works with static methods", function()
+            local source = [[
         class Foo:
             @staticmethod
             def no_arguments():|cursor|
@@ -203,7 +169,7 @@ describe("python function docstrings - arguments", function()
                 return 9
         ]]
 
-        local expected = [[
+            local expected = [[
         class Foo:
             @staticmethod
             def no_arguments():
@@ -240,20 +206,20 @@ describe("python function docstrings - arguments", function()
                 return 9
         ]]
 
-        local result = _make_python_docstring(source)
+            local result = make_google_docstrings(source)
 
-        assert.equal(expected, result)
+            assert.equal(expected, result)
+        end)
     end)
-end)
 
-describe("python function docstrings - arguments permutations", function()
-    it("works with named typed arguments", function()
-        local source = [[
+    describe("func - argument permutations", function()
+        it("works with named typed arguments", function()
+            local source = [[
         def foo(fizz: str=None, buzz: list[str]=None):|cursor|
             pass
         ]]
 
-        local expected = [[
+            local expected = [[
         def foo(fizz: str=None, buzz: list[str]=None):
             """[TODO:description]
 
@@ -264,18 +230,18 @@ describe("python function docstrings - arguments permutations", function()
             pass
         ]]
 
-        local result = _make_python_docstring(source)
+            local result = make_google_docstrings(source)
 
-        assert.equal(expected, result)
-    end)
+            assert.equal(expected, result)
+        end)
 
-    it("works with named untyped arguments", function()
-        local source = [[
+        it("works with named untyped arguments", function()
+            local source = [[
         def foo(fizz=None, buzz=8):|cursor|
             pass
         ]]
 
-        local expected = [[
+            local expected = [[
         def foo(fizz=None, buzz=8):
             """[TODO:description]
 
@@ -286,18 +252,18 @@ describe("python function docstrings - arguments permutations", function()
             pass
         ]]
 
-        local result = _make_python_docstring(source)
+            local result = make_google_docstrings(source)
 
-        assert.equal(expected, result)
-    end)
+            assert.equal(expected, result)
+        end)
 
-    it("works with positional typed arguments", function()
-        local source = [[
+        it("works with positional typed arguments", function()
+            local source = [[
         def foo(fizz: str, buzz: list[str]):|cursor|
             pass
         ]]
 
-        local expected = [[
+            local expected = [[
         def foo(fizz: str, buzz: list[str]):
             """[TODO:description]
 
@@ -308,18 +274,18 @@ describe("python function docstrings - arguments permutations", function()
             pass
         ]]
 
-        local result = _make_python_docstring(source)
+            local result = make_google_docstrings(source)
 
-        assert.equal(expected, result)
-    end)
+            assert.equal(expected, result)
+        end)
 
-    it("works with positional untyped arguments", function()
-        local source = [[
+        it("works with positional untyped arguments", function()
+            local source = [[
         def foo(fizz, buzz):|cursor|
             pass
         ]]
 
-        local expected = [[
+            local expected = [[
         def foo(fizz, buzz):
             """[TODO:description]
 
@@ -330,18 +296,18 @@ describe("python function docstrings - arguments permutations", function()
             pass
         ]]
 
-        local result = _make_python_docstring(source)
+            local result = make_google_docstrings(source)
 
-        assert.equal(expected, result)
-    end)
+            assert.equal(expected, result)
+        end)
 
-    it("works with required named typed arguments", function()
-        local source = [[
+        it("works with required named typed arguments", function()
+            local source = [[
         def foo(fizz, *, buzz: int):|cursor|
             pass
         ]]
 
-        local expected = [[
+            local expected = [[
         def foo(fizz, *, buzz: int):
             """[TODO:description]
 
@@ -352,18 +318,18 @@ describe("python function docstrings - arguments permutations", function()
             pass
         ]]
 
-        local result = _make_python_docstring(source)
+            local result = make_google_docstrings(source)
 
-        assert.equal(expected, result)
-    end)
+            assert.equal(expected, result)
+        end)
 
-    it("works with required named untyped arguments", function()
-        local source = [[
+        it("works with required named untyped arguments", function()
+            local source = [[
         def foo(fizz, *, buzz):|cursor|
             pass
         ]]
 
-        local expected = [[
+            local expected = [[
         def foo(fizz, *, buzz):
             """[TODO:description]
 
@@ -374,101 +340,101 @@ describe("python function docstrings - arguments permutations", function()
             pass
         ]]
 
-        local result = _make_python_docstring(source)
+            local result = make_google_docstrings(source)
 
-        assert.equal(expected, result)
+            assert.equal(expected, result)
+        end)
+
+        -- TODO: These tests currently fail but should pass. Fix the bugs!
+        -- it("works with *args typed arguments", function()
+        --     local source = [[
+        --     def foo(*args: list[str]):|cursor|
+        --         pass
+        --     ]]
+        --
+        --     local expected = [[
+        --     def foo(*args: list[str]):
+        --         """[TODO:description]
+        --
+        --         Args:
+        --             *args: [TODO:description]
+        --         """
+        --         pass
+        --     ]]
+        --
+        --     local result = _make_python_docstring(source)
+        --
+        --     assert.equal(expected, result)
+        -- end)
+        --
+        -- it("works with *args untyped arguments", function()
+        --     local source = [[
+        --     def foo(*args):|cursor|
+        --         pass
+        --     ]]
+        --
+        --     local expected = [[
+        --     def foo(*args):
+        --         """[TODO:description]
+        --
+        --         Args:
+        --             *args: [TODO:description]
+        --         """
+        --         pass
+        --     ]]
+        --
+        --     local result = _make_python_docstring(source)
+        --
+        --     assert.equal(expected, result)
+        -- end)
+
+        -- TODO: These tests currently fail but should pass. Fix the bugs!
+        -- it("works with *kwargs typed arguments", function()
+        --     local source = [[
+        --     def foo(**kwargs: dict[str, str]):|cursor|
+        --         pass
+        --     ]]
+        --
+        --     local expected = [[
+        --     def foo(**kwargs: dict[str, str]):
+        --         """[TODO:description]
+        --
+        --         Args:
+        --             **kwargs: [TODO:description]
+        --         """
+        --         pass
+        --     ]]
+        --
+        --     local result = _make_python_docstring(source)
+        --
+        --     assert.equal(expected, result)
+        -- end)
+        --
+        -- it("works with *args untyped arguments", function()
+        --     local source = [[
+        --     def foo(**kwargs):|cursor|
+        --         pass
+        --     ]]
+        --
+        --     local expected = [[
+        --     def foo(**kwargs):
+        --         """[TODO:description]
+        --
+        --         Args:
+        --             **kwargs: [TODO:description]
+        --         """
+        --         pass
+        --     ]]
+        --
+        --     local result = _make_python_docstring(source)
+        --
+        --     assert.equal(expected, result)
+        -- end)
     end)
 
-    -- TODO: These tests currently fail but should pass. Fix the bugs!
-    -- it("works with *args typed arguments", function()
-    --     local source = [[
-    --     def foo(*args: list[str]):|cursor|
-    --         pass
-    --     ]]
-    --
-    --     local expected = [[
-    --     def foo(*args: list[str]):
-    --         """[TODO:description]
-    --
-    --         Args:
-    --             *args: [TODO:description]
-    --         """
-    --         pass
-    --     ]]
-    --
-    --     local result = _make_python_docstring(source)
-    --
-    --     assert.equal(expected, result)
-    -- end)
-    --
-    -- it("works with *args untyped arguments", function()
-    --     local source = [[
-    --     def foo(*args):|cursor|
-    --         pass
-    --     ]]
-    --
-    --     local expected = [[
-    --     def foo(*args):
-    --         """[TODO:description]
-    --
-    --         Args:
-    --             *args: [TODO:description]
-    --         """
-    --         pass
-    --     ]]
-    --
-    --     local result = _make_python_docstring(source)
-    --
-    --     assert.equal(expected, result)
-    -- end)
-
-    -- TODO: These tests currently fail but should pass. Fix the bugs!
-    -- it("works with *kwargs typed arguments", function()
-    --     local source = [[
-    --     def foo(**kwargs: dict[str, str]):|cursor|
-    --         pass
-    --     ]]
-    --
-    --     local expected = [[
-    --     def foo(**kwargs: dict[str, str]):
-    --         """[TODO:description]
-    --
-    --         Args:
-    --             **kwargs: [TODO:description]
-    --         """
-    --         pass
-    --     ]]
-    --
-    --     local result = _make_python_docstring(source)
-    --
-    --     assert.equal(expected, result)
-    -- end)
-    --
-    -- it("works with *args untyped arguments", function()
-    --     local source = [[
-    --     def foo(**kwargs):|cursor|
-    --         pass
-    --     ]]
-    --
-    --     local expected = [[
-    --     def foo(**kwargs):
-    --         """[TODO:description]
-    --
-    --         Args:
-    --             **kwargs: [TODO:description]
-    --         """
-    --         pass
-    --     ]]
-    --
-    --     local result = _make_python_docstring(source)
-    --
-    --     assert.equal(expected, result)
-    -- end)
-end)
-
-describe("python function docstrings - raises", function()
-    it("does not show when implicitly re-raising an exception", function()
-        local source = [[
+    describe("func - raises", function()
+        it("does not show when implicitly re-raising an exception", function()
+            local source = [[
         def foo():|cursor|
             try:
                 blah()
@@ -478,7 +444,7 @@ describe("python function docstrings - raises", function()
                 raise
         ]]
 
-        local expected = [[
+            local expected = [[
         def foo():
             """[TODO:description]"""
             try:
@@ -489,56 +455,56 @@ describe("python function docstrings - raises", function()
                 raise
         ]]
 
-        local result = _make_python_docstring(source)
+            local result = make_google_docstrings(source)
 
-        assert.equal(expected, result)
-    end)
+            assert.equal(expected, result)
+        end)
 
-    -- TODO: This is broken. Fix it!
-    -- This used to work but broke later on, it seems - https://github.com/danymat/neogen/pull/142
-    -- it("lists only one entry per-raised type", function()
-    --     local source = [[
-    --     def foo(bar):|cursor|
-    --         if bar:
-    --             raise TypeError("THING")
-    --
-    --         if GLOBAL:
-    --             raise ValueError("asdffsd")
-    --
-    --         raise TypeError("BLAH")
-    --     ]]
-    --
-    --     local expected = [[
-    --     def foo(bar):
-    --         """[TODO:description]
-    --
-    --         Args:
-    --             bar ([TODO:parameter]): [TODO:description]
-    --
-    --         Raises:
-    --             TypeError: [TODO:throw]
-    --             ValueError: [TODO:throw]
-    --         """
-    --         if bar:
-    --             raise TypeError("THING")
-    --
-    --             raise ValueError("asdffsd")
-    --
-    --         raise TypeError("BLAH")
-    --     ]]
-    --
-    --     local result = _make_python_docstring(source)
-    --
-    --     assert.equal(expected, result)
-    -- end)
+        -- TODO: This is broken. Fix it!
+        -- This used to work but broke later on, it seems - https://github.com/danymat/neogen/pull/142
+        -- it("lists only one entry per-raised type", function()
+        --     local source = [[
+        --     def foo(bar):|cursor|
+        --         if bar:
+        --             raise TypeError("THING")
+        --
+        --         if GLOBAL:
+        --             raise ValueError("asdffsd")
+        --
+        --         raise TypeError("BLAH")
+        --     ]]
+        --
+        --     local expected = [[
+        --     def foo(bar):
+        --         """[TODO:description]
+        --
+        --         Args:
+        --             bar ([TODO:parameter]): [TODO:description]
+        --
+        --         Raises:
+        --             TypeError: [TODO:throw]
+        --             ValueError: [TODO:throw]
+        --         """
+        --         if bar:
+        --             raise TypeError("THING")
+        --
+        --             raise ValueError("asdffsd")
+        --
+        --         raise TypeError("BLAH")
+        --     ]]
+        --
+        --     local result = _make_python_docstring(source)
+        --
+        --     assert.equal(expected, result)
+        -- end)
 
-    it("works with modules, even if they are nested", function()
-        local source = [[
+        it("works with modules, even if they are nested", function()
+            local source = [[
         def foo():|cursor|
             raise some_package.submodule.BlahError("asdffsd")
         ]]
 
-        local expected = [[
+            local expected = [[
         def foo():
             """[TODO:description]
 
@@ -548,18 +514,18 @@ describe("python function docstrings - raises", function()
             raise some_package.submodule.BlahError("asdffsd")
         ]]
 
-        local result = _make_python_docstring(source)
+            local result = make_google_docstrings(source)
 
-        assert.equal(expected, result)
-    end)
+            assert.equal(expected, result)
+        end)
 
-    it("works with 1 raise", function()
-        local source = [[
+        it("works with 1 raise", function()
+            local source = [[
         def foo():|cursor|
             raise ValueError("asdffsd")
         ]]
 
-        local expected = [[
+            local expected = [[
         def foo():
             """[TODO:description]
 
@@ -569,53 +535,53 @@ describe("python function docstrings - raises", function()
             raise ValueError("asdffsd")
         ]]
 
-        local result = _make_python_docstring(source)
+            local result = make_google_docstrings(source)
 
-        assert.equal(expected, result)
+            assert.equal(expected, result)
+        end)
+
+        -- TODO: This is broken. Fix it!
+        -- This used to work but broke later on, it seems - https://github.com/danymat/neogen/pull/142
+        -- it("works with 2+ raises", function()
+        --     local source = [[
+        --     def foo(bar):|cursor|
+        --         if bar:
+        --             raise TypeError("THING")
+        --
+        --         if GLOBAL:
+        --             raise TypeError("asdffsd")
+        --
+        --         raise TypeError("BLAH")
+        --     ]]
+        --
+        --     local expected = [[
+        --     def foo(bar):
+        --         """[TODO:description]
+        --
+        --         Args:
+        --             bar ([TODO:parameter]): [TODO:description]
+        --
+        --         Raises:
+        --             TypeError: [TODO:throw]
+        --         """
+        --         if bar:
+        --             raise TypeError("THING")
+        --
+        --         if GLOBAL:
+        --             raise TypeError("asdffsd")
+        --
+        --         raise TypeError("BLAH")
+        --     ]]
+        --
+        --     local result = _make_python_docstring(source)
+        --
+        --     assert.equal(expected, result)
+        -- end)
     end)
 
-    -- TODO: This is broken. Fix it!
-    -- This used to work but broke later on, it seems - https://github.com/danymat/neogen/pull/142
-    -- it("works with 2+ raises", function()
-    --     local source = [[
-    --     def foo(bar):|cursor|
-    --         if bar:
-    --             raise TypeError("THING")
-    --
-    --         if GLOBAL:
-    --             raise TypeError("asdffsd")
-    --
-    --         raise TypeError("BLAH")
-    --     ]]
-    --
-    --     local expected = [[
-    --     def foo(bar):
-    --         """[TODO:description]
-    --
-    --         Args:
-    --             bar ([TODO:parameter]): [TODO:description]
-    --
-    --         Raises:
-    --             TypeError: [TODO:throw]
-    --         """
-    --         if bar:
-    --             raise TypeError("THING")
-    --
-    --         if GLOBAL:
-    --             raise TypeError("asdffsd")
-    --
-    --         raise TypeError("BLAH")
-    --     ]]
-    --
-    --     local result = _make_python_docstring(source)
-    --
-    --     assert.equal(expected, result)
-    -- end)
-end)
-
-describe("python function docstrings - returns", function()
-    it("does not show if there are only implicit returns", function()
-        local source = [[
+    describe("func - returns", function()
+        it("does not show if there are only implicit returns", function()
+            local source = [[
         def foo(bar):|cursor|
             if bar:
                 return
@@ -623,7 +589,7 @@ describe("python function docstrings - returns", function()
             return  # Unneeded but good for the unittest
         ]]
 
-        local expected = [[
+            local expected = [[
         def foo(bar):
             """[TODO:description]
 
@@ -636,52 +602,52 @@ describe("python function docstrings - returns", function()
             return  # Unneeded but good for the unittest
         ]]
 
-        local result = _make_python_docstring(source)
+            local result = make_google_docstrings(source)
 
-        assert.equal(expected, result)
-    end)
+            assert.equal(expected, result)
+        end)
 
-    -- TODO: This test is broken. Needs fixing
-    -- it("works with an inline comment", function()
-    --     local source = [[
-    --     def flags(self, index):|cursor|  # pylint: disable=unused-argument
-    --         return (
-    --             QtCore.Qt.ItemIsEnabled
-    --             | QtCore.Qt.ItemIsSelectable
-    --             | QtCore.Qt.ItemIsUserCheckable
-    --         )
-    --     ]]
-    --
-    --     local expected = [[
-    --     def flags(self, index):  # pylint: disable=unused-argument
-    --         """[TODO:description]
-    --
-    --         Args:
-    --             self ([TODO:parameter]): [TODO:description]
-    --             index ([TODO:parameter]): [TODO:description]
-    --
-    --         Returns:
-    --             [TODO:return]
-    --         """
-    --         return (
-    --             QtCore.Qt.ItemIsEnabled
-    --             | QtCore.Qt.ItemIsSelectable
-    --             | QtCore.Qt.ItemIsUserCheckable
-    --         )
-    --     ]]
-    --
-    --     local result = _make_python_docstring(source)
-    --
-    --     assert.equal(expected, result)
-    -- end)
+        -- TODO: This test is broken. Needs fixing
+        -- it("works with an inline comment", function()
+        --     local source = [[
+        --     def flags(self, index):|cursor|  # pylint: disable=unused-argument
+        --         return (
+        --             QtCore.Qt.ItemIsEnabled
+        --             | QtCore.Qt.ItemIsSelectable
+        --             | QtCore.Qt.ItemIsUserCheckable
+        --         )
+        --     ]]
+        --
+        --     local expected = [[
+        --     def flags(self, index):  # pylint: disable=unused-argument
+        --         """[TODO:description]
+        --
+        --         Args:
+        --             self ([TODO:parameter]): [TODO:description]
+        --             index ([TODO:parameter]): [TODO:description]
+        --
+        --         Returns:
+        --             [TODO:return]
+        --         """
+        --         return (
+        --             QtCore.Qt.ItemIsEnabled
+        --             | QtCore.Qt.ItemIsSelectable
+        --             | QtCore.Qt.ItemIsUserCheckable
+        --         )
+        --     ]]
+        --
+        --     local result = _make_python_docstring(source)
+        --
+        --     assert.equal(expected, result)
+        -- end)
 
-    it("works with no arguments", function()
-        local source = [[
+        it("works with no arguments", function()
+            local source = [[
         def foo():|cursor|
             return 10
         ]]
 
-        local expected = [[
+            local expected = [[
         def foo():
             """[TODO:description]
 
@@ -691,30 +657,30 @@ describe("python function docstrings - returns", function()
             return 10
         ]]
 
-        local result = _make_python_docstring(source)
+            local result = make_google_docstrings(source)
 
-        assert.equal(expected, result)
-    end)
+            assert.equal(expected, result)
+        end)
 
-    it("works with no return", function()
-        local source = [[
+        it("works with no return", function()
+            local source = [[
         def foo():|cursor|
             pass
         ]]
 
-        local expected = [[
+            local expected = [[
         def foo():
             """[TODO:description]"""
             pass
         ]]
 
-        local result = _make_python_docstring(source)
+            local result = make_google_docstrings(source)
 
-        assert.equal(expected, result)
-    end)
+            assert.equal(expected, result)
+        end)
 
-    it("works with various returns in one function", function()
-        local source = [[
+        it("works with various returns in one function", function()
+            local source = [[
         def foo(items):|cursor|
             for item in items:
                 if item == "blah":
@@ -723,7 +689,7 @@ describe("python function docstrings - returns", function()
             return "something else"
         ]]
 
-        local expected = [[
+            local expected = [[
         def foo(items):
             """[TODO:description]
 
@@ -740,15 +706,15 @@ describe("python function docstrings - returns", function()
             return "something else"
         ]]
 
-        local result = _make_python_docstring(source)
+            local result = make_google_docstrings(source)
 
-        assert.equal(expected, result)
+            assert.equal(expected, result)
+        end)
     end)
-end)
 
-describe("python function docstrings - yields", function()
-    it("works even with no explicit yield value", function()
-        local source = [[
+    describe("func - yields", function()
+        it("works even with no explicit yield value", function()
+            local source = [[
         @contextlib.contextmanager
         def foo(items):|cursor|
             try:
@@ -757,7 +723,7 @@ describe("python function docstrings - yields", function()
                 print("bad thing happened")
         ]]
 
-        local expected = [[
+            local expected = [[
         @contextlib.contextmanager
         def foo(items):
             """[TODO:description]
@@ -774,20 +740,20 @@ describe("python function docstrings - yields", function()
                 print("bad thing happened")
         ]]
 
-        local result = _make_python_docstring(source)
+            local result = make_google_docstrings(source)
 
-        assert.equal(expected, result)
-    end)
+            assert.equal(expected, result)
+        end)
 
-    it("works when doing yield + return at once", function()
-        local source = [[
+        it("works when doing yield + return at once", function()
+            local source = [[
         def items(value):|cursor|
             if value:
                 return
                 yield
         ]]
 
-        local expected = [[
+            local expected = [[
         def items(value):
             """[TODO:description]
 
@@ -802,13 +768,13 @@ describe("python function docstrings - yields", function()
                 yield
         ]]
 
-        local result = _make_python_docstring(source)
+            local result = make_google_docstrings(source)
 
-        assert.equal(expected, result)
-    end)
+            assert.equal(expected, result)
+        end)
 
-    it("works with 2+ yields in one function", function()
-        local source = [[
+        it("works with 2+ yields in one function", function()
+            local source = [[
         def foo(thing):|cursor|
             if thing:
                 yield 10
@@ -821,7 +787,7 @@ describe("python function docstrings - yields", function()
                 yield
         ]]
 
-        local expected = [[
+            local expected = [[
         def foo(thing):
             """[TODO:description]
 
@@ -842,8 +808,9 @@ describe("python function docstrings - yields", function()
                 yield
         ]]
 
-        local result = _make_python_docstring(source)
+            local result = make_google_docstrings(source)
 
-        assert.equal(expected, result)
+            assert.equal(expected, result)
+        end)
     end)
 end)
