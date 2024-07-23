@@ -25,7 +25,8 @@ vim.cmd("runtime plugin/nvim-treesitter.lua")
 -- vim.cmd([[TSInstallSync! python]])
 require("nvim-treesitter.configs").setup({
     ensured_installed = {
-        "python"
+        "python",
+        "lua"
     }
 })
 
