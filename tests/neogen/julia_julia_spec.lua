@@ -57,6 +57,37 @@ end
             assert.equal(expected, result)
         end)
 
+        it("works with arguments in a new line", function()
+            local source = [[
+function foo(
+    a, b
+    )
+|cursor|
+end
+        ]]
+
+            local expected = [[
+"""
+    foo(a, b)
+
+[TODO:description]
+
+# Arguments
+- `a`: [TODO:parameter]
+- `b`: [TODO:parameter]
+"""
+function foo(
+    a, b
+    )
+
+end
+        ]]
+
+            local result = make_julia(source)
+
+            assert.equal(expected, result)
+        end)
+
         it("works with typed arguments", function()
             local source = [[
 function foo(a::Int, b::Float64)

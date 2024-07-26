@@ -84,8 +84,7 @@ return {
             results.signature = { signature }
             results[i.HasParameter] = (res.typed_expression or res.identifier) and { true } or nil
             results[i.Type] = res.type
-            results[i.Parameter] = res.identifier
-              or nil
+            results[i.Parameter] = res.identifier or nil
 
             return results
           end,
@@ -105,14 +104,33 @@ return {
                 retrieve = "first",
                 node_type = "signature",
                 recursive = true,
-                extract = true,
-              },
-              {
-                retrieve = "first",
-                node_type = "argument_list",
-                extract = true,
-                as = "param_list",
-                recursive = true,
+                subtree = {
+                  {
+                    retrieve = "first",
+                    node_type = "call_expression",
+                    recursive = true,
+                    subtree = {
+                      {
+                        position = 1,
+                        node_type = "identifier",
+                        extract = true,
+                        as = "f_name",
+                      },
+                    },
+                  },
+                  {
+                    retrieve = "first",
+                    node_type = "argument_list",
+                    recursive = true,
+                    subtree = {
+                      {
+                        retrieve = "all",
+                        as = "param_list",
+                        extract = true,
+                      },
+                    },
+                  },
+                },
               },
               {
                 retrieve = "first",
@@ -171,10 +189,17 @@ return {
             results = process_typed_parameters(nodes, results)
 
             local res = extractors:extract_from_matched(nodes)
+            -- Make the signature
+            local signature
+            if res.param_list then
+              signature = res.f_name[1] .. "(" .. table.concat(res.param_list, ", ") .. ")"
+            else
+              signature = res.f_name[1] .. "()"
+            end
 
             results[i.HasParameter] = (res.typed_expression or res.identifier) and { true } or nil
             results[i.Type] = res.type
-            results.signature = res.signature
+            results.signature = { signature }
             results.params = res.params
             results[i.Parameter] = res.identifier
             results[i.Return] = res.return_statement
