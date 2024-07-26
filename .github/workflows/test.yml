@@ -23,5 +23,7 @@ jobs:
     - name: Run tests
       working-directory: ./neogen
       run: |
+        rm -rdf /tmp/nvim_treesitter
+        rm -rdf /tmp/plenary.nvim
         nvim --version
         make test
