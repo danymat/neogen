@@ -26,7 +26,8 @@ vim.cmd("runtime plugin/nvim-treesitter.lua")
 require("nvim-treesitter.configs").setup({
     ensured_installed = {
         "python",
-        "lua"
+        "lua",
+        "julia",
     }
 })
 

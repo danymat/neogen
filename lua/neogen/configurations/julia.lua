@@ -82,7 +82,7 @@ return {
             end
 
             results.signature = { signature }
-            results[i.HasParameter] = (res.typed_parameter or res.identifier) and { true } or nil
+            results[i.HasParameter] = (res.typed_expression or res.identifier) and { true } or nil
             results[i.Type] = res.type
             results[i.Parameter] = res.identifier
             -- TODO: Remove this
@@ -176,7 +176,7 @@ return {
 
             local res = extractors:extract_from_matched(nodes)
 
-            results[i.HasParameter] = (res.typed_parameter or res.identifier) and { true } or nil
+            results[i.HasParameter] = (res.typed_expression or res.identifier) and { true } or nil
             results[i.Type] = res.type
             results.signature = res.signature
             results.params = res.params
