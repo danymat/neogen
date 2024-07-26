@@ -9,14 +9,9 @@ return {
   { nil, "" },
   { nil, "$1" },
   { nil, "" },
-  { nil, "# Arguments", { type = { "func" } } },
+  { i.HasParameter, "# Arguments", { type = { "func" } } },
   { nil, "# Fields", { type = { "class" } } },
-  { nil, "", type = { "func" } },
-  {
-    i.Parameter,
-    "- `%s`: $1",
-    { required = "parameters", type = { "class" } },
-  },
+  { i.Parameter, "- `%s`: $1", { type = { "class" } } },
   {
     { i.Parameter, i.Type },
     "- `%s::%s`: $1",
