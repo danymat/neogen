@@ -7,8 +7,28 @@ local i = require("neogen.types.template").item
 
 local parent = {
   func = { "function_definition" },
-  struct = {"struct_definition"}
+  class = { "struct_definition" },
 }
+
+--- Extract data for typed parameters
+---@param nodes
+---@param results
+---@return
+local function process_typed_parameters(nodes, results)
+  if nodes["typed_expression"] then
+    results["typed_parameters"] = {}
+    for _, n in pairs(nodes["typed_expression"]) do
+      local type_subtree = {
+        { position = 1, extract = true, as = i.Parameter },
+        { position = 2, extract = true, as = i.Type },
+      }
+      local typed_parameters = nodes_utils:matching_nodes_from(n, type_subtree)
+      typed_parameters = extractors:extract_from_matched(typed_parameters)
+      table.insert(results["typed_parameters"], typed_parameters)
+    end
+  end
+  return results
+end
 
 return {
   -- Search for these nodes
@@ -16,7 +36,7 @@ return {
 
   -- Traverse down these nodes and extract the information as necessary
   data = {
-    struct = {
+    class = {
 
       ["struct_definition"] = {
         ["0"] = {
@@ -24,19 +44,28 @@ return {
             local results = {}
 
             local tree = {
-              -- TODO: Figure this one out, for now what we have is sufficient, but we can make it more convenient
-              -- goal is to get the function name and parameters in the docstring, e.g. at the top f(x,y,z), in the overview section
+              -- Get the name of the struct
               {
-                retrieve = "all",
+                retrieve = "first",
+                node_type = "identifier",
+                extract = true,
+                as = "name",
+              },
+              -- Get type parameters
+              {
+                retrieve = "first",
+                recursive = true,
                 node_type = "type_parameter_list",
                 subtree = {
                   {
                     retrieve = "all",
                     node_type = "identifier",
                     extract = true,
+                    as = "type_params",
                   },
                 },
               },
+              -- Fields
               {
                 retrieve = "all",
                 node_type = "typed_expression",
@@ -44,20 +73,15 @@ return {
               },
             }
             local nodes = nodes_utils:matching_nodes_from(node, tree)
-            if nodes["typed_expression"] then
-              results["typed_parameters"] = {}
-              for _, n in pairs(nodes["typed_expression"]) do
-                local type_subtree = {
-                  { position = 1, extract = true, as = i.Parameter },
-                  { position = 2, extract = true, as = i.Type },
-                }
-                local typed_parameters = nodes_utils:matching_nodes_from(n, type_subtree)
-                typed_parameters = extractors:extract_from_matched(typed_parameters)
-                table.insert(results["typed_parameters"], typed_parameters)
-              end
-            end
+            results = process_typed_parameters(nodes, results)
             local res = extractors:extract_from_matched(nodes)
 
+            local signature = res.name[1]
+            if res.type_params then
+              signature = signature .. "{" .. table.concat(res.type_params, ", ") .. "}"
+            end
+
+            results.signature = { signature }
             results[i.HasParameter] = (res.typed_parameter or res.identifier) and { true } or nil
             -- results["definition"] = {name = res.name, param_list = res.param_list}
             results[i.Type] = res.type
@@ -65,115 +89,135 @@ return {
             -- TODO: Remove this
             results[i.Return] = res.return_statement
             results[i.ReturnTypeHint] = res[i.ReturnTypeHint]
-            results[i.HasReturn] = (res.return_statement or res.anonymous_return or res[i.ReturnTypeHint])
-            and { true }
-            or nil
+            results[i.HasReturn] = (res.return_statement or res.anonymous_return or res[i.ReturnTypeHint]) and { true }
+              or nil
 
             return results
           end,
         },
       },
-
     },
     func = {
 
       ["function_definition"] = {
+
         ["0"] = {
           extract = function(node)
             local results = {}
 
             local tree = {
-              -- TODO: Figure this one out, for now what we have is sufficient, but we can make it more convenient
-              -- goal is to get the function name and parameters in the docstring, e.g. at the top f(x,y,z), in the overview section
               {
-                position = 1,
-                node_type = "identifier",
-                extract = true,
-                as = "name",
+                retrieve = "first",
+                node_type = "call_expression",
+                recursive = true,
+                subtree = {
+                  {
+                    retrieve = "first",
+                    node_type = "identifier",
+                    extract = true,
+                    as = "name",
+                  },
+                },
               },
               {
-                retrieve = "all",
-                node_type = "parameter_list",
+                retrieve = "first",
+                node_type = "argument_list",
                 extract = true,
                 as = "param_list",
+                recursive = true,
               },
               {
-                retrieve = "all",
-                node_type = "parameter_list",
+                retrieve = "first",
+                node_type = "argument_list",
+                recursive = true,
                 subtree = {
+                  -- Parameters without type definition
                   {
                     retrieve = "all",
                     node_type = "identifier",
                     extract = true,
                   },
+                  -- Typed parameters
                   {
                     retrieve = "all",
-                    node_type = "typed_parameter",
+                    node_type = "typed_expression",
                     extract = true,
                   },
+                  -- Optional parameters
                   {
                     retrieve = "all",
-                    node_type = "optional_parameter",
+                    node_type = "named_argument",
                     subtree = {
-                      { retrieve = "all", node_type = "typed_parameter", extract = true },
+                      { retrieve = "all", node_type = "typed_expression", extract = true },
                     },
                   },
-
                   {
                     retrieve = "all",
-                    node_type = "optional_parameter",
+                    node_type = "named_argument",
                     subtree = { { retrieve = "all", node_type = "identifier", extract = true } },
                   },
+                  -- Splat parameters
                   {
                     retrieve = "all",
-                    node_type = "spread_parameter",
-                    extract = true,
+                    node_type = "splat_expression",
                     subtree = { { retrieve = "all", node_type = "identifier", extract = true } },
-                    as = "identifier",
                   },
+                },
+              },
+              -- Get all parameters irrespective of the type in the correct order
+              {
+                retrieve = "first",
+                node_type = "argument_list",
+                recursive = true,
+                subtree = {
                   {
                     retrieve = "all",
-                    node_type = "keyword_parameters",
+                    node_type = "typed_expression",
                     subtree = {
                       {
-                        retrieve = "all",
+                        position = 1,
                         node_type = "identifier",
                         extract = true,
+                        as = "params",
                       },
+                    },
+                  },
+                  {
+                    retrieve = "all",
+                    node_type = "identifier",
+                    extract = true,
+                    as = "params",
+                  },
+                  {
+                    retrieve = "all",
+                    node_type = "named_argument",
+                    extract = false,
+                    subtree = {
                       {
-                        retrieve = "all",
-                        node_type = "typed_parameter",
+                        position = 1,
+                        node_type = "identifier",
                         extract = true,
+                        as = "params_optional",
                       },
                       {
-                        retrieve = "all",
-                        node_type = "optional_parameter",
+                        position = 1,
+                        node_type = "typed_expression",
                         subtree = {
                           {
-                            retrieve = "all",
-                            node_type = "typed_parameter",
+                            position = 1,
+                            node_type = "identifier",
                             extract = true,
+                            as = "params_optional",
                           },
                         },
                       },
-
-                      {
-                        retrieve = "all",
-                        node_type = "optional_parameter",
-                        subtree = {
-                          { retrieve = "all", node_type = "identifier", extract = true },
-                        },
-                      },
-                      {
-                        retrieve = "all",
-                        node_type = "spread_parameter",
-                        extract = true,
-                        subtree = {
-                          { retrieve = "all", node_type = "identifier", extract = true },
-                        },
-                        as = "identifier",
-                      },
                     },
+                  },
+                  {
+                    retrieve = "first",
+                    node_type = "splat_expression",
+                    extract = true,
+                    as = "params",
                   },
                 },
               },
@@ -191,29 +235,37 @@ return {
               },
             }
             local nodes = nodes_utils:matching_nodes_from(node, tree)
-            if nodes["typed_parameter"] then
-              results["typed_parameters"] = {}
-              for _, n in pairs(nodes["typed_parameter"]) do
-                local type_subtree = {
-                  { position = 1, extract = true, as = i.Parameter },
-                  { position = 2, extract = true, as = i.Type },
-                }
-                local typed_parameters = nodes_utils:matching_nodes_from(n, type_subtree)
-                typed_parameters = extractors:extract_from_matched(typed_parameters)
-                table.insert(results["typed_parameters"], typed_parameters)
-              end
-            end
+
+            -- Add table with {params, types}
+            results = process_typed_parameters(nodes, results)
+
             local res = extractors:extract_from_matched(nodes)
 
+            -- Signature
+            local signature = res["name"][1]
+            -- Add parameters if they exist
+            if res.params then
+              signature = signature .. "(" .. table.concat(res.params, ", ")
+            end
+            -- Add optional parameters if they exist
+            if res.params_optional then
+              if res.params then
+                signature = signature .. ", "
+              end
+              signature = signature .. "[" .. table.concat(res.params_optional, ", ") .. "]"
+            end
+            -- Close parenthesis
+            signature = signature .. ")"
+
             results[i.HasParameter] = (res.typed_parameter or res.identifier) and { true } or nil
-            -- results["definition"] = {name = res.name, param_list = res.param_list}
             results[i.Type] = res.type
+            results.signature = { signature }
+            results.params = res.params
             results[i.Parameter] = res.identifier
             results[i.Return] = res.return_statement
             results[i.ReturnTypeHint] = res[i.ReturnTypeHint]
-            results[i.HasReturn] = (res.return_statement or res.anonymous_return or res[i.ReturnTypeHint])
-            and { true }
-            or nil
+            results[i.HasReturn] = (res.return_statement or res.anonymous_return or res[i.ReturnTypeHint]) and { true }
+              or nil
 
             return results
           end,
@@ -224,7 +276,7 @@ return {
 
   -- Use default granulator and generator
   locator = nil,
-  granulator = nil,
+  -- granulator = nil,
   generator = nil,
 
   template = template:add_default_annotation("julia"),
