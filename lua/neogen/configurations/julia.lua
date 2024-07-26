@@ -107,16 +107,9 @@ return {
             local tree = {
               {
                 retrieve = "first",
-                node_type = "call_expression",
+                node_type = "signature",
                 recursive = true,
-                subtree = {
-                  {
-                    retrieve = "first",
-                    node_type = "identifier",
-                    extract = true,
-                    as = "name",
-                  },
-                },
+                extract = true,
               },
               {
                 retrieve = "first",
@@ -163,63 +156,6 @@ return {
                   },
                 },
               },
-              -- Get all parameters irrespective of the type in the correct order
-              {
-                retrieve = "first",
-                node_type = "argument_list",
-                recursive = true,
-                subtree = {
-                  {
-                    retrieve = "all",
-                    node_type = "typed_expression",
-                    subtree = {
-                      {
-                        position = 1,
-                        node_type = "identifier",
-                        extract = true,
-                        as = "params",
-                      },
-                    },
-                  },
-                  {
-                    retrieve = "all",
-                    node_type = "identifier",
-                    extract = true,
-                    as = "params",
-                  },
-                  {
-                    retrieve = "all",
-                    node_type = "named_argument",
-                    extract = false,
-                    subtree = {
-                      {
-                        position = 1,
-                        node_type = "identifier",
-                        extract = true,
-                        as = "params_optional",
-                      },
-                      {
-                        position = 1,
-                        node_type = "typed_expression",
-                        subtree = {
-                          {
-                            position = 1,
-                            node_type = "identifier",
-                            extract = true,
-                            as = "params_optional",
-                          },
-                        },
-                      },
-                    },
-                  },
-                  {
-                    retrieve = "first",
-                    node_type = "splat_expression",
-                    extract = true,
-                    as = "params",
-                  },
-                },
-              },
               {
                 retrieve = "first",
                 node_type = "block",
@@ -240,25 +176,9 @@ return {
 
             local res = extractors:extract_from_matched(nodes)
 
-            -- Signature
-            local signature = res["name"][1]
-            -- Add parameters if they exist
-            if res.params then
-              signature = signature .. "(" .. table.concat(res.params, ", ")
-            end
-            -- Add optional parameters if they exist
-            if res.params_optional then
-              if res.params then
-                signature = signature .. ", "
-              end
-              signature = signature .. "[" .. table.concat(res.params_optional, ", ") .. "]"
-            end
-            -- Close parenthesis
-            signature = signature .. ")"
-
             results[i.HasParameter] = (res.typed_parameter or res.identifier) and { true } or nil
             results[i.Type] = res.type
-            results.signature = { signature }
+            results.signature = res.signature
             results.params = res.params
             results[i.Parameter] = res.identifier
             results[i.Return] = res.return_statement
