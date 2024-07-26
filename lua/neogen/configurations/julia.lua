@@ -85,10 +85,6 @@ return {
             results[i.HasParameter] = (res.typed_expression or res.identifier) and { true } or nil
             results[i.Type] = res.type
             results[i.Parameter] = res.identifier
-            -- TODO: Remove this
-            results[i.Return] = res.return_statement
-            results[i.ReturnTypeHint] = res[i.ReturnTypeHint]
-            results[i.HasReturn] = (res.return_statement or res.anonymous_return or res[i.ReturnTypeHint]) and { true }
               or nil
 
             return results
@@ -195,7 +191,7 @@ return {
 
   -- Use default granulator and generator
   locator = nil,
-  -- granulator = nil,
+  granulator = nil,
   generator = nil,
 
   template = template:add_default_annotation("julia"),
