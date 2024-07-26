@@ -138,7 +138,7 @@ end
             assert.equal(expected, result)
         end)
 
-        it("works with named arguments", function()
+        it("works with optional arguments", function()
             local source = [[
 function foo(a, b=1)
 |cursor|
