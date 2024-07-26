@@ -22,11 +22,12 @@ require("plenary.busted")
 vim.cmd("runtime plugin/nvim-treesitter.lua")
 
 -- Some tests require the Python parser
--- vim.cmd([[TSInstallSync! python]])
+-- vim.cmd([[TSInstallSync! python lua java]])
 require("nvim-treesitter.configs").setup({
     ensured_installed = {
         "python",
-        "lua"
+        "lua",
+        "java"
     }
 })
 
