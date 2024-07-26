@@ -275,6 +275,33 @@ end
 
             assert.equal(expected, result)
         end)
+
+        it("works when extinding a methods (e.g. from Base)", function()
+            local source = [[
+function Base.foo(a, b)
+|cursor|
+end
+        ]]
+
+            local expected = [[
+"""
+    Base.foo(a, b)
+
+[TODO:description]
+
+# Arguments
+- `a`: [TODO:parameter]
+- `b`: [TODO:parameter]
+"""
+function Base.foo(a, b)
+
+end
+        ]]
+
+            local result = make_julia(source)
+
+            assert.equal(expected, result)
+        end)
     end)
 end)
 

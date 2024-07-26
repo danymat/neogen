@@ -110,9 +110,17 @@ return {
                     node_type = "call_expression",
                     recursive = true,
                     subtree = {
+                      -- Get the name of the function
                       {
                         position = 1,
                         node_type = "identifier",
+                        extract = true,
+                        as = "f_name",
+                      },
+                      -- ... this considers cases like 'Base.add(...)'
+                      {
+                        position = 1,
+                        node_type = "field_expression",
                         extract = true,
                         as = "f_name",
                       },
