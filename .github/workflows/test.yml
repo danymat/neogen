@@ -24,8 +24,9 @@ jobs:
         version: ${{ matrix.neovim }}
 
     - name: Compile Needed Parsers
+      working-directory: ./neogen
       run: |
-        nvim --headless -c "TSInstallSync python lua julia" -c "q"
+        nvim -u tests/minimal_init.lua --headless -c "TSInstallSync python lua julia" -c "q"
 
     - name: Run tests
       working-directory: ./neogen
