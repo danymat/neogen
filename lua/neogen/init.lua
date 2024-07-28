@@ -241,6 +241,10 @@ end
 ---
 --- Note: We will only document `major` and `minor` versions, not `patch` ones. (only X and Y in X.Y.z)
 ---
+--- ## 2.19.0~
+---    - Add support for julia (`julia`) ! (#185)
+--- ## 2.18.0~
+---    - Add tests cases to tests/ for annotation generation with basic support for python (#174)
 --- ## 2.17.1~
 ---   - Python raises now supports `raise foo.Bar()` syntax
 --- ## 2.17.0~
@@ -305,7 +309,7 @@ end
 ---     with multiple annotation conventions.
 ---@tag neogen-changelog
 ---@toc_entry Changes in neogen plugin
-neogen.version = "2.18.0"
+neogen.version = "2.19.0"
 --minidoc_afterlines_end
 
 return neogen
