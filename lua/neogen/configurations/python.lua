@@ -248,6 +248,9 @@ return {
 
                         if nodes[i.Return] then
                             validate_direct_returns(nodes, node)
+                        end
+
+                        if nodes[i.Return] then
                             validate_bare_returns(nodes)
                         end
 

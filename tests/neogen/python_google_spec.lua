@@ -110,6 +110,38 @@ describe("python: google_docstrings", function()
             assert.equal(expected, result)
         end)
 
+        it("works with methods + nested function + return", function()
+            local source = [[
+        def foo():|cursor|
+            def bar():|cursor|
+                return "blah"
+
+            yield "asdfsfd"
+        ]]
+
+            local expected = [[
+        def foo():
+            """[TODO:description]
+
+            Yields:
+                [TODO:description]
+            """
+            def bar():
+                """[TODO:description]
+
+                Returns:
+                    [TODO:return]
+                """
+                return "blah"
+
+            yield "asdfsfd"
+        ]]
+
+            local result = make_google_docstrings(source)
+
+            assert.equal(expected, result)
+        end)
+
         it("works with methods + nested functions", function()
             local source = [[
         # Reference: https://github.com/danymat/neogen/pull/151
