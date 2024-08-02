@@ -7,7 +7,7 @@ return {
     parent = {
         type = { "property_declaration", "const_declaration", "foreach_statement" },
         func = { "function_definition", "method_declaration" },
-        class = { "class_declaration" },
+        class = { "class_declaration", "interface_declaration" },
     },
     data = {
         type = {
@@ -77,6 +77,13 @@ return {
         },
         class = {
             ["class_declaration"] = {
+                ["0"] = {
+                    extract = function()
+                        return {}
+                    end,
+                },
+            },
+            ["interface_declaration"] = {
                 ["0"] = {
                     extract = function()
                         return {}

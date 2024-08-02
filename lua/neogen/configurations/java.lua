@@ -1,6 +1,7 @@
 local extractors = require("neogen.utilities.extractors")
 local nodes_utils = require("neogen.utilities.nodes")
 local template = require("neogen.template")
+local i = require("neogen.types.template").item
 
 local function_tree = {
     {
@@ -28,7 +29,7 @@ local function_tree = {
         node_type = "block|constructor_body",
         subtree = {
             { retrieve = "first", node_type = "return_statement", extract = true },
-            { retrieve = "all", recursive = true, node_type = "throw_statement", extract = true },
+            { retrieve = "all",   recursive = true,               node_type = "throw_statement", extract = true },
             {
                 retrieve = "first",
                 node_type = "try_statement",
@@ -52,7 +53,7 @@ local function_tree = {
 
 return {
     parent = {
-        class = { "class_declaration" },
+        class = { "class_declaration", "interface_declaration" },
         func = { "method_declaration", "constructor_declaration" },
     },
 
@@ -103,8 +104,23 @@ return {
                         local nodes = nodes_utils:matching_nodes_from(node, tree)
                         local res = extractors:extract_from_matched(nodes)
 
-                        results.class_name = res.identifier
-                        return results
+                        return {
+                            [i.ClassName] = res.identifier
+                        }
+                    end,
+                },
+            },
+            ["interface_declaration"] = {
+                ["0"] = {
+                    extract = function(node)
+                        local results = {}
+                        local tree = { { retrieve = "all", node_type = "identifier", extract = true } }
+                        local nodes = nodes_utils:matching_nodes_from(node, tree)
+                        local res = extractors:extract_from_matched(nodes)
+
+                        return {
+                            [i.ClassName] = res.identifier
+                        }
                     end,
                 },
             },

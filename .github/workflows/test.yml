@@ -26,7 +26,7 @@ jobs:
     - name: Compile Needed Parsers
       working-directory: ./neogen
       run: |
-        nvim -u tests/minimal_init.lua --headless -c "TSInstallSync python lua julia" -c "q"
+        nvim -u tests/minimal_init.lua --headless -c "TSInstallSync python lua julia java" -c "q"
 
     - name: Run tests
       working-directory: ./neogen
