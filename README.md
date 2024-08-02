@@ -3,7 +3,7 @@
 
 # Neogen - Your Annotation Toolkit
 
-[![Neovim](https://img.shields.io/badge/Neovim%200.6.1+-green.svg?style=for-the-badge&logo=neovim)](https://neovim.io)
+[![Neovim](https://img.shields.io/badge/Neovim%200.10.0+-green.svg?style=for-the-badge&logo=neovim)](https://neovim.io)
 [![Lua](https://img.shields.io/badge/Lua-blue.svg?style=for-the-badge&logo=lua)](http://www.lua.org)
 
 </div>
@@ -112,7 +112,7 @@ And this is done via the `snippet_engine` option in neogen's setup:
 
 - `snippet_engine` option will use provided engine to place the annotations:
 
-Currently supported: `luasnip`, `snippy`, `vsnip`.
+Currently supported: `luasnip`, `snippy`, `vsnip`, `nvim`.
 
 ```lua
 require('neogen').setup({ snippet_engine = "luasnip" })
@@ -236,6 +236,7 @@ There is a list of supported languages and fields, with their annotation style
 | java            | [Javadoc](https://docs.oracle.com/javase/1.5.0/docs/tooldocs/windows/javadoc.html#documentationcomments) (`"javadoc`)                                                                                                                                                            | `func`, `class`                 |
 | javascript      | [JSDoc](https://jsdoc.app) (`"jsdoc"`)                                                                                                                                                                                                                                           | `func`, `class`, `type`, `file` |
 | javascriptreact | [JSDoc](https://jsdoc.app) (`"jsdoc"`)                                                                                                                                                                                                                                           | `func`, `class`, `type`, `file` |
+| julia             | [Julia](https://docs.julialang.org/en/v1/manual/documentation/#Writing-Documentation) (`"julia"`)                                                                                                                                                                                                                                            | `func`, `class` |
 | kotlin          | [KDoc](https://kotlinlang.org/docs/kotlin-doc.html) (`"kdoc"`)                                                                                                                                                                                                                   | `func`, `class`                 |
 | lua             | [Emmylua](https://emmylua.github.io/) (`"emmylua"`)<br> [Ldoc](https://stevedonovan.github.io/ldoc/manual/doc.md.html) (`"ldoc"`)                                                                                                                                                | `func`, `class`, `type`, `file` |
 | php             | [Php-doc](https://docs.phpdoc.org/3.0/guide/references/phpdoc/index.html) (`"phpdoc"`)                                                                                                                                                                                           | `func`, `type`, `class`         |
@@ -254,6 +255,13 @@ There is a list of supported languages and fields, with their annotation style
 Tip: Take a look at this beatiful diagram, showing a representation of the codebase. You can then take a first understanding of what is under the hood. For more details, you can see `:h neogen-develop`.
     
 ![Visualization of this repo](./diagram.svg)
+
+## Tests
+Run tests using this command
+
+```sh
+make test
+```
 
 ## GIFS
 

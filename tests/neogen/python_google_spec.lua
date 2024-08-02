@@ -110,6 +110,38 @@ describe("python: google_docstrings", function()
             assert.equal(expected, result)
         end)
 
+        it("works with methods + nested function + return", function()
+            local source = [[
+        def foo():|cursor|
+            def bar():|cursor|
+                return "blah"
+
+            yield "asdfsfd"
+        ]]
+
+            local expected = [[
+        def foo():
+            """[TODO:description]
+
+            Yields:
+                [TODO:description]
+            """
+            def bar():
+                """[TODO:description]
+
+                Returns:
+                    [TODO:return]
+                """
+                return "blah"
+
+            yield "asdfsfd"
+        ]]
+
+            local result = make_google_docstrings(source)
+
+            assert.equal(expected, result)
+        end)
+
         it("works with methods + nested functions", function()
             local source = [[
         # Reference: https://github.com/danymat/neogen/pull/151
@@ -460,43 +492,42 @@ describe("python: google_docstrings", function()
             assert.equal(expected, result)
         end)
 
-        -- TODO: This is broken. Fix it!
-        -- This used to work but broke later on, it seems - https://github.com/danymat/neogen/pull/142
-        -- it("lists only one entry per-raised type", function()
-        --     local source = [[
-        --     def foo(bar):|cursor|
-        --         if bar:
-        --             raise TypeError("THING")
-        --
-        --         if GLOBAL:
-        --             raise ValueError("asdffsd")
-        --
-        --         raise TypeError("BLAH")
-        --     ]]
-        --
-        --     local expected = [[
-        --     def foo(bar):
-        --         """[TODO:description]
-        --
-        --         Args:
-        --             bar ([TODO:parameter]): [TODO:description]
-        --
-        --         Raises:
-        --             TypeError: [TODO:throw]
-        --             ValueError: [TODO:throw]
-        --         """
-        --         if bar:
-        --             raise TypeError("THING")
-        --
-        --             raise ValueError("asdffsd")
-        --
-        --         raise TypeError("BLAH")
-        --     ]]
-        --
-        --     local result = _make_python_docstring(source)
-        --
-        --     assert.equal(expected, result)
-        -- end)
+        it("lists only one entry per-raised type", function()
+            local source = [[
+            def foo(bar):|cursor|
+                if bar:
+                    raise TypeError("THING")
+
+                if GLOBAL:
+                    raise ValueError("asdffsd")
+
+                raise TypeError("BLAH")
+            ]]
+
+            local expected = [[
+            def foo(bar):
+                """[TODO:description]
+
+                Args:
+                    bar ([TODO:parameter]): [TODO:description]
+
+                Raises:
+                    TypeError: [TODO:throw]
+                    ValueError: [TODO:throw]
+                """
+                if bar:
+                    raise TypeError("THING")
+
+                if GLOBAL:
+                    raise ValueError("asdffsd")
+
+                raise TypeError("BLAH")
+            ]]
+
+            local result = make_google_docstrings(source)
+
+            assert.equal(expected, result)
+        end)
 
         it("works with modules, even if they are nested", function()
             local source = [[
@@ -540,43 +571,41 @@ describe("python: google_docstrings", function()
             assert.equal(expected, result)
         end)
 
-        -- TODO: This is broken. Fix it!
-        -- This used to work but broke later on, it seems - https://github.com/danymat/neogen/pull/142
-        -- it("works with 2+ raises", function()
-        --     local source = [[
-        --     def foo(bar):|cursor|
-        --         if bar:
-        --             raise TypeError("THING")
-        --
-        --         if GLOBAL:
-        --             raise TypeError("asdffsd")
-        --
-        --         raise TypeError("BLAH")
-        --     ]]
-        --
-        --     local expected = [[
-        --     def foo(bar):
-        --         """[TODO:description]
-        --
-        --         Args:
-        --             bar ([TODO:parameter]): [TODO:description]
-        --
-        --         Raises:
-        --             TypeError: [TODO:throw]
-        --         """
-        --         if bar:
-        --             raise TypeError("THING")
-        --
-        --         if GLOBAL:
-        --             raise TypeError("asdffsd")
-        --
-        --         raise TypeError("BLAH")
-        --     ]]
-        --
-        --     local result = _make_python_docstring(source)
-        --
-        --     assert.equal(expected, result)
-        -- end)
+        it("works with 2+ raises", function()
+            local source = [[
+            def foo(bar):|cursor|
+                if bar:
+                    raise TypeError("THING")
+
+                if GLOBAL:
+                    raise TypeError("asdffsd")
+
+                raise TypeError("BLAH")
+            ]]
+
+            local expected = [[
+            def foo(bar):
+                """[TODO:description]
+
+                Args:
+                    bar ([TODO:parameter]): [TODO:description]
+
+                Raises:
+                    TypeError: [TODO:throw]
+                """
+                if bar:
+                    raise TypeError("THING")
+
+                if GLOBAL:
+                    raise TypeError("asdffsd")
+
+                raise TypeError("BLAH")
+            ]]
+
+            local result = make_google_docstrings(source)
+
+            assert.equal(expected, result)
+        end)
     end)
 
     describe("func - returns", function()
@@ -738,6 +767,27 @@ describe("python: google_docstrings", function()
                 yield
             except:
                 print("bad thing happened")
+        ]]
+
+            local result = make_google_docstrings(source)
+
+            assert.equal(expected, result)
+        end)
+
+        it("works with type-hints as expected", function()
+            local source = [[
+        def foo() -> typing.Generator[str]:|cursor|
+            yield "asdfsfd"
+        ]]
+
+            local expected = [[
+        def foo() -> typing.Generator[str]:
+            """[TODO:description]
+
+            Yields:
+                [TODO:description]
+            """
+            yield "asdfsfd"
         ]]
 
             local result = make_google_docstrings(source)

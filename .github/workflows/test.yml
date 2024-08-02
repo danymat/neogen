@@ -16,14 +16,19 @@ jobs:
       with:
         repository: danymat/neogen
         path: neogen
-    - uses: rhysd/action-setup-vim@v1
+
+    - name: Setup Neovim
+      uses: rhysd/action-setup-vim@v1
       with:
         neovim: true
         version: ${{ matrix.neovim }}
+
+    - name: Compile Needed Parsers
+      working-directory: ./neogen
+      run: |
+        nvim -u tests/minimal_init.lua --headless -c "TSInstallSync python lua julia" -c "q"
+
     - name: Run tests
       working-directory: ./neogen
       run: |
-        rm -rdf /tmp/nvim_treesitter
-        rm -rdf /tmp/plenary.nvim
-        nvim --version
         make test

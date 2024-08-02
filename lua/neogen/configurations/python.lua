@@ -38,6 +38,30 @@ local get_nearest_parent = function(node, type_name)
 end
 
 
+--- Remove raise (aka throw) nodes so there is only one node per-type.
+---
+---@param nodes table<string, TSNode[]> The nodes to simplify / reduce.
+local deduplicate_throw_nodes = function(nodes)
+    if not nodes[i.Throw] then
+        return
+    end
+
+    local output = {}
+
+    local seen = {}
+
+    for _, node in ipairs(nodes[i.Throw]) do
+        local text = helpers.get_node_text(node)[1]
+
+        if not vim.tbl_contains(seen, text) then
+            table.insert(seen, text)
+            table.insert(output, node)
+        end
+    end
+
+    nodes[i.Throw] = output
+end
+
 --- Modify `nodes` if the found return(s) are **all** bare-returns.
 ---
 --- A bare-return is used to return early from a function and aren't meant to be
@@ -248,10 +272,15 @@ return {
 
                         if nodes[i.Return] then
                             validate_direct_returns(nodes, node)
+                        end
+
+                        if nodes[i.Return] then
                             validate_bare_returns(nodes)
                         end
 
                         validate_yield_nodes(nodes)
+
+                        deduplicate_throw_nodes(nodes)
 
                         local res = extractors:extract_from_matched(nodes)
                         res[i.Tparam] = temp[i.Tparam]
@@ -292,7 +321,7 @@ return {
                                 return (t[i.Parameter] or t[i.Tparam]) and { true }
                             end,
                             [i.HasReturn] = function(t)
-                                return (t[i.ReturnTypeHint] or t[i.Return]) and { true }
+                                return (not t[i.Yield] and (t[i.ReturnTypeHint] or t[i.Return]) and { true })
                             end,
                             [i.HasThrow] = function(t)
                                 return t[i.Throw] and { true }

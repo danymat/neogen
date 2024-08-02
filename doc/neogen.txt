@@ -182,12 +182,16 @@ Feel free to submit a PR, I will be happy to help you !
 We use semantic versioning ! (https://semver.org)
 Here is the current Neogen version:
 >lua
-  neogen.version = "2.18.0"
+  neogen.version = "2.19.2"
 <
 # Changelog~
 
 Note: We will only document `major` and `minor` versions, not `patch` ones. (only X and Y in X.Y.z)
 
+## 2.19.0~
+   - Add support for julia (`julia`) ! (#185)
+## 2.18.0~
+   - Add tests cases to tests/ for annotation generation with basic support for python (#174)
 ## 2.17.1~
   - Python raises now supports `raise foo.Bar()` syntax
 ## 2.17.0~
