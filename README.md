@@ -3,7 +3,7 @@
 
 # Neogen - Your Annotation Toolkit
 
-[![Neovim](https://img.shields.io/badge/Neovim%200.6.1+-green.svg?style=for-the-badge&logo=neovim)](https://neovim.io)
+[![Neovim](https://img.shields.io/badge/Neovim%200.10.0+-green.svg?style=for-the-badge&logo=neovim)](https://neovim.io)
 [![Lua](https://img.shields.io/badge/Lua-blue.svg?style=for-the-badge&logo=lua)](http://www.lua.org)
 
 </div>
@@ -255,6 +255,13 @@ There is a list of supported languages and fields, with their annotation style
 Tip: Take a look at this beatiful diagram, showing a representation of the codebase. You can then take a first understanding of what is under the hood. For more details, you can see `:h neogen-develop`.
     
 ![Visualization of this repo](./diagram.svg)
+
+## Tests
+Run tests using this command
+
+```sh
+make test
+```
 
 ## GIFS
 
