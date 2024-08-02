@@ -256,6 +256,13 @@ Tip: Take a look at this beatiful diagram, showing a representation of the codeb
     
 ![Visualization of this repo](./diagram.svg)
 
+## Tests
+Run tests using this command
+
+```sh
+make test
+```
+
 ## GIFS
 
 ![screen1](https://user-images.githubusercontent.com/5306901/135055052-6ee6a5e8-3f30-4c41-872e-e624e21a1e98.gif)
