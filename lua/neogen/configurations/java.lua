@@ -53,7 +53,7 @@ local function_tree = {
 
 return {
     parent = {
-        class = { "class_declaration", "interface_declaration" },
+        class = { "class_declaration", "interface_declaration", "record_declaration" },
         func = { "method_declaration", "constructor_declaration" },
     },
 
@@ -111,6 +111,20 @@ return {
                 },
             },
             ["interface_declaration"] = {
+                ["0"] = {
+                    extract = function(node)
+                        local results = {}
+                        local tree = { { retrieve = "all", node_type = "identifier", extract = true } }
+                        local nodes = nodes_utils:matching_nodes_from(node, tree)
+                        local res = extractors:extract_from_matched(nodes)
+
+                        return {
+                            [i.ClassName] = res.identifier
+                        }
+                    end,
+                },
+            },
+            ["record_declaration"] = {
                 ["0"] = {
                     extract = function(node)
                         local results = {}
