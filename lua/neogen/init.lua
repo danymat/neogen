@@ -147,7 +147,7 @@ neogen.configuration = {
 --- For example, if you are inside a function, and called `generate({ type = "func" })`,
 --- Neogen will go until the start of the function and start annotating for you.
 ---
----@param opts table Optional configs to change default behaviour of generation.
+---@param opts? table Optional configs to change default behaviour of generation.
 ---  - {opts.type} `(string, default: "any")` Which type we are trying to use for generating annotations.
 ---    Currently supported: `any`, `func`, `class`, `type`, `file`
 ---  - {opts.annotation_convention} `(table)` convention to use for generating annotations.
