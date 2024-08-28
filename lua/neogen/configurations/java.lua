@@ -55,6 +55,7 @@ return {
     parent = {
         class = { "class_declaration", "interface_declaration", "record_declaration" },
         func = { "method_declaration", "constructor_declaration" },
+        type = { "field_declaration", "enum_constant", "formal_parameter" },
     },
 
     data = {
@@ -135,6 +136,15 @@ return {
                         return {
                             [i.ClassName] = res.identifier
                         }
+                    end,
+                },
+            },
+        },
+        type = {
+            ["field_declaration|enum_constant|formal_parameter"] = {
+                ["0"] = {
+                    extract = function()
+                        return {}
                     end,
                 },
             },

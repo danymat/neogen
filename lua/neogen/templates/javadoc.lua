@@ -1,9 +1,9 @@
 local i = require("neogen.types.template").item
 
 return {
-    { nil, "/**", { no_results = true, type = { "class", "func" } } },
-    { nil, " * $1", { no_results = true, type = { "class", "func" } } },
-    { nil, " */", { no_results = true, type = { "class", "func" } } },
+    { nil, "/**", { no_results = true, type = { "class", "func", "type" } } },
+    { nil, " * $1", { no_results = true, type = { "class", "func", "type" } } },
+    { nil, " */", { no_results = true, type = { "class", "func", "type" } } },
 
     { nil, "/**" },
     { nil, " * $1" },
