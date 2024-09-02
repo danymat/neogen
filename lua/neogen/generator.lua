@@ -152,8 +152,13 @@ end
 ---@param template table a template from the configuration
 ---@param required_type string
 ---@param annotation_convention string
+---@param sections string[] | string the parts of a docstring to create
 ---@return table { line, content }, with line being the line to append the content
-local function generate_content(parent, data, template, required_type, annotation_convention)
+local function generate_content(parent, data, template, required_type, annotation_convention, partial)
+    if partial == nil then
+        partial = false
+    end
+
     local row, col = get_place_pos(parent, template.position, template.append, required_type)
 
     local commentstring = vim.trim(vim.bo.commentstring:format(""))
@@ -188,7 +193,7 @@ local function generate_content(parent, data, template, required_type, annotatio
             end
 
             local ins_type = type(inserted_type)
-            if ins_type == "nil" then
+            if not partial and ins_type == "nil" then
                 local no_data = vim.tbl_isempty(data)
                 if opts.no_results then
                     if no_data then
@@ -231,11 +236,110 @@ local function generate_content(parent, data, template, required_type, annotatio
         end
     end
 
+    if partial then
+        local index = 1
+
+        while result[index] == "" do
+            table.remove(result, index)
+        end
+    end
+
     return row, result, default_text
 end
 
+--- Interpret all `sections` into Neogen-compatible section names.
+--- Each section name is a partial match. e.g. "parameter" will match
+--- "has_parameter" and "parameters".
+---@param sections string[] | string A user's desired parts of a docstring to create.
+---@return string[] # The resolved section names.
+---
+local function expand_sections(sections)
+    local function has_match(expression, options)
+        for _, option in ipairs(options) do
+            if option:match(expression) then
+                return true
+            end
+        end
+
+        return false
+    end
+
+    local i = require("neogen.types.template").item
+
+    if type(sections) == "string" then
+        sections = {sections}
+    end
+
+    local has_parameter = false
+    local parameters = {
+        i.ArbitraryArgs,
+        i.HasParameter,
+        i.Kwargs,
+        i.Parameter,
+        i.Tparam,
+        i.Vararg,
+    }
+
+    local has_return = false
+    local returns = {
+        i.HasReturn,
+        i.Return,
+        i.ReturnAnonym,
+        i.ReturnTypeHint,
+    }
+
+    local has_throw = false
+    local throws = { i.HasThrow, i.Throw }
+
+    local has_yield = false
+    local yields = { i.HasYield, i.Yield }
+
+    local output = {}
+
+    for _, section in ipairs(sections) do
+        if not has_parameter and has_match(section, parameters) then
+            vim.list_extend(output, parameters)
+            has_parameter = true
+        end
+
+        if not has_return and has_match(section, returns) then
+            vim.list_extend(output, returns)
+            has_return = true
+        end
+
+        if not has_throw and has_match(section, throws) then
+            vim.list_extend(output, throws)
+            has_throw = true
+        end
+
+        if not has_yield and has_match(section, yields) then
+            vim.list_extend(output, yields)
+            has_yield = true
+        end
+    end
+
+    return output
+end
+
+--- Remove `data` that is not present in `sections`.
+---@param data table the data from configurations[lang].data
+---@param sections string[] Any part of `data` not found in `sections` will be omitted.
+---@return table # The filtered output of `data`.
+local function filter_by_sections(data, sections)
+    local output = {}
+
+    for key, value in pairs(data) do
+        if vim.tbl_contains(sections, key) then
+            output[key] = value
+        end
+    end
+
+    return output
+end
+
+
 return setmetatable({}, {
-    __call = function(_, filetype, node_type, return_snippet, annotation_convention)
+    __call = function(_, filetype, node_type, return_snippet, annotation_convention, sections)
         if filetype == "" then
             notify("No filetype detected", vim.log.levels.WARN)
             return
@@ -279,9 +383,21 @@ return setmetatable({}, {
 
         local data = granulator(parent_node, language.data[node_type])
 
+        local partial = false
+
+        if sections ~= nil then
+            partial = true
+            sections = expand_sections(sections)
+            data = filter_by_sections(data, sections)
+        end
+
         -- Will try to generate the documentation from a template and the data found from the granulator
         local row, template_content, default_text =
-            generate_content(parent_node, data, template, node_type, annotation_convention[filetype])
+            generate_content(parent_node, data, template, node_type, annotation_convention[filetype], partial)
+
+        if partial then
+            row = vim.api.nvim_win_get_cursor(0)[1]
+        end
 
         local content = {}
         local marks_pos = {}

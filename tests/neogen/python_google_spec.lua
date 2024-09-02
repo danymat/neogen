@@ -4,8 +4,12 @@
 
 local specs = require('tests.utils.specs')
 
-local function make_google_docstrings(source)
-    return specs.make_docstring(source, 'python', { annotation_convention = { python = 'google_docstrings' } })
+--- Parse `source` and expand all docstrings with Neogen.
+---@param source string Pseudo-source-code to call. It contains `"|cursor|"` which is the expected user position.
+---@param sections (string[] | string)? Parts of the docstring to create. e.g. `"parameters"`.
+---@return string # The real, Neogen-generated source code result.
+local function make_google_docstrings(source, sections)
+    return specs.make_docstring(source, 'python', { annotation_convention = { python = 'google_docstrings' }, sections=sections })
 end
 
 describe("python: google_docstrings", function()
@@ -859,6 +863,131 @@ describe("python: google_docstrings", function()
         ]]
 
             local result = make_google_docstrings(source)
+
+            assert.equal(expected, result)
+        end)
+    end)
+
+    describe("sections", function()
+        it("works even with no sections are given", function()
+            local source = [[
+        def foo(thing):|cursor|
+            if thing:
+                yield 10
+                yield 20
+                yield 30
+            else:
+                yield 0
+
+            for _ in range(10):
+                yield
+        ]]
+
+            local expected = [[
+        def foo(thing):
+            """[TODO:description]
+
+            Args:
+                thing ([TODO:parameter]): [TODO:description]
+
+            Yields:
+                [TODO:description]
+            """
+            if thing:
+                yield 10
+                yield 20
+                yield 30
+            else:
+                yield 0
+
+            for _ in range(10):
+                yield
+        ]]
+
+            local result = make_google_docstrings(source)
+
+            assert.equal(expected, result)
+        end)
+
+        it("works with 1 section", function()
+            local source = [[
+        def foo(thing):
+            """An existing docstring.
+            |cursor|
+            """
+            if thing:
+                yield 10
+                yield 20
+                yield 30
+            else:
+                yield 0
+
+            for _ in range(10):
+                yield
+        ]]
+
+            local expected = [[
+        def foo(thing):
+            """An existing docstring.
+            
+            Yields:
+                [TODO:description]
+            """
+            if thing:
+                yield 10
+                yield 20
+                yield 30
+            else:
+                yield 0
+
+            for _ in range(10):
+                yield
+        ]]
+
+            local result = make_google_docstrings(source, {"yield"})
+
+            assert.equal(expected, result)
+        end)
+
+        it("works with 2+ sections", function()
+            local source = [[
+        def foo(thing):
+            """An existing docstring.
+            |cursor|
+            """
+            if thing:
+                yield 10
+                yield 20
+                yield 30
+            else:
+                yield 0
+
+            for _ in range(10):
+                yield
+        ]]
+
+            local expected = [[
+        def foo(thing):
+            """An existing docstring.
+            
+            Args:
+                thing ([TODO:parameter]): [TODO:description]
+
+            Yields:
+                [TODO:description]
+            """
+            if thing:
+                yield 10
+                yield 20
+                yield 30
+            else:
+                yield 0
+
+            for _ in range(10):
+                yield
+        ]]
+
+            local result = make_google_docstrings(source, {"parameters", "yield"})
 
             assert.equal(expected, result)
         end)
