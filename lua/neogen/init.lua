@@ -241,6 +241,8 @@ end
 ---
 --- Note: We will only document `major` and `minor` versions, not `patch` ones. (only X and Y in X.Y.z)
 ---
+--- ## 2.20.0~
+---    - Add the `snippet_engine` parameter to `neogen.generator` (#202)
 --- ## 2.19.0~
 ---    - Add support for julia (`julia`) ! (#185)
 --- ## 2.18.0~
@@ -309,7 +311,7 @@ end
 ---     with multiple annotation conventions.
 ---@tag neogen-changelog
 ---@toc_entry Changes in neogen plugin
-neogen.version = "2.19.4"
+neogen.version = "2.20.0"
 --minidoc_afterlines_end
 
 return neogen
