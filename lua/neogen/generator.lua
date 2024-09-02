@@ -235,7 +235,7 @@ local function generate_content(parent, data, template, required_type, annotatio
 end
 
 return setmetatable({}, {
-    __call = function(_, filetype, node_type, return_snippet, annotation_convention)
+    __call = function(_, filetype, node_type, return_snippet, annotation_convention, snippet_engine)
         if filetype == "" then
             notify("No filetype detected", vim.log.levels.WARN)
             return
@@ -319,7 +319,7 @@ return setmetatable({}, {
             return generated_snippet, row
         end
 
-        local snippet_engine = conf.snippet_engine
+        snippet_engine = snippet_engine or conf.snippet_engine
         if snippet_engine then
             -- User want to use a snippet engine instead of native handling
             local engines = snippet.engines
