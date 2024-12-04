@@ -460,8 +460,8 @@ return {
             },
         },
     },
+    locator = require("neogen.locators.python"),
     -- Use default granulator and generator
-    locator = nil,
     granulator = nil,
     generator = nil,
     template = template

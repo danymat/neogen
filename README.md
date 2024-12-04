@@ -105,6 +105,23 @@ local opts = { noremap = true, silent = true }
 vim.api.nvim_set_keymap("n", "<Leader>nc", ":lua require('neogen').generate({ type = 'class' })<CR>", opts)
 ```
 
+If you'd like to generate only part of a docstring, add `sections`.
+
+```lua
+require('neogen').generate({
+    type = "func" -- the annotation type to generate. Currently supported: func, class, type, file
+    sections = {"parameter", "return"}
+})
+```
+
+Example sections:
+```
+parameter
+return
+throw
+yield
+```
+
 ### Snippet support
 
 We added snippet support, and we provide defaults for some snippet engines.
