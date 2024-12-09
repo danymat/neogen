@@ -32,6 +32,10 @@ return {
         class = { "function_declaration", "expression_statement", "variable_declaration", "class_declaration" },
         file = { "program" },
         type = { "variable_declaration", "lexical_declaration" },
+        property = {
+            "property_signature",
+            "property_identifier",
+        },
     },
 
     data = {
@@ -101,6 +105,15 @@ return {
                 },
             },
         },
+        property = {
+            ["property_signature|property_identifier"] = {
+                ["0"] = {
+                    extract = function()
+                        return {}
+                    end,
+                },
+            },
+        },
         type = {
             ["variable_declaration|lexical_declaration"] = {
                 ["0"] = {
@@ -112,5 +125,32 @@ return {
         },
     },
 
-    template = template:add_default_annotation("jsdoc"),
+    locator = require("neogen.locators.typescript"),
+
+    template = template
+        :config({
+            append = { position = "after", child_name = "comment", fallback = "block", disabled = { "file" } },
+            position = function(node, type)
+                if vim.tbl_contains({ "func", "class" }, type) then
+                    local parent = node:parent()
+
+                    -- Verify if the parent is an export_statement (prevents offset of generated annotation)
+                    if parent and parent:type() == "export_statement" then
+                        local row, col = vim.treesitter.get_node_range(parent)
+                        return row, col
+                    end
+                    return
+                end
+                if vim.tbl_contains({ "property" }, type) then
+                    local parent = node:parent()
+
+                    if parent and vim.tbl_contains({ "public_field_definition" }, parent:type()) then
+                        local row, col = vim.treesitter.get_node_range(parent)
+                        return row, col
+                    end
+                    return
+                end
+            end,
+        })
+        :add_default_annotation("jsdoc"),
 }
