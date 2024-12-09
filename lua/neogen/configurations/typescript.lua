@@ -89,6 +89,11 @@ return {
             "property_signature",
             "property_identifier",
         },
+        declaration = {
+            "type_alias_declaration",
+            "interface_declaration",
+            "enum_declaration",
+        },
     },
 
     data = {
@@ -186,6 +191,15 @@ return {
                 },
             },
         },
+        declaration = {
+            ["type_alias_declaration|interface_declaration|enum_declaration"] = {
+                ["0"] = {
+                    extract = function()
+                        return {}
+                    end,
+                },
+            },
+        },
     },
 
     locator = require("neogen.locators.typescript"),
@@ -194,7 +208,7 @@ return {
         :config({
             append = { position = "after", child_name = "comment", fallback = "block", disabled = { "file" } },
             position = function(node, type)
-                if vim.tbl_contains({ "func", "class" }, type) then
+                if vim.tbl_contains({ "func", "class", "declaration" }, type) then
                     local parent = node:parent()
 
                     -- Verify if the parent is an export_statement (prevents offset of generated annotation)
