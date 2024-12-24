@@ -112,7 +112,7 @@ And this is done via the `snippet_engine` option in neogen's setup:
 
 - `snippet_engine` option will use provided engine to place the annotations:
 
-Currently supported: `luasnip`, `snippy`, `vsnip`, `nvim`.
+Currently supported: `luasnip`, `snippy`, `vsnip`, `nvim`, `mini`.
 
 ```lua
 require('neogen').setup({ snippet_engine = "luasnip" })

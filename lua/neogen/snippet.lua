@@ -14,6 +14,7 @@ local conf = require("neogen.config").get()
 --- - `"snippy"` (https://github.com/dcampos/nvim-snippy)
 --- - `"vsnip"` (https://github.com/hrsh7th/vim-vsnip)
 --- - `"nvim"` (`:h vim.snippet`)
+--- - `"mini"` (https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini-snippets.md)
 ---
 --- If you want to customize the placeholders, you can use `placeholders_text` option:
 --- >
@@ -141,6 +142,25 @@ snippet.engines.nvim = function(snip, pos)
     vim.api.nvim_win_set_cursor(0, { row + 1, 0 })
     snip = table.concat(snip, "\n")
     vim.snippet.expand(snip)
+end
+
+--- Expand snippet for mini.snippets engine
+---@param snip string the snippet to expand
+---@param pos table a tuple of row, col
+---@private
+snippet.engines.mini = function(snip, pos)
+    -- Check `MiniSnippets` is set up by the user
+    if _G.MiniSnippets == nil then
+        notify("'mini.snippets' is not set up, aborting...", vim.log.levels.ERROR)
+        return
+    end
+
+    local row = pos[1]
+    vim.api.nvim_buf_set_lines(0, row, row, true, { "" })
+    vim.api.nvim_win_set_cursor(0, { row + 1, 0 })
+    -- Use user configured `insert` method but fall back to default
+    local insert = MiniSnippets.config.expand.insert or MiniSnippets.default_insert
+    insert({ body = snip })
 end
 
 return snippet
