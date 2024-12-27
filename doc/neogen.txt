@@ -182,16 +182,18 @@ Feel free to submit a PR, I will be happy to help you !
 We use semantic versioning ! (https://semver.org)
 Here is the current Neogen version:
 >lua
-  neogen.version = "2.19.4"
+  neogen.version = "2.20.0"
 <
 # Changelog~
 
 Note: We will only document `major` and `minor` versions, not `patch` ones. (only X and Y in X.Y.z)
 
+## 2.20.0~
+  - Add support for `mini` snippet engine  ! (see |neogen-snippet-integration|)
 ## 2.19.0~
-   - Add support for julia (`julia`) ! (#185)
+  - Add support for julia (`julia`) ! (#185)
 ## 2.18.0~
-   - Add tests cases to tests/ for annotation generation with basic support for python (#174)
+  - Add tests cases to tests/ for annotation generation with basic support for python (#174)
 ## 2.17.1~
   - Python raises now supports `raise foo.Bar()` syntax
 ## 2.17.0~
@@ -273,6 +275,7 @@ Some snippet engines come out of the box bundled with neogen:
 - `"snippy"` (https://github.com/dcampos/nvim-snippy)
 - `"vsnip"` (https://github.com/hrsh7th/vim-vsnip)
 - `"nvim"` (`:h vim.snippet`)
+- `"mini"` (https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini-snippets.md)
 
 If you want to customize the placeholders, you can use `placeholders_text` option:
 >
