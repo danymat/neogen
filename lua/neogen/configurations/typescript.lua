@@ -85,6 +85,15 @@ return {
         },
         type = { "variable_declaration", "lexical_declaration" },
         file = { "program" },
+        property = {
+            "property_signature",
+            "property_identifier",
+        },
+        declaration = {
+            "type_alias_declaration",
+            "interface_declaration",
+            "enum_declaration",
+        },
     },
 
     data = {
@@ -173,6 +182,24 @@ return {
                 },
             },
         },
+        property = {
+            ["property_signature|property_identifier"] = {
+                ["0"] = {
+                    extract = function()
+                        return {}
+                    end,
+                },
+            },
+        },
+        declaration = {
+            ["type_alias_declaration|interface_declaration|enum_declaration"] = {
+                ["0"] = {
+                    extract = function()
+                        return {}
+                    end,
+                },
+            },
+        },
     },
 
     locator = require("neogen.locators.typescript"),
@@ -181,11 +208,20 @@ return {
         :config({
             append = { position = "after", child_name = "comment", fallback = "block", disabled = { "file" } },
             position = function(node, type)
-                if vim.tbl_contains({ "func", "class" }, type) then
+                if vim.tbl_contains({ "func", "class", "declaration" }, type) then
                     local parent = node:parent()
 
                     -- Verify if the parent is an export_statement (prevents offset of generated annotation)
                     if parent and parent:type() == "export_statement" then
+                        local row, col = vim.treesitter.get_node_range(parent)
+                        return row, col
+                    end
+                    return
+                end
+                if vim.tbl_contains({ "property" }, type) then
+                    local parent = node:parent()
+
+                    if parent and vim.tbl_contains({ "public_field_definition" }, parent:type()) then
                         local row, col = vim.treesitter.get_node_range(parent)
                         return row, col
                     end
