@@ -88,8 +88,6 @@ snippet.engines.luasnip = function(snip, pos)
     -- Convert the snippet to string
     local _snip = table.concat(snip, "\n")
 
-    vim.print(snip)
-
     ls.snip_expand(
 
         ls.s("", ls.parser.parse_snippet(nil, _snip, { trim_empty = false, dedent = false }), {
