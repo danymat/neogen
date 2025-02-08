@@ -48,6 +48,13 @@ snippet.engines = {}
 ---@private
 snippet.to_snippet = function(template, marks, pos)
     local offset, ph = {}, {}
+
+    -- Add double $ for template before creating the snippet so that text with $ (such as parameters in php)
+    -- are not interpreted as snippet
+    for i, str in ipairs(template) do
+        template[i] = str:gsub("%$", "$$") -- Escape $
+    end
+
     for i, m in ipairs(marks) do
         local r, col = m.row - pos[1] + 1, m.col
         ph[i] = (m.text and conf.enable_placeholders) and string.format("${%d:%s}", i, m.text) or "$" .. i
@@ -81,6 +88,8 @@ snippet.engines.luasnip = function(snip, pos)
     -- Convert the snippet to string
     local _snip = table.concat(snip, "\n")
 
+    vim.print(snip)
+
     ls.snip_expand(
 
         ls.s("", ls.parser.parse_snippet(nil, _snip, { trim_empty = false, dedent = false }), {
@@ -111,7 +120,7 @@ snippet.engines.snippy = function(snip, pos)
     end
     local row, _ = unpack(pos)
     vim.api.nvim_buf_set_lines(0, row, row, true, { "" }) -- snippy will change `row`
-    vim.api.nvim_win_set_cursor(0, { row + 1, 0 }) -- `snip` already has indent so we should ignore `col`
+    vim.api.nvim_win_set_cursor(0, { row + 1, 0 })        -- `snip` already has indent so we should ignore `col`
     snippy.expand_snippet({ body = snip })
 end
 
@@ -127,8 +136,8 @@ snippet.engines.vsnip = function(snip, pos)
     end
     local row, _ = unpack(pos)
     vim.api.nvim_buf_set_lines(0, row, row, true, { "" }) -- vsnip will change `row`
-    vim.api.nvim_win_set_cursor(0, { row + 1, 0 }) -- `snip` already has indent so we should ignore `col`
-    snip = table.concat(snip, "\n") -- vsnip expects on string instead of a list/table of lines
+    vim.api.nvim_win_set_cursor(0, { row + 1, 0 })        -- `snip` already has indent so we should ignore `col`
+    snip = table.concat(snip, "\n")                       -- vsnip expects on string instead of a list/table of lines
     vim.fn["vsnip#anonymous"](snip)
 end
 
