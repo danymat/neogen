@@ -10,12 +10,12 @@ return {
 
     { nil, "/**", { type = { "class", "func" } } },
     { i.ClassName, " * @classdesc $1", { before_first_item = { " * ", " * @class" }, type = { "class" } } },
-    { i.Parameter, " * @param {any} %s $1", { type = { "func" } } },
+    { i.Parameter, " * @param {$1} %s - $1", { type = { "func" } } },
     {
         { i.Type, i.Parameter },
-        " * @param {%s} %s $1",
+        " * @param {%s} %s - $1",
         { required = i.Tparam, type = { "func" } },
     },
-    { i.Return, " * @returns {$1} $1", { type = { "func" } } },
+    { i.Return, " * @returns {$1} - $1", { type = { "func" } } },
     { nil, " */", { type = { "class", "func" } } },
 }
