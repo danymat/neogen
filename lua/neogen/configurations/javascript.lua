@@ -8,7 +8,7 @@ local function_tree = {
         retrieve = "first",
         node_type = "formal_parameters",
         subtree = {
-            { retrieve = "all", node_type = "identifier", extract = true, as = i.Parameter },
+            { retrieve = "all", node_type = "identifier", recursive = true, extract = true, as = i.Parameter },
         },
     },
     {
