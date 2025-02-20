@@ -97,6 +97,8 @@ end
 ---    }
 --- <
 ---   Default configurations for a languages can be found in `lua/neogen/configurations/<your_language>.lua`
+---   To use an existing configuration in another file type, you can do like: `cuda = require("neogen.configurations.cpp")` 
+---   for your language.
 ---
 ---  - To know which snippet engines are supported, take a look at |neogen-snippet-integration|.
 ---    Example: `snippet_engine = "luasnip"`
