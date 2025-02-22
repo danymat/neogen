@@ -19,4 +19,8 @@ return {
     },
     { i.Return, " * @returns $1", { type = { "func" } } },
     { nil, " */", { type = { "class", "func" } } },
+
+    { nil, "/**", { no_results = true, type = { "property", "declaration" } } },
+    { nil, " * $1", { no_results = true, type = { "property", "declaration" } } },
+    { nil, " */", { no_results = true, type = { "property", "declaration" } } },
 }

@@ -13,5 +13,12 @@ return function(node_info, nodes_to_match)
         end
     end
 
+    if found_node and vim.tbl_contains({ "property_identifier" }, found_node:type()) then
+        local parent = found_node:parent()
+        if parent and parent:type() == "method_definition" then
+            return parent
+        end
+    end
+
     return found_node
 end
