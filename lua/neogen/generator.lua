@@ -62,7 +62,7 @@ local function get_parent_node(filetype, node_type, language)
     local parser = vim.treesitter.get_parser(0, parser_name)
     local tstree = parser:parse()[1]
     local tree = tstree:root()
-    local current_node = vim.treesitter.get_node()
+    local current_node = vim.treesitter.get_node({ ignore_injections = false })
     local match_any = node_type == ANY_TYPE
     local target_node, target_type
     local locator = language.locator or default_locator
