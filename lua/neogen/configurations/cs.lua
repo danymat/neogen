@@ -12,7 +12,7 @@ return {
             "delegate_declaration",
             "conversion_operator_declaration",
         },
-        class = { "class_declaration", "interface_declaration" },
+        class = { "class_declaration", "interface_declaration", "record_declaration" },
         type = { "field_declaration", "property_declaration", "event_field_declaration", "indexer_declaration" },
     },
     data = {
@@ -65,7 +65,7 @@ return {
             },
         },
         class = {
-            ["class_declaration|interface_declaration"] = {
+            ["class_declaration|interface_declaration|record_declaration"] = {
                 ["0"] = {
                     extract = function(node)
                         local tree = {
