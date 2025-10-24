@@ -246,6 +246,7 @@ There is a list of supported languages and fields, with their annotation style
 | typescript      | [JSDoc](https://jsdoc.app) (`"jsdoc"`) <br> [TSDoc](https://tsdoc.org) (`"tsdoc"`)                                                                                                                                                                                               | `func`, `class`, `type`, `file` |
 | typescriptreact | [JSDoc](https://jsdoc.app) (`"jsdoc"`) <br> [TSDoc](https://tsdoc.org) (`"tsdoc"`)                                                                                                                                                                                               | `func`, `class`, `type`, `file` |
 | vue             | [JSDoc](https://jsdoc.app) (`"jsdoc"`)                                                                                                                                                                                                                                           | `func`, `class`, `type`, `file` |
+| zig             | [Zig](https://ziglang.org/documentation/master/#toc-Doc-Comments) (`"zig"`)                                                                                                                                                                                                      | `func`, `type`, `file`          |
 
 ## Adding Languages
 
