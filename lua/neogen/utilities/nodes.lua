@@ -56,7 +56,7 @@ return {
     --- @param parent TSNode the parent node
     --- @param tree table a nested table : { retrieve = "all|first", node_type = node_name, subtree = tree, recursive = true }
     --- If you want to extract the node, do not specify the subtree and instead: extract = true
-    --- Optional: you can specify position = number instead of retrieve, and it will fetch the child node at position number
+    --- Optional: you can specify position = number instead of retrieve, and it will fetch the child node at position number, if position == -1, then last child is taken
     --- @param result? table the table of results
     --- @return table result a table of k,v where k are node_types and v all matched nodes
     matching_nodes_from = function(self, parent, tree, result)
@@ -74,6 +74,9 @@ return {
             -- Only keep the node with custom position
             if not subtree.retrieve then
                 assert(type(subtree.position) == "number", "please require position if retrieve is nil")
+                if subtree.position == -1 then
+                    subtree.position = #matched
+                end
                 matched = { matched[subtree.position] }
             end
 
