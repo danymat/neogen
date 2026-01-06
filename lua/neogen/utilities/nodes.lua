@@ -74,10 +74,11 @@ return {
             -- Only keep the node with custom position
             if not subtree.retrieve then
                 assert(type(subtree.position) == "number", "please require position if retrieve is nil")
-                if subtree.position == -1 then
-                    subtree.position = #matched
+                local position = subtree.position
+                if position == -1 then
+                    position = #matched
                 end
-                matched = { matched[subtree.position] }
+                matched = { matched[position] }
             end
 
             if subtree.recursive then
