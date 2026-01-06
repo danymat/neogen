@@ -76,8 +76,7 @@ return {
                         local nodes = nodes_utils:matching_nodes_from(node, tree)
                         local res = extractors:extract_from_matched(nodes)
 
-                        local has_no_return = node:type() == "constructor_declaration"
-                                              or is_void(res.return_statement);
+                        local has_no_return = node:type() == "constructor_declaration" or is_void(res.return_statement)
                         if has_no_return then
                             res.return_statement = nil
                         else
@@ -94,7 +93,7 @@ return {
                 ["0"] = {
                     extract = function(node)
                         local tree = {
-                            get_type_parameters_tree()
+                            get_type_parameters_tree(),
                         }
                         local nodes = nodes_utils:matching_nodes_from(node, tree)
                         local res = extractors:extract_from_matched(nodes)
@@ -164,7 +163,7 @@ return {
                         local nodes = nodes_utils:matching_nodes_from(node, tree)
                         local res = extractors:extract_from_matched(nodes)
 
-                        local has_getter = false;
+                        local has_getter = false
                         if res.return_statement then
                             for _, value in ipairs(res.return_statement) do
                                 if vim.startswith(value, "get") then
