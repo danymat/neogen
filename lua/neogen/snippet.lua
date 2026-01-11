@@ -49,10 +49,10 @@ snippet.engines = {}
 snippet.to_snippet = function(template, marks, pos)
     local offset, ph = {}, {}
 
-    -- Add double $ for template before creating the snippet so that text with $ (such as parameters in php)
+    -- Escape $ for template before creating the snippet so that text with $ (such as parameters in php)
     -- are not interpreted as snippet
     for i, str in ipairs(template) do
-        template[i] = str:gsub("%$", "$$") -- Escape $
+        template[i] = str:gsub("%$", "\\$") -- Escape $
     end
 
     for i, m in ipairs(marks) do
