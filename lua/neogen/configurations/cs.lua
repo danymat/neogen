@@ -56,8 +56,8 @@ return {
             "delegate_declaration",
             "conversion_operator_declaration",
         },
-        class = { "interface_declaration", "class_declaration", "record_declaration", "struct_declaration" },
-        type = { "field_declaration", "property_declaration", "event_field_declaration", "indexer_declaration" },
+        class = { "interface_declaration", "class_declaration", "record_declaration", "struct_declaration", "enum_declaration" },
+        type = { "field_declaration", "property_declaration", "event_field_declaration", "indexer_declaration", "enum_member_declaration" },
     },
     data = {
         func = {
@@ -116,9 +116,16 @@ return {
                     end,
                 },
             },
+            ["enum_declaration"] = {
+                ["0"] = {
+                    extract = function()
+                        return {}
+                    end,
+                }
+            },
         },
         type = {
-            ["field_declaration|property_declaration|event_field_declaration"] = {
+            ["field_declaration|property_declaration|event_field_declaration|enum_member_declaration"] = {
                 ["0"] = {
                     extract = function()
                         return {}
