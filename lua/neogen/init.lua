@@ -79,7 +79,7 @@ end
 --- Check out the up-to-date readme section: https://github.com/danymat/neogen#supported-languages
 --- To know the supported types for a certain language
 ---
---- NOTE: calling `:Neogen` without any type is the same as `:Neogen func`
+--- NOTE: calling `:Neogen` without any type selects the nearest supported type around the cursor.
 ---@tag neogen-usage
 ---@toc_entry Usage
 
@@ -155,12 +155,11 @@ neogen.configuration = {
 ---  - {opts.annotation_convention} `(table)` convention to use for generating annotations.
 ---    This is language specific. For example, `generate({ annotation_convention = { python = 'numpydoc' } })`
 ---    If no convention is specified for a specific language, it'll use the default annotation convention for the language.
----  - {opts.return_snippet} `boolean` if true, will return 3 values from the function call.
+---  - {opts.return_snippet} `boolean` if true, will return 2 values from the function call.
 ---  This option is useful if you want to get the snippet to use with a unsupported snippet engine
 ---  Below are the returned values:
 ---  - 1: (type: `string[]`) the resulting lsp snippet
 ---  - 2: (type: `number`) the `row` to insert the annotations
----  - 3: (type: `number`) the `col` to insert the annotations
 ---@toc_entry Generate annotations
 neogen.generate = function(opts)
     if not conf or not conf.enabled then

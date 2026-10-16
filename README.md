@@ -88,7 +88,7 @@ local opts = { noremap = true, silent = true }
 vim.api.nvim_set_keymap("n", "<Leader>nf", ":lua require('neogen').generate()<CR>", opts)
 ```
 
-Calling the `generate` function without any parameters will try to generate annotations for the current function.
+Calling the `generate` function without any parameters will generate annotations for the nearest supported type around the cursor.
 
 You can provide some options for the generate, like so:
 
@@ -126,7 +126,7 @@ you can do it by using the `return_snippet` option in the `generate` function:
 - `return_snippet` option will return the annotations as lsp snippets.
 
 ```lua
-local snippet, row, col = require('neogen').generate({ snippet_engine = "luasnip" })
+local snippet, row = require('neogen').generate({ return_snippet = true })
 ```
 
 And then pass the snippet to the plugin's snippet expansion function.
@@ -140,8 +140,8 @@ To map some keys to the cycling feature, you can do like so:
 
 ```lua
 local opts = { noremap = true, silent = true }
-vim.api.nvim_set_keymap("i", "<C-l>", ":lua require('neogen').jump_next<CR>", opts)
-vim.api.nvim_set_keymap("i", "<C-h>", ":lua require('neogen').jump_prev<CR>", opts)
+vim.api.nvim_set_keymap("i", "<C-l>", "<Cmd>lua require('neogen').jump_next()<CR>", opts)
+vim.api.nvim_set_keymap("i", "<C-h>", "<Cmd>lua require('neogen').jump_prev()<CR>", opts)
 ```
 
 Or, if you want to use a key that's already used for completion purposes, take a look at the code snippet here:

@@ -194,6 +194,7 @@ end
 ---            annotation_convention = "my_annotation",
 ---            my_annotation = annotation
 ---          }
+---        }
 ---      }
 ---    }
 ---   <
